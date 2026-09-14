@@ -1,0 +1,101 @@
+@import "tailwindcss";
+
+/*
+ * Design tokens de adsme — espejo 1:1 de las variables definidas en `adsme.pen`.
+ * Mapeo token Pencil -> utilidad Tailwind:
+ *   $bg-base -> canvas | $card-2 -> card-elevated | $brand-* -> brand-* | $text-* -> text-*
+ */
+@theme {
+  --color-canvas: #f4f5fa;
+  --color-surface: #ffffff;
+  --color-card: #ffffff;
+  --color-card-elevated: #f1f2f8;
+
+  --color-border: #e2e4ef;
+  --color-border-strong: #c7cada;
+
+  --color-brand-violet: #7c3aed;
+  --color-brand-magenta: #db2777;
+
+  --color-data-cyan: #0891b2;
+  --color-data-lime: #4d7c0f;
+
+  --color-success: #059669;
+  --color-warning: #b45309;
+  --color-danger: #e11d48;
+
+  --color-text-primary: #15141e;
+  --color-text-secondary: #5a596e;
+  --color-text-muted: #8a899b;
+
+  /* El .pen especifica Space Grotesk + Inter; se sustituyeron por una pareja
+     geométrica con más carácter en titulares y mejor lectura en datos densos. */
+  --font-display: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-plus-jakarta-sans), ui-sans-serif, system-ui, sans-serif;
+
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-card: 20px;
+  --radius-pill: 999px;
+}
+
+/* Gradiente de marca (violeta -> magenta a -45º) usado en botones primarios y acentos. */
+@utility bg-brand-gradient {
+  background-image: linear-gradient(
+    135deg,
+    var(--color-brand-violet) 0%,
+    var(--color-brand-magenta) 100%
+  );
+}
+
+/* Fondo radial del panel visual de autenticación. */
+@utility bg-auth-aurora {
+  background-image: radial-gradient(
+    150% 130% at 25% 15%,
+    #ede9fe 0%,
+    #f6f4ff 60%,
+    var(--color-canvas) 100%
+  );
+}
+
+/* Halo magenta difuminado que acompaña al ecualizador. */
+@utility bg-magenta-glow {
+  background-image: radial-gradient(
+    closest-side,
+    #db277740 0%,
+    #db277700 100%
+  );
+}
+
+@keyframes equalizer-pulse {
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(0.55);
+  }
+}
+
+@utility animate-equalizer {
+  transform-origin: bottom;
+  animation: equalizer-pulse 1.8s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-equalizer {
+    animation: none;
+  }
+}
+
+/* Fija el tema claro también en los controles nativos (scrollbars, selectores
+   de fecha, autofill) para que no hereden el esquema del sistema. */
+html {
+  color-scheme: light;
+}
+
+body {
+  background-color: var(--color-canvas);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+}
