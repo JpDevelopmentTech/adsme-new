@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { EMPTY_JOB_VALUES, JOB_WIZARD_COPY } from "@/constants/job-wizard.constants";
+import { EMPTY_JOB_VALUES } from "@/constants/job-wizard.constants";
 import { createListClients } from "@/domain/use-cases/list-clients";
 import { createSupabaseClientRepository } from "@/infrastructure/repositories/supabase-client-repository";
 import { createServerSupabaseClient } from "@/infrastructure/supabase/server-supabase-client";
@@ -17,7 +17,6 @@ export default async function NuevoTrabajoPage() {
 
   return (
     <JobBasicsForm
-      title={JOB_WIZARD_COPY.title}
       initialValues={EMPTY_JOB_VALUES}
       clientOptions={toClientOptions(clients)}
     />

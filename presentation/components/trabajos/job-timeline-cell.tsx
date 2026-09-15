@@ -11,22 +11,22 @@ import { jobSpanTone } from "@/utils/job-span-tone";
 
 /**
  * La ventana de la pauta sobre el eje común de la tabla. Como todas las filas
- * comparten eje, la marca de hoy cae en la misma vertical y basta bajar la
- * vista para ver qué está corriendo, qué se acaba y qué no ha empezado.
+ * comparten eje, la marca de hoy cae en la misma vertical en todas ellas sin
+ * necesidad de dibujar nada por encima de la tabla.
  */
 export function JobTimelineCell({ job, timeline, today }: JobTimelineCellProps) {
   const span = positionJob(job, timeline);
   const countdown = formatJobCountdown(job, today);
 
   return (
-    <div className="flex min-w-[170px] flex-col gap-2">
-      <div className="flex items-baseline justify-between gap-3">
-        <span className="text-xs whitespace-nowrap text-text-secondary">
+    <div className="flex flex-col gap-[7px]">
+      <div className="flex items-center justify-between gap-3">
+        <span className="text-[11.5px] whitespace-nowrap text-text-secondary">
           {formatJobPeriod(job.startsOn, job.endsOn)}
         </span>
         <span
           className={cn(
-            "text-[11.5px] font-semibold whitespace-nowrap",
+            "text-[11.5px] font-normal whitespace-nowrap",
             JOB_COUNTDOWN_TONES[countdown.tone],
           )}
         >
@@ -34,7 +34,7 @@ export function JobTimelineCell({ job, timeline, today }: JobTimelineCellProps) 
         </span>
       </div>
 
-      <div aria-hidden className="relative h-[5px] w-full rounded-pill bg-surface">
+      <div aria-hidden className="relative h-2 w-full rounded-pill bg-g-200">
         <span
           className={cn(
             "absolute inset-y-0 rounded-pill",
@@ -45,8 +45,10 @@ export function JobTimelineCell({ job, timeline, today }: JobTimelineCellProps) 
             width: `${span.widthPercent}%`,
           }}
         />
+        {/* Asoma por arriba y por abajo del carril para seguir viéndose cuando
+            el tramo del trabajo pasa justo por debajo. */}
         <span
-          className="absolute -top-[3px] h-[11px] w-0.5 -translate-x-1/2 rounded-[1px] bg-text-primary"
+          className="absolute -top-[3px] h-[14px] w-0.5 -translate-x-1/2 rounded-pill bg-ink"
           style={{ left: `${timeline.todayPercent}%` }}
         />
       </div>

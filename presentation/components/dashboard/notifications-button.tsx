@@ -7,12 +7,12 @@ export function NotificationsButton() {
     <button
       type="button"
       aria-label={TOPBAR_COPY.notifications}
-      className="relative grid size-[42px] shrink-0 cursor-pointer place-items-center rounded-md border border-border bg-card transition-colors hover:border-border-strong"
+      className="glass-field relative grid size-[38px] shrink-0 cursor-pointer place-items-center rounded-md transition-colors duration-150 hover:border-border-strong focus-visible:ring-2 focus-visible:ring-ink/40 focus-visible:outline-none"
     >
-      <Bell size={19} strokeWidth={1.75} className="text-text-secondary" aria-hidden />
+      <Bell size={17} strokeWidth={1.5} className="text-text-secondary" aria-hidden />
       <span
         aria-hidden
-        className="absolute top-[9px] right-[9px] size-[9px] rounded-full border-2 border-canvas bg-brand-magenta"
+        className="absolute top-[6px] right-[6px] size-[7px] rounded-pill bg-accent"
       />
     </button>
   );

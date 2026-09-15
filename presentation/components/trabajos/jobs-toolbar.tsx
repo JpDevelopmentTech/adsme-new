@@ -14,8 +14,15 @@ import { SearchField } from "@/presentation/components/ui/search-field";
 import { useQueryParams } from "@/presentation/hooks/use-query-params";
 import type { JobsToolbarProps } from "@/types/jobs-list.types";
 
-/** Barra de búsqueda y filtros del listado de trabajos; el estado vive en la URL. */
-export function JobsToolbar({ query, clientOptions }: JobsToolbarProps) {
+/**
+ * Búsqueda, filtros y vista del listado. Vive dentro del panel de resultados
+ * porque filtra esa tabla; el estado vive en la URL.
+ */
+export function JobsToolbar({
+  query,
+  clientOptions,
+  resultsLabel,
+}: JobsToolbarProps) {
   const { setParam } = useQueryParams();
 
   const applyFilter = (key: string, value: string, fallback: string) => {
@@ -23,7 +30,7 @@ export function JobsToolbar({ query, clientOptions }: JobsToolbarProps) {
   };
 
   return (
-    <div className="flex flex-wrap items-center gap-3">
+    <div className="flex flex-wrap items-center gap-2.5 px-5 py-3">
       <SearchField
         value={query.search}
         paramName={JOB_QUERY_PARAMS.search}
@@ -68,6 +75,10 @@ export function JobsToolbar({ query, clientOptions }: JobsToolbarProps) {
       />
 
       <div className="flex-1" />
+
+      <span className="text-[10px] font-medium tracking-[0.6px] text-text-muted uppercase">
+        {resultsLabel}
+      </span>
 
       <JobsViewToggle />
     </div>

@@ -36,25 +36,22 @@ export interface ConnectionTokenUpdate {
   tokenExpiresAt: string | null;
 }
 
-/** Cambio de cuenta publicitaria dentro del mismo acceso concedido. */
-export interface ConnectionAccountUpdate {
-  label: string;
-  externalAccountId: string;
-  /** Solo Google: cuenta administradora desde la que se accede a esta. */
-  loginCustomerId?: string | null;
-  /** Se fusiona con `extra` en vez de reemplazarlo. */
-  extra?: Record<string, unknown>;
-}
-
-/** Datos necesarios para dar de alta o actualizar una conexión. */
-export interface ConnectionDraft {
-  platform: ConnectionPlatform;
-  accountLabel: string;
-  externalAccountId: string;
-  loginCustomerId?: string | null;
+/**
+ * Permiso concedido por una plataforma. Es común a todas las cuentas que cubre:
+ * autorizar una vez basta para conectar varias, y cada una guarda su copia.
+ */
+export interface PlatformAccess {
   accessToken: string;
   refreshToken?: string | null;
   tokenExpiresAt: string | null;
   scopes: string;
+}
+
+/** Datos necesarios para dar de alta o actualizar una conexión. */
+export interface ConnectionDraft extends PlatformAccess {
+  platform: ConnectionPlatform;
+  accountLabel: string;
+  externalAccountId: string;
+  loginCustomerId?: string | null;
   extra?: Record<string, unknown>;
 }

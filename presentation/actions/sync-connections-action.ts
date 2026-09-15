@@ -15,11 +15,18 @@ import { syncMeta } from "@/infrastructure/sync/sync-meta";
 import { syncTiktok } from "@/infrastructure/sync/sync-tiktok";
 import { finishSync } from "@/presentation/actions/finish-sync";
 
-/** Sincronizador de cada plataforma que ya tiene integración real. */
+/**
+ * Sincronizador de cada plataforma que ya tiene integración real. Todos
+ * devuelven una lista porque Meta y TikTok admiten varias cuentas conectadas y
+ * cada una trae su propio resultado; Google, con una sola, devuelve uno.
+ */
 const SYNCS: Partial<
-  Record<ConnectionPlatform, (supabase: SupabaseClient) => Promise<SyncOutcome>>
+  Record<
+    ConnectionPlatform,
+    (supabase: SupabaseClient) => Promise<SyncOutcome[]>
+  >
 > = {
-  google_ads: syncGoogle,
+  google_ads: async (supabase) => [await syncGoogle(supabase)],
   meta: syncMeta,
   tiktok: syncTiktok,
 };
@@ -41,8 +48,8 @@ export async function syncConnectionsAction(): Promise<void> {
   const connections =
     await createSupabaseConnectionRepository(supabase).listConnections();
 
-  // Una vuelta por plataforma aunque haya varias filas de la misma: cada sync
-  // resuelve la conexión vigente por sí mismo y repetirlo sería trabajo doble.
+  // Una vuelta por plataforma aunque haya varias cuentas de la misma: cada
+  // sync recorre por su cuenta todas las conexiones que le pertenecen.
   const platforms = [...new Set(connections.map((item) => item.platform))];
 
   // Google no se conecta desde la app: sus datos los empuja un script y la fila
@@ -58,7 +65,7 @@ export async function syncConnectionsAction(): Promise<void> {
     const sync = SYNCS[platform];
     if (!sync) continue;
 
-    outcomes.push(await sync(supabase));
+    outcomes.push(...(await sync(supabase)));
   }
 
   finishSync(outcomes);

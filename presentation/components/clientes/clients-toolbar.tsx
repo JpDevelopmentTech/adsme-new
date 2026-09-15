@@ -16,8 +16,12 @@ import { SegmentedControl } from "@/presentation/components/ui/segmented-control
 import { useQueryParams } from "@/presentation/hooks/use-query-params";
 import type { ClientsToolbarProps } from "@/types/client.types";
 
-/** Barra de búsqueda, filtros y orden; todo el estado vive en la URL. */
-export function ClientsToolbar({ query }: ClientsToolbarProps) {
+/**
+ * Búsqueda, filtros y orden de la cartera. Vive dentro del panel de resultados
+ * porque filtra esa tabla: separarlos obligaba a deducir la relación.
+ * Todo el estado vive en la URL.
+ */
+export function ClientsToolbar({ query, resultsLabel }: ClientsToolbarProps) {
   const { setParam } = useQueryParams();
 
   /** Escribe el parámetro salvo que sea el valor por defecto, que se omite. */
@@ -26,7 +30,7 @@ export function ClientsToolbar({ query }: ClientsToolbarProps) {
   };
 
   return (
-    <div className="flex flex-wrap items-center gap-3">
+    <div className="flex flex-wrap items-center gap-2.5 px-5 py-3">
       <SearchField
         value={query.search}
         paramName={CLIENT_QUERY_PARAMS.search}
@@ -62,12 +66,16 @@ export function ClientsToolbar({ query }: ClientsToolbarProps) {
 
       <div className="flex-1" />
 
+      <span className="text-[10px] font-medium tracking-[0.6px] text-text-muted uppercase">
+        {resultsLabel}
+      </span>
+
       <FilterSelect
         align="end"
         value={query.sort}
         options={CLIENT_SORT_OPTIONS}
         defaultValue={DEFAULT_CLIENT_LIST_QUERY.sort}
-        icon={<ArrowUpDown size={15} className="text-text-muted" aria-hidden />}
+        icon={<ArrowUpDown size={14} className="text-text-muted" aria-hidden />}
         onChange={(value) =>
           applyFilter(
             CLIENT_QUERY_PARAMS.sort,

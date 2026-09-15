@@ -16,29 +16,21 @@ export function SidebarNavItem({ item }: SidebarNavItemProps) {
       href={item.href}
       aria-current={isActive ? "page" : undefined}
       className={cn(
-        "relative flex items-center gap-3 rounded-md px-3 py-2.5 transition-colors",
-        isActive ? "bg-card-elevated" : "hover:bg-card",
+        "flex items-center gap-[11px] rounded-md px-[11px] py-[9px] transition-colors duration-150",
+        "focus-visible:ring-2 focus-visible:ring-ink/40 focus-visible:outline-none",
+        isActive ? "bg-ink shadow-float" : "hover:bg-white/70",
       )}
     >
-      {isActive ? (
-        <span
-          aria-hidden
-          className="absolute left-0 h-[18px] w-[3px] rounded-pill bg-brand-gradient"
-        />
-      ) : null}
-
       <Icon
-        size={19}
-        strokeWidth={1.75}
-        className={isActive ? "text-brand-violet" : "text-text-secondary"}
+        size={17}
+        strokeWidth={1.5}
+        className={isActive ? "text-g-50" : "text-text-secondary"}
         aria-hidden
       />
       <span
         className={cn(
-          "flex-1 text-sm",
-          isActive
-            ? "font-semibold text-text-primary"
-            : "font-medium text-text-secondary",
+          "flex-1 text-[13px]",
+          isActive ? "font-normal text-g-50" : "font-light text-text-secondary",
         )}
       >
         {item.label}

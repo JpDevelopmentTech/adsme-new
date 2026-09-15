@@ -9,18 +9,25 @@ import type { JobListing } from "@/domain/entities/job-listing";
 import { share } from "@/utils/format-compact-number";
 import { endOfMonth, startOfMonth } from "@/utils/month-range";
 import { tokenDaysLeft } from "@/utils/token-days-left";
+import { worstConnection } from "@/utils/worst-connection";
 
 /** Inversión del mes que corresponde a cada plataforma del trabajo. */
 function splitInvestment(job: JobListing): number {
   return job.platforms.length > 0 ? job.investment / job.platforms.length : 0;
 }
 
+/**
+ * Conexión que representa a la plataforma. Con varias cuentas se queda con la
+ * que peor está: basta una caída para que el reparto deje de cuadrar.
+ */
 function findConnection(
   connections: Connection[],
   platform: JobPlatform,
 ): Connection | undefined {
-  return connections.find(
-    (item) => item.platform === CONNECTION_OF_PLATFORM[platform],
+  return worstConnection(
+    connections.filter(
+      (item) => item.platform === CONNECTION_OF_PLATFORM[platform],
+    ),
   );
 }
 

@@ -24,7 +24,8 @@ export interface PlatformConnection {
   /** Nombre comercial de la plataforma, distinto del de la pauta. */
   name: string;
   status: "connected" | "disconnected";
-  accountName: string | null;
+  /** Cuentas conectadas de esa plataforma, en el orden en que se vincularon. */
+  accountNames: string[];
   activeCampaigns: number | null;
   /** Inversión sumada de las campañas que ha importado esta cuenta. */
   importedSpend: number | null;
@@ -37,7 +38,7 @@ export interface ImportedCampaign {
   id: string;
   name: string;
   platform: JobPlatform;
-  /** Plataforma de la que vino, en su nombre comercial. */
+  /** Cuenta publicitaria de la que vino, con la etiqueta con la que se guardó. */
   accountName: string;
   /** Trabajo al que está asociada («Neón · Sofía Vega»); `null` si no lo está. */
   jobLabel: string | null;

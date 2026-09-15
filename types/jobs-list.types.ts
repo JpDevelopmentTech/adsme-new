@@ -37,12 +37,43 @@ export type JobSpanTone =
   | "overdue"
   | "muted";
 
+/** Rótulo de mes sobre el eje común, situado por su porcentaje. */
+export interface TimelineMonth {
+  label: string;
+  percent: number;
+}
+
+/** Cifras de la banda de `B5`; los grupos son excluyentes y suman `total`. */
+export interface JobsSummary {
+  invested: number;
+  total: number;
+  running: number;
+  /** Trabajos en curso a los que les quedan siete días o menos. */
+  endingSoon: number;
+  /** Activos cuyo período ya terminó: ni corriendo ni cerrados. */
+  overdue: number;
+  upcoming: number;
+  finished: number;
+}
+
+export interface JobsSummaryBandProps {
+  summary: JobsSummary;
+}
+
 export interface JobsTableProps {
   jobs: JobListing[];
   totalJobs: number;
   /** Fecha de render en ISO, para situar hoy sin desfases de hidratación. */
   today: string;
-  sort: JobSort;
+  query: JobListQuery;
+  /** Clientes con trabajos, para poblar el filtro «Cliente». */
+  clientOptions: FilterSelectOption<string>[];
+  isFiltered: boolean;
+}
+
+export interface JobReportLinkProps {
+  reportUrl: string | null;
+  jobTitle: string;
 }
 
 export interface JobRowProps {
@@ -62,12 +93,16 @@ export interface SortHeaderProps {
   label: string;
   column: JobSortColumn;
   sort: JobSort;
+  /** Deja solo la flecha; el rótulo pasa a ser accesible pero invisible. */
+  hideLabel?: boolean;
 }
 
 export interface JobsToolbarProps {
   query: JobListQuery;
   /** Clientes con trabajos, para poblar el filtro «Cliente». */
   clientOptions: FilterSelectOption<string>[];
+  /** Recuento que se muestra a la derecha de los filtros. */
+  resultsLabel: string;
 }
 
 export interface JobsEmptyProps {

@@ -39,10 +39,10 @@ export const REPORT_SECTIONS = [
 ] as const;
 
 export const STEP_FOUR_COPY = {
-  successTitle: "El enlace del cliente está listo",
-  successBody: (client: string) =>
-    `Se activa al publicar el trabajo. ${client} verá los datos actualizados cada hora, sin crear una cuenta.`,
-  reviewTitle: "ESTO ES LO QUE SE VA A PUBLICAR",
+  shareSection: "Comparte el enlace",
+  protectSection: "Protege el reporte",
+  shareHint:
+    "Compártelo por donde ya hablas con el artista. El código funciona impreso o en pantalla.",
   urlLabel: "Enlace único del cliente",
   copy: "Copiar",
   whatsapp: "WhatsApp",

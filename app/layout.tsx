@@ -1,15 +1,14 @@
 import type { Metadata } from "next";
-import { Outfit, Plus_Jakarta_Sans } from "next/font/google";
+import { Poppins } from "next/font/google";
 import "./globals.css";
 
-const outfit = Outfit({
-  variable: "--font-outfit",
+// Poppins no es variable: hay que declarar los pesos que se usan. El sistema
+// se apoya en 300 y 400; 500 marca lo enfático y 600 solo sobrevive para las
+// pantallas que todavía no se han migrado al nuevo sistema.
+const poppins = Poppins({
+  variable: "--font-poppins",
   subsets: ["latin"],
-});
-
-const plusJakartaSans = Plus_Jakarta_Sans({
-  variable: "--font-plus-jakarta-sans",
-  subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
 });
 
 export const metadata: Metadata = {
@@ -20,11 +19,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html
-      lang="es"
-      className={`${outfit.variable} ${plusJakartaSans.variable} h-full antialiased`}
-    >
-      <body className="bg-canvas text-text-primary flex min-h-full flex-col">
+    <html lang="es" className={`${poppins.variable} h-full antialiased`}>
+      <body className="bg-canvas text-text-primary flex min-h-full flex-col font-light">
         {children}
       </body>
     </html>

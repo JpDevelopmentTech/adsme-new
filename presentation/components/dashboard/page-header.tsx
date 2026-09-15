@@ -1,6 +1,9 @@
 import type { PageHeaderProps } from "@/types/dashboard.types";
 
-/** Encabezado del área de contenido: título, estado de sincronización y acciones. */
+/**
+ * Cabecera de un bloque de contenido. El `h1` de la pantalla lo pone ya la
+ * topbar, así que aquí el título baja a `h2` y sirve de rótulo de la sección.
+ */
 export function PageHeader({
   title,
   subtitle,
@@ -9,14 +12,14 @@ export function PageHeader({
 }: PageHeaderProps) {
   return (
     <div className="flex flex-wrap items-center justify-between gap-4">
-      <div className="flex flex-col gap-[5px]">
-        <h1 className="font-display text-[26px] font-bold text-text-primary">
+      <div className="flex flex-col gap-1">
+        <h2 className="font-display text-[19px] font-normal tracking-[-0.4px] text-text-primary">
           {title}
-        </h1>
+        </h2>
         {subtitle ? (
-          <p className="flex items-center gap-2 text-[13px] text-text-secondary">
+          <p className="flex items-center gap-2 text-[12px] text-text-secondary">
             {hasStatusDot ? (
-              <span aria-hidden className="size-[7px] rounded-full bg-success" />
+              <span aria-hidden className="size-[6px] bg-g-600" />
             ) : null}
             {subtitle}
           </p>

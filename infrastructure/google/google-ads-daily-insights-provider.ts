@@ -11,18 +11,21 @@ import { toGoogleDayInsight } from "@/infrastructure/google/google-ads-staging-r
  * una API. Para el caso de uso es indistinguible de Meta o TikTok: recibe los
  * mismos días y no necesita saber que aquí los dejó un script programado.
  *
- * La conexión no se usa porque el buzón es común a todos los usuarios; qué
- * cuenta se lee lo decide `GOOGLE_ADS_CUSTOMER_ID`, no quién sincroniza.
+ * No usa ninguno de los dos argumentos del port, y TypeScript deja declararlo
+ * sin ellos. La conexión no pinta nada porque el buzón es común a todos los
+ * usuarios: qué cuenta se lee lo decide `GOOGLE_ADS_CUSTOMER_ID`, no quién
+ * sincroniza. Y `since` acota en las otras plataformas lo que se descarga de su
+ * API; aquí acotaría una consulta a una tabla propia y, a cambio, dejaría fuera
+ * para siempre el histórico de años anteriores que el script ya trajo, porque
+ * el caso de uso pide desde el último día importado. Al ser upsert, releer el
+ * buzón entero en cada sync solo reescribe lo mismo.
  */
 export function createGoogleDailyInsightsProvider(
   supabase: SupabaseClient,
 ): DailyInsightsProvider {
   return {
-    async fetchDailyInsights(
-      _connection,
-      since: string | null,
-    ): Promise<CampaignDayInsight[]> {
-      const rows = await readStagedDaily(supabase, since);
+    async fetchDailyInsights(): Promise<CampaignDayInsight[]> {
+      const rows = await readStagedDaily(supabase, null);
 
       return rows.map(toGoogleDayInsight);
     },

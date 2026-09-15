@@ -15,5 +15,5 @@ export async function syncMetaAction(): Promise<void> {
 
   if (!user) redirect(LOGIN_ROUTE);
 
-  finishSync([await syncMeta(supabase)]);
+  finishSync(await syncMeta(supabase));
 }

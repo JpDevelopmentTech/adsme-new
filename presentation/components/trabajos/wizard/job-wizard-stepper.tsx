@@ -1,24 +1,22 @@
-import { Check, Minus } from "lucide-react";
 import { Fragment } from "react";
 import { JOB_WIZARD_STEPS } from "@/constants/job-wizard.constants";
 import type { JobWizardStepperProps } from "@/types/job-wizard.types";
 import { cn } from "@/utils/cn";
 
 /**
- * Progreso del asistente: el paso vigente se marca con el gradiente de marca y
- * los ya cumplidos con su línea en verde. El círculo numerado ya dice en qué
- * paso se está, así que no se repite en ningún otro sitio.
+ * Progreso del asistente. Un paso omitido no se da por cumplido y además dice
+ * por qué: prometer cuatro pasos y saltarse uno en silencio desorienta más que
+ * admitir que ese se configura más adelante.
  */
 export function JobWizardStepper({
   currentStep,
   skippedSteps = [],
 }: JobWizardStepperProps) {
   return (
-    <ol className="flex items-center rounded-card border border-border bg-card px-5 py-3">
+    <ol className="glass-panel flex flex-wrap items-center gap-y-3 rounded-card px-[22px] py-3.5">
       {JOB_WIZARD_STEPS.map((step, index) => {
         const isSkipped = skippedSteps.includes(step.number);
         const isCurrent = step.number === currentStep;
-        // Un paso omitido no se da por cumplido: queda pendiente para después.
         const isDone = step.number < currentStep && !isSkipped;
 
         return (
@@ -29,31 +27,34 @@ export function JobWizardStepper({
             >
               <span
                 className={cn(
-                  "grid size-[26px] shrink-0 place-items-center rounded-pill font-display text-xs font-bold",
-                  isCurrent && "bg-brand-gradient text-white",
-                  isDone && "border border-success/30 bg-success/15 text-success",
-                  !isCurrent &&
-                    !isDone &&
-                    "border border-border bg-card-elevated text-text-muted",
+                  "grid size-[26px] shrink-0 place-items-center rounded-pill border text-[11.5px]",
+                  isCurrent && "border-ink bg-ink text-g-50",
+                  isDone && "border-success bg-success/12 text-success",
+                  !isCurrent && !isDone && "border-border-strong",
+                  !isCurrent && !isDone && isSkipped
+                    ? "text-g-500"
+                    : !isCurrent && !isDone && "text-text-secondary",
                 )}
               >
-                {isDone ? (
-                  <Check size={14} strokeWidth={3} aria-hidden />
-                ) : isSkipped ? (
-                  <Minus size={14} strokeWidth={3} aria-hidden />
-                ) : (
-                  step.number
-                )}
+                {isDone ? "✓" : step.number}
               </span>
 
-              <span
-                className={cn(
-                  "text-[13px] font-semibold whitespace-nowrap",
-                  isCurrent || isDone ? "text-text-primary" : "text-text-secondary",
-                  isSkipped && "text-text-muted",
-                )}
-              >
-                {step.label}
+              <span className="flex flex-col gap-px">
+                <span
+                  className={cn(
+                    "text-[12.5px] whitespace-nowrap",
+                    isCurrent ? "font-normal text-text-primary" : "font-light",
+                    !isCurrent && (isSkipped ? "text-g-500" : "text-text-secondary"),
+                  )}
+                >
+                  {step.label}
+                </span>
+
+                {step.note ? (
+                  <span className="text-[10px] font-medium tracking-[0.6px] text-g-500 uppercase">
+                    {step.note}
+                  </span>
+                ) : null}
               </span>
             </li>
 
@@ -61,10 +62,8 @@ export function JobWizardStepper({
               <span
                 aria-hidden
                 className={cn(
-                  "mx-3 h-0.5 min-w-6 flex-1 rounded-sm",
-                  step.number < currentStep && !skippedSteps.includes(step.number)
-                    ? "bg-success"
-                    : "bg-border",
+                  "mx-3 hidden h-0.5 min-w-6 flex-1 rounded-pill sm:block",
+                  isDone ? "bg-success" : "bg-border/70",
                 )}
               />
             ) : null}

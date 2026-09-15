@@ -14,6 +14,7 @@ import type { JobPlatform } from "@/domain/entities/job";
 import type { JobListing } from "@/domain/entities/job-listing";
 import { dayOfMonth } from "@/utils/month-range";
 import { tokenDaysLeft } from "@/utils/token-days-left";
+import { worstConnection } from "@/utils/worst-connection";
 
 const MAX_ALERTS = 5;
 
@@ -64,8 +65,12 @@ function connectionAlerts(
 ): DashboardAlert[] {
   return PLATFORM_ORDER.filter((platform) => inUse.has(platform)).flatMap(
     (platform): DashboardAlert[] => {
-      const connection = connections.find(
-        (item) => item.platform === CONNECTION_OF_PLATFORM[platform],
+      // De todas las cuentas de la plataforma manda la que peor está: es la
+      // que deja de traer datos, aunque las demás sigan importando.
+      const connection = worstConnection(
+        connections.filter(
+          (item) => item.platform === CONNECTION_OF_PLATFORM[platform],
+        ),
       );
       const daysLeft = tokenDaysLeft(connection, now);
       const label = PLATFORM_LABELS[platform];

@@ -1,80 +1,143 @@
-import { JOB_TABLE_COLUMNS } from "@/constants/jobs.constants";
+import {
+  JOBS_COPY,
+  JOB_TABLE_COLUMNS,
+  JOB_TABLE_WIDTHS,
+} from "@/constants/jobs.constants";
 import { jobSortDirection } from "@/domain/entities/job-query";
 import { JobRow } from "@/presentation/components/trabajos/job-row";
+import { JobsEmpty } from "@/presentation/components/trabajos/jobs-empty";
+import { JobsToolbar } from "@/presentation/components/trabajos/jobs-toolbar";
 import { SortHeader } from "@/presentation/components/trabajos/sort-header";
 import type { JobsTableProps } from "@/types/jobs-list.types";
 import { buildJobTimeline } from "@/utils/build-job-timeline";
+import { buildTimelineMonths } from "@/utils/build-timeline-months";
 
 const HEADER_CLASSES =
-  "px-5 py-3 text-left text-[11px] font-bold tracking-[0.5px] text-text-muted";
+  "py-[9px] text-left text-[10px] font-medium tracking-[0.6px] text-text-muted uppercase";
 
 /** Sentido que espera `aria-sort` en la columna que ordena la tabla. */
 const ARIA_SORT = { asc: "ascending", desc: "descending" } as const;
 
-export function JobsTable({ jobs, totalJobs, today, sort }: JobsTableProps) {
+/**
+ * El listado como línea de tiempo. Todas las filas comparten eje, así que los
+ * períodos se comparan entre sí y la escala de meses de la cabecera les da
+ * contexto: de un vistazo se ve qué corre, qué venció y qué no ha empezado.
+ */
+export function JobsTable({
+  jobs,
+  totalJobs,
+  today,
+  query,
+  clientOptions,
+  isFiltered,
+}: JobsTableProps) {
   const timeline = buildJobTimeline(jobs, today);
-  const investmentSort = jobSortDirection("investment", sort);
-  const periodSort = jobSortDirection("period", sort);
+  const months = buildTimelineMonths(timeline);
+  const investmentSort = jobSortDirection("investment", query.sort);
+  const periodSort = jobSortDirection("period", query.sort);
+
+  const resultsLabel = isFiltered
+    ? JOBS_COPY.results(jobs.length, totalJobs)
+    : JOBS_COPY.count(totalJobs);
 
   return (
-    <div className="overflow-hidden rounded-card border border-border bg-card">
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[1020px] border-collapse">
-          <thead className="border-b border-border bg-surface">
-            <tr>
-              <th className={HEADER_CLASSES}>{JOB_TABLE_COLUMNS.job}</th>
-              <th className={HEADER_CLASSES}>{JOB_TABLE_COLUMNS.platforms}</th>
+    <section className="glass-panel flex flex-col overflow-hidden rounded-card">
+      <JobsToolbar
+        query={query}
+        clientOptions={clientOptions}
+        resultsLabel={resultsLabel}
+      />
 
-              <th
-                className={HEADER_CLASSES}
-                aria-sort={periodSort ? ARIA_SORT[periodSort] : "none"}
-              >
-                <SortHeader
-                  column="period"
-                  sort={sort}
-                  label={`${JOB_TABLE_COLUMNS.period} · ${timeline.label.toUpperCase()}`}
-                />
-              </th>
+      <div className="h-px bg-border/60" />
 
-              <th
-                className={HEADER_CLASSES}
-                aria-sort={investmentSort ? ARIA_SORT[investmentSort] : "none"}
-              >
-                <SortHeader
-                  column="investment"
-                  sort={sort}
-                  label={JOB_TABLE_COLUMNS.investment}
-                />
-              </th>
+      {jobs.length === 0 ? (
+        <JobsEmpty isFiltered={isFiltered} />
+      ) : (
+        <div className="overflow-x-auto">
+          <div className="min-w-[980px]">
+            <table className="w-full table-fixed border-collapse">
+              <colgroup>
+                {JOB_TABLE_WIDTHS.map((width) => (
+                  <col key={width} style={{ width }} />
+                ))}
+              </colgroup>
 
-              <th className={HEADER_CLASSES}>{JOB_TABLE_COLUMNS.status}</th>
-              <th className={HEADER_CLASSES}>{JOB_TABLE_COLUMNS.report}</th>
-              <th className={HEADER_CLASSES}>
-                <span className="sr-only">Acciones</span>
-              </th>
-            </tr>
-          </thead>
+              <thead className="bg-white/40">
+                <tr>
+                  <th className={`${HEADER_CLASSES} pr-3.5 pl-5`}>
+                    {JOB_TABLE_COLUMNS.job}
+                  </th>
+                  <th className={`${HEADER_CLASSES} pr-3.5`}>
+                    {JOB_TABLE_COLUMNS.platforms}
+                  </th>
 
-          <tbody>
-            {jobs.map((job) => (
-              <JobRow
-                key={job.id}
-                job={job}
-                timeline={timeline}
-                today={today}
-              />
-            ))}
-          </tbody>
-        </table>
-      </div>
+                  <th
+                    className={HEADER_CLASSES}
+                    aria-sort={periodSort ? ARIA_SORT[periodSort] : "none"}
+                  >
+                    <div className="relative h-4">
+                      {months.map((month) => (
+                        <span
+                          key={month.label}
+                          className="absolute top-0"
+                          style={{ left: `${month.percent}%` }}
+                        >
+                          {month.label}
+                        </span>
+                      ))}
 
-      <div className="border-t border-border bg-surface px-5 py-3">
-        <p className="text-xs text-text-muted">
-          {jobs.length === totalJobs
-            ? `${totalJobs} ${totalJobs === 1 ? "trabajo" : "trabajos"}`
-            : `${jobs.length} de ${totalJobs} trabajos`}
-        </p>
-      </div>
-    </div>
+                      <span className="absolute top-0 right-0">
+                        <SortHeader
+                          hideLabel
+                          column="period"
+                          sort={query.sort}
+                          label={JOB_TABLE_COLUMNS.period}
+                        />
+                      </span>
+                    </div>
+                  </th>
+
+                  <th
+                    className={`${HEADER_CLASSES} px-3.5`}
+                    aria-sort={
+                      investmentSort ? ARIA_SORT[investmentSort] : "none"
+                    }
+                  >
+                    <div className="flex justify-end">
+                      <SortHeader
+                        column="investment"
+                        sort={query.sort}
+                        label={JOB_TABLE_COLUMNS.investment}
+                      />
+                    </div>
+                  </th>
+
+                  <th className={`${HEADER_CLASSES} pr-3.5 text-center`}>
+                    {JOB_TABLE_COLUMNS.status}
+                  </th>
+                  <th className={`${HEADER_CLASSES} pr-3.5`}>
+                    <span className="sr-only">{JOB_TABLE_COLUMNS.report}</span>
+                  </th>
+                  <th className={`${HEADER_CLASSES} pr-5`}>
+                    <span className="sr-only">Acciones</span>
+                  </th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {jobs.map((job) => (
+                  <JobRow
+                    key={job.id}
+                    job={job}
+                    timeline={timeline}
+                    today={today}
+                  />
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+    </section>
   );
 }

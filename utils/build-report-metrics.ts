@@ -3,10 +3,7 @@ import type {
   ReportArtist,
   ReportArtistLaunch,
 } from "@/domain/entities/report-artist";
-import type {
-  ReportPlatformMetrics,
-  ReportTotals,
-} from "@/domain/entities/report-metrics";
+import type { ReportPlatformMetrics } from "@/domain/entities/report-metrics";
 import type {
   ReportMetric,
   ReportMetricNote,
@@ -51,44 +48,6 @@ function budgetNote(spend: number, investment: number): ReportMetricNote {
   };
 }
 
-/**
- * Resumen del lanzamiento. El alcance no está aquí: abre el reporte como
- * titular, porque es la única cifra que responde a «¿cuánta gente me oyó?».
- *
- * El diseño pone una variación semanal bajo cada cifra, pero no guardamos
- * histórico: en su lugar va una segunda métrica real que da contexto a la
- * primera, sin inventar una tendencia que nadie ha medido.
- */
-export function buildCrossMetrics(
-  totals: ReportTotals,
-  investment: number,
-): ReportMetric[] {
-  return [
-    {
-      label: "Reproducciones",
-      value: formatCompactNumber(totals.videoPlays),
-      icon: "views",
-      tone: "violet",
-      note: campaignsNote(totals.campaigns, "violet"),
-    },
-    {
-      label: "Interacciones",
-      value: formatCompactNumber(totals.engagement),
-      icon: "engagement",
-      tone: "magenta",
-      note: socialNote(totals.comments, totals.shares, "magenta"),
-    },
-    {
-      label: "Inversión",
-      value: formatCompactCurrency(totals.spend),
-      icon: "spend",
-      tone: "lime",
-      note: budgetNote(totals.spend, investment),
-    },
-  ];
-}
-
-/** Resumen del reporte consolidado del artista. */
 export function buildArtistMetrics(artist: ReportArtist): ReportMetric[] {
   const sum = (pick: (launch: ReportArtistLaunch) => number) =>
     artist.launches.reduce((total, launch) => total + pick(launch), 0);

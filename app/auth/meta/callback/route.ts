@@ -9,6 +9,7 @@ import {
 } from "@/constants/meta-ads.constants";
 import { CONNECTIONS_ROUTE, LOGIN_ROUTE } from "@/constants/routes.constants";
 import { createGetCurrentUser } from "@/domain/use-cases/get-current-user";
+import { createRegisterPlatformAccess } from "@/domain/use-cases/register-platform-access";
 import {
   exchangeCodeForToken,
   exchangeForLongLivedToken,
@@ -22,9 +23,10 @@ import { resolveOrigin } from "@/utils/resolve-origin";
 
 /**
  * Cierra el OAuth de Meta: valida el `state` y canjea el código por un token de
- * larga duración. Deja conectada la primera cuenta publicitaria para que la
- * pantalla quede en un estado válido, pero si hay más de una vuelve pidiendo
- * elegir: cuál es «la primera» lo decide Meta, no el usuario.
+ * larga duración. En la primera conexión deja vinculada una cuenta para que la
+ * pantalla quede en un estado válido y, si hay más de una, vuelve pidiendo
+ * elegir de cuáles importar: cuál es «la primera» lo decide Meta, no el usuario.
+ * Al reautorizar no toca la selección, solo renueva el token de sus cuentas.
  */
 export async function GET(request: NextRequest): Promise<NextResponse> {
   const origin = resolveOrigin(request.headers);
@@ -69,7 +71,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
   if (!account) return backToConnections(origin, META_ERRORS.noAdAccounts);
 
-  const saved = await createSupabaseConnectionRepository(supabase).saveConnection(
+  const saved = await createRegisterPlatformAccess(
+    createSupabaseConnectionRepository(supabase),
+  )(
     {
       platform: "meta",
       accountLabel: account.name,

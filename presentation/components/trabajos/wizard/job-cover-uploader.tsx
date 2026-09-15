@@ -1,12 +1,16 @@
 "use client";
 
-import { CloudUpload, X } from "lucide-react";
+import { ImagePlus, X } from "lucide-react";
 import type { DragEvent } from "react";
 import { AVATAR_ACCEPTED_TYPES } from "@/constants/client-form.constants";
 import { JOB_WIZARD_COPY } from "@/constants/job-wizard.constants";
 import type { JobCoverUploaderProps } from "@/types/job-wizard.types";
 
-/** Zona cuadrada de carga de la portada: acepta clic y arrastrar-soltar. */
+/**
+ * Zona cuadrada de carga de la portada: acepta clic y arrastrar-soltar. Va al
+ * tamaño de la miniatura que se va a ver en el listado, no a media pantalla:
+ * ocupar más no ayuda a elegir mejor la imagen.
+ */
 export function JobCoverUploader({
   previewUrl,
   error,
@@ -24,18 +28,14 @@ export function JobCoverUploader({
   };
 
   return (
-    <div className="flex w-full flex-col gap-3 lg:w-[300px] lg:shrink-0">
-      <p className="text-[13px] font-medium text-text-secondary">
-        {JOB_WIZARD_COPY.coverLabel}
-      </p>
-
+    <div className="flex w-[132px] shrink-0 flex-col gap-2">
       <button
         type="button"
         onClick={() => inputRef.current?.click()}
         onDragOver={(event) => event.preventDefault()}
         onDrop={handleDrop}
         aria-label={JOB_WIZARD_COPY.coverTitle}
-        className="flex aspect-square w-full cursor-pointer flex-col items-center justify-center gap-3.5 overflow-hidden rounded-md border border-border-strong bg-card-elevated p-5 transition-colors hover:border-brand-violet/70"
+        className="flex size-[132px] cursor-pointer flex-col items-center justify-center gap-2 overflow-hidden rounded-tile border border-border-strong bg-g-100 p-3 transition-colors duration-150 hover:border-ink"
       >
         {previewUrl ? (
           // Blob local del navegador: `next/image` no aplica.
@@ -43,28 +43,26 @@ export function JobCoverUploader({
           <img src={previewUrl} alt="" className="size-full object-cover" />
         ) : (
           <>
-            <span className="grid size-14 place-items-center rounded-pill bg-brand-violet/12">
-              <CloudUpload size={26} className="text-brand-violet" aria-hidden />
-            </span>
-            <span className="text-sm font-semibold text-text-primary">
+            <ImagePlus size={22} strokeWidth={1.5} className="text-text-muted" aria-hidden />
+            <span className="text-center text-[11.5px] text-text-secondary">
               {JOB_WIZARD_COPY.coverTitle}
             </span>
-            <span className="text-center text-xs leading-[1.4] text-text-muted">
+            <span className="text-center text-[10px] font-medium tracking-[0.6px] text-text-muted uppercase">
               {JOB_WIZARD_COPY.coverHint}
             </span>
           </>
         )}
       </button>
 
-      {error ? <p className="text-xs text-danger">{error}</p> : null}
+      {error ? <p className="text-[11px] text-danger">{error}</p> : null}
 
       {previewUrl ? (
         <button
           type="button"
           onClick={() => onSelect(null)}
-          className="flex w-fit cursor-pointer items-center gap-1.5 text-xs font-medium text-text-secondary transition-colors hover:text-text-primary"
+          className="flex cursor-pointer items-center justify-center gap-1.5 rounded-sm text-[11.5px] text-text-secondary transition-colors duration-150 hover:text-text-primary"
         >
-          <X size={13} aria-hidden />
+          <X size={13} strokeWidth={1.5} aria-hidden />
           {JOB_WIZARD_COPY.coverRemove}
         </button>
       ) : null}

@@ -7,14 +7,18 @@ import { fetchAdAccounts } from "@/infrastructure/meta/meta-api";
 import { createSupabaseAuthRepository } from "@/infrastructure/repositories/supabase-auth-repository";
 import { createSupabaseConnectionRepository } from "@/infrastructure/repositories/supabase-connection-repository";
 import { createServerSupabaseClient } from "@/infrastructure/supabase/server-supabase-client";
-import type { MetaAccountsResult } from "@/types/meta-ads.types";
+import type { AccountPickerData } from "@/types/account-picker.types";
+import { toMetaAccountOption } from "@/utils/to-meta-account-option";
 
 /**
- * Cuentas publicitarias que cubre el acceso ya concedido, consultadas bajo
- * demanda en vez de en cada carga de la pantalla. Devuelve la lista vacía si la
- * consulta falla: el selector ya explica qué revisar cuando no llega ninguna.
+ * Cuentas publicitarias que cubre el acceso ya concedido, con las que hoy
+ * alimentan adsme marcadas. Se consultan bajo demanda en vez de en cada carga
+ * de la pantalla, para no gastar una llamada a la Graph API por visita.
+ *
+ * Devuelve la lista vacía si la consulta falla: el selector ya explica qué
+ * revisar cuando no llega ninguna cuenta.
  */
-export async function listMetaAccountsAction(): Promise<MetaAccountsResult> {
+export async function listMetaAccountsAction(): Promise<AccountPickerData> {
   const supabase = await createServerSupabaseClient();
   const user = await createGetCurrentUser(
     createSupabaseAuthRepository(supabase),
@@ -22,17 +26,19 @@ export async function listMetaAccountsAction(): Promise<MetaAccountsResult> {
 
   if (!user) redirect(LOGIN_ROUTE);
 
-  const connection =
-    await createSupabaseConnectionRepository(supabase).findByPlatform("meta");
+  const connected =
+    await createSupabaseConnectionRepository(supabase).listByPlatform("meta");
+  const selectedIds = connected.map((connection) => connection.externalAccountId);
+  // Cualquiera de las conexiones sirve: todas guardan el mismo acceso.
+  const [access] = connected;
 
-  if (!connection) return { accounts: [], currentId: null };
+  if (!access) return { options: [], selectedIds: [] };
 
   try {
-    return {
-      accounts: await fetchAdAccounts(connection.accessToken),
-      currentId: connection.externalAccountId,
-    };
+    const accounts = await fetchAdAccounts(access.accessToken);
+
+    return { options: accounts.map(toMetaAccountOption), selectedIds };
   } catch {
-    return { accounts: [], currentId: connection.externalAccountId };
+    return { options: [], selectedIds };
   }
 }

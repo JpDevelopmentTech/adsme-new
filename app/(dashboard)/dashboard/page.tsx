@@ -9,17 +9,17 @@ import { createSupabaseJobRepository } from "@/infrastructure/repositories/supab
 import { createServerSupabaseClient } from "@/infrastructure/supabase/server-supabase-client";
 import { ActiveCampaignsPanel } from "@/presentation/components/dashboard/active-campaigns-panel";
 import { AlertsPanel } from "@/presentation/components/dashboard/alerts-panel";
-import { KpiRow } from "@/presentation/components/dashboard/kpi-row";
-import { MonthSpendChart } from "@/presentation/components/dashboard/month-spend-chart";
-import { PageHeader } from "@/presentation/components/dashboard/page-header";
-import { PlatformsPanel } from "@/presentation/components/dashboard/platforms-panel";
+import { MonthHero } from "@/presentation/components/dashboard/month-hero";
+import { PortfolioStrip } from "@/presentation/components/dashboard/portfolio-strip";
 import { formatRelativeTime } from "@/utils/format-relative-time";
 
 export const metadata: Metadata = { title: "Dashboard · adsme" };
 
 /**
- * Pantalla `B1 · Dashboard`: el estado de todo el sistema en una vista —dinero
- * del mes, reparto por plataforma, trabajos con más peso y lo que exige acción.
+ * Pantalla `B1 · Dashboard`, ordenada por importancia: arriba queda todo lo que
+ * contesta «¿va bien el mes y qué se rompió?» —el dinero a la izquierda, lo que
+ * exige una decisión a la derecha— y el detalle del portafolio se baja con
+ * scroll. El título lo pone la topbar, así que empieza ya en el primer dato.
  */
 export default async function DashboardPage() {
   const supabase = await createServerSupabaseClient();
@@ -33,39 +33,29 @@ export default async function DashboardPage() {
     createSupabaseCampaignDailyRepository(supabase),
   )(now);
 
-  const subtitle = summary.lastSyncedAt
-    ? `Datos sincronizados ${formatRelativeTime(summary.lastSyncedAt, now.toISOString())}`
-    : DASHBOARD_COPY.noSync;
+  const status = summary.lastSyncedAt
+    ? `${DASHBOARD_COPY.synced} ${formatRelativeTime(summary.lastSyncedAt, now.toISOString())}`
+    : DASHBOARD_COPY.noSyncShort;
 
   return (
     <>
-      <PageHeader
-        title={DASHBOARD_COPY.title}
-        subtitle={subtitle}
-        hasStatusDot={summary.lastSyncedAt !== null}
-      />
+      <div className="flex flex-col gap-4 xl:flex-row">
+        <div className="flex min-w-0 flex-1 flex-col gap-4">
+          <MonthHero
+            metrics={summary.metrics}
+            spend={summary.monthSpend}
+            status={status}
+          />
 
-      <KpiRow metrics={summary.metrics} spend={summary.monthSpend} />
-
-      <div className="flex flex-col gap-5 xl:flex-row">
-        <div className="min-w-0 flex-1">
-          <MonthSpendChart spend={summary.monthSpend} />
+          <PortfolioStrip metrics={summary.metrics} />
         </div>
 
-        <div className="xl:w-[360px] xl:shrink-0">
-          <PlatformsPanel platforms={summary.platforms} />
-        </div>
-      </div>
-
-      <div className="flex flex-col gap-5 xl:flex-row">
-        <div className="min-w-0 flex-1">
-          <ActiveCampaignsPanel jobs={summary.activeJobs} />
-        </div>
-
-        <div className="xl:w-[360px] xl:shrink-0">
+        <div className="xl:w-[340px] xl:shrink-0">
           <AlertsPanel alerts={summary.alerts} />
         </div>
       </div>
+
+      <ActiveCampaignsPanel jobs={summary.activeJobs} />
     </>
   );
 }

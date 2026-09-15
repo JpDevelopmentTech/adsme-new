@@ -1,13 +1,16 @@
 "use client";
 
 import { useActionState, useRef, useState } from "react";
-import { JOB_FORM_FIELDS, JOB_WIZARD_COPY } from "@/constants/job-wizard.constants";
+import {
+  JOB_FORM_FIELDS,
+  JOB_STEP_COPY,
+  JOB_WIZARD_COPY,
+} from "@/constants/job-wizard.constants";
 import { saveJobAction } from "@/presentation/actions/save-job-action";
 import { JobBasicsFields } from "@/presentation/components/trabajos/wizard/job-basics-fields";
-import { JobCoverUploader } from "@/presentation/components/trabajos/wizard/job-cover-uploader";
 import { JobWizardFooter } from "@/presentation/components/trabajos/wizard/job-wizard-footer";
-import { JobWizardHeader } from "@/presentation/components/trabajos/wizard/job-wizard-header";
-import { JobWizardStepper } from "@/presentation/components/trabajos/wizard/job-wizard-stepper";
+import { JobWizardLayout } from "@/presentation/components/trabajos/wizard/job-wizard-layout";
+import { JobWizardPanel } from "@/presentation/components/trabajos/wizard/job-wizard-panel";
 import { FormAlert } from "@/presentation/components/ui/form-alert";
 import { useAvatarPreview } from "@/presentation/hooks/use-avatar-preview";
 import type {
@@ -15,11 +18,13 @@ import type {
   JobBasicsValues,
   JobWizardIntent,
 } from "@/types/job-wizard.types";
+import { formatInvestmentSummary } from "@/utils/format-investment-summary";
+import { formatPeriodSummary } from "@/utils/format-period-summary";
+import { parseThousands } from "@/utils/parse-thousands";
 
 /** Paso 1 del asistente `B6`: datos básicos del trabajo y su portada. */
 export function JobBasicsForm({
   clientOptions,
-  title,
   initialValues,
   jobId,
   initialCoverUrl = null,
@@ -48,8 +53,26 @@ export function JobBasicsForm({
     setValues((previous) => ({ ...previous, [field]: value }));
   };
 
+  // La ficha lateral se alimenta del estado local: se completa mientras escribes.
+  const summary = {
+    title: values.title.trim() || null,
+    clientName:
+      clientOptions.find((option) => option.value === values.clientId)?.label ??
+      null,
+    format: values.format,
+    coverUrl: cover.previewUrl,
+    period: formatPeriodSummary(values.startsOn, values.endsOn),
+    investment: formatInvestmentSummary(
+      parseThousands(values.investment),
+      values.startsOn,
+      values.endsOn,
+    ),
+    platforms: null,
+    report: null,
+  };
+
   return (
-    <form action={formAction} noValidate className="flex flex-col gap-6">
+    <form action={formAction} noValidate className="flex flex-col gap-4">
       {jobId ? (
         <input type="hidden" name={JOB_FORM_FIELDS.jobId} value={jobId} />
       ) : null}
@@ -65,13 +88,6 @@ export function JobBasicsForm({
       />
       <input ref={intentRef} type="hidden" name="intent" defaultValue="draft" />
 
-      <JobWizardHeader
-        title={title}
-        isPending={isPending}
-        onIntent={setIntent}
-      />
-      <JobWizardStepper currentStep={1} />
-
       {clientOptions.length === 0 ? (
         <FormAlert tone="warning" message={JOB_WIZARD_COPY.noClients} />
       ) : null}
@@ -80,23 +96,26 @@ export function JobBasicsForm({
 
       {state.message ? <FormAlert message={state.message} /> : null}
 
-      <div className="flex flex-col gap-7 rounded-card border border-border bg-card p-7 lg:flex-row">
-        <JobCoverUploader
-          previewUrl={cover.previewUrl}
-          error={cover.error}
-          onSelect={cover.selectFile}
-          inputRef={coverInputRef}
-        />
-
-        <JobBasicsFields
-          values={values}
-          errors={state.fieldErrors}
-          clientOptions={clientOptions}
-          onChange={handleChange}
-        />
-      </div>
-
-      <JobWizardFooter isPending={isPending} onIntent={setIntent} />
+      <JobWizardLayout currentStep={1} summary={summary}>
+        <JobWizardPanel
+          title={JOB_STEP_COPY.one.title}
+          subtitle={JOB_STEP_COPY.one.subtitle}
+          footer={<JobWizardFooter isPending={isPending} onIntent={setIntent} />}
+        >
+          <JobBasicsFields
+            values={values}
+            errors={state.fieldErrors}
+            clientOptions={clientOptions}
+            cover={{
+              previewUrl: cover.previewUrl,
+              error: cover.error,
+              onSelect: cover.selectFile,
+              inputRef: coverInputRef,
+            }}
+            onChange={handleChange}
+          />
+        </JobWizardPanel>
+      </JobWizardLayout>
     </form>
   );
 }

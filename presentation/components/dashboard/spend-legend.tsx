@@ -6,7 +6,7 @@ import {
 } from "@/constants/platforms.constants";
 import type { SpendLegendProps } from "@/types/dashboard-home.types";
 
-/** Leyenda de la gráfica de inversión, con el mismo color que las barras. */
+/** Leyenda de la gráfica, sobre el panel oscuro y con el color de las barras. */
 export function SpendLegend({ hasUnassigned }: SpendLegendProps) {
   const entries = [
     ...PLATFORM_ORDER.map((platform) => ({
@@ -30,11 +30,11 @@ export function SpendLegend({ hasUnassigned }: SpendLegendProps) {
       {entries.map((entry) => (
         <li
           key={entry.key}
-          className="flex items-center gap-1.5 text-[11.5px] font-semibold text-text-secondary"
+          className="flex items-center gap-[6px] text-[10.5px] text-g-400"
         >
           <span
             aria-hidden
-            className="size-[7px] shrink-0 rounded-full"
+            className="size-[7px] shrink-0 rounded-pill"
             style={{ backgroundColor: entry.color }}
           />
           {entry.label}

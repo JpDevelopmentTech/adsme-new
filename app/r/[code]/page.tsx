@@ -18,7 +18,7 @@ import { InvalidReportLink } from "@/presentation/components/reporte/invalid-rep
 import { ReportPasswordGate } from "@/presentation/components/reporte/report-password-gate";
 import { ReportPreview } from "@/presentation/components/reporte/report-preview";
 import { buildReportTotals } from "@/utils/build-report-totals";
-import { buildReportTrends } from "@/utils/build-report-trends";
+import { buildReportGrowth } from "@/utils/build-report-growth";
 import { getClientIp } from "@/utils/get-client-ip";
 import { toIsoDate } from "@/utils/month-range";
 import { withAllReportPlatforms } from "@/utils/with-all-report-platforms";
@@ -83,7 +83,7 @@ export default async function ReportePage({
       job={job}
       totals={buildReportTotals(platforms)}
       platforms={platforms}
-      trends={buildReportTrends(daily, job, toIsoDate(now))}
+      growth={buildReportGrowth(daily, job, toIsoDate(now))}
       activePlatform={activePlatform}
       basePath={basePath}
       reportUrl={`${resolveOrigin(headerList)}${basePath}`}

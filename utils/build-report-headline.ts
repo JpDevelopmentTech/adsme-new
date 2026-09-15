@@ -20,8 +20,8 @@ export function buildLaunchHeadline(
   const days = daysBetween(job.startsOn, until);
 
   return {
-    value: `${formatCompactNumber(reach)} de personas`,
-    caption: `han visto tu lanzamiento en ${days} ${days === 1 ? "día" : "días"}`,
+    value: formatCompactNumber(reach),
+    caption: `personas han visto ${job.title} en ${days} ${days === 1 ? "día" : "días"}`,
   };
 }
 
@@ -30,7 +30,7 @@ export function buildArtistHeadline(reach: number): ReportHeadline | null {
   if (reach <= 0) return null;
 
   return {
-    value: `${formatCompactNumber(reach)} de personas`,
-    caption: "han conocido tu música con las campañas de adsme",
+    value: formatCompactNumber(reach),
+    caption: "personas han conocido tu música con las campañas de adsme",
   };
 }

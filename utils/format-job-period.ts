@@ -34,6 +34,15 @@ export function formatJobPeriod(startsOn: string, endsOn: string): string {
   return `${startDay} ${SHORT_MONTHS[start.month]}–${endDay} ${SHORT_MONTHS[end.month]}`;
 }
 
+/** Un solo día abreviado, como lo rotula el eje del reporte («01 Sep»). */
+export function formatShortDate(value: string): string {
+  const date = parseIsoDate(value);
+
+  if (!date) return "";
+
+  return `${pad(date.day)} ${SHORT_MONTHS[date.month]}`;
+}
+
 function parseIsoDate(value: string) {
   const [year, month, day] = value.split("-").map(Number);
 

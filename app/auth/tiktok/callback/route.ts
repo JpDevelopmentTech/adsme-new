@@ -7,6 +7,7 @@ import {
   TIKTOK_STATE_COOKIE,
 } from "@/constants/tiktok-ads.constants";
 import { createGetCurrentUser } from "@/domain/use-cases/get-current-user";
+import { createRegisterPlatformAccess } from "@/domain/use-cases/register-platform-access";
 import { createSupabaseAuthRepository } from "@/infrastructure/repositories/supabase-auth-repository";
 import { createSupabaseConnectionRepository } from "@/infrastructure/repositories/supabase-connection-repository";
 import { createServerSupabaseClient } from "@/infrastructure/supabase/server-supabase-client";
@@ -19,9 +20,10 @@ import { resolveOrigin } from "@/utils/resolve-origin";
 
 /**
  * Cierra el OAuth de TikTok: valida el `state` y canjea el código por el
- * acceso. Deja conectada la primera cuenta de anunciante para que la pantalla
- * quede en un estado válido, pero si hay más de una vuelve pidiendo elegir:
- * cuál es «la primera» lo decide TikTok, no el usuario.
+ * acceso. En la primera conexión deja vinculada una cuenta de anunciante para
+ * que la pantalla quede en un estado válido y, si hay más de una, vuelve
+ * pidiendo elegir de cuáles importar. Al reautorizar no toca la selección, solo
+ * renueva el token de sus cuentas.
  */
 export async function GET(request: NextRequest): Promise<NextResponse> {
   const origin = resolveOrigin(request.headers);
@@ -64,7 +66,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
   if (!advertiser) return backToConnections(origin, TIKTOK_ERRORS.noAdvertisers);
 
-  const saved = await createSupabaseConnectionRepository(supabase).saveConnection(
+  const saved = await createRegisterPlatformAccess(
+    createSupabaseConnectionRepository(supabase),
+  )(
     {
       platform: "tiktok",
       accountLabel: advertiser.name,

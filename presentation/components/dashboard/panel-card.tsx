@@ -1,10 +1,12 @@
+import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { DASHBOARD_COPY } from "@/constants/dashboard.constants";
 import type { PanelCardProps } from "@/types/dashboard-home.types";
 
-/** Tarjeta con cabecera y filas separadas, base de los paneles de `B1`. */
+/** Panel de vidrio con cabecera y filas separadas por filete, base de `B1`. */
 export function PanelCard({
   title,
+  subtitle,
   icon,
   count,
   seeAllHref,
@@ -13,15 +15,20 @@ export function PanelCard({
   children,
 }: PanelCardProps) {
   return (
-    <section className="flex h-full flex-col overflow-hidden rounded-card border border-border bg-card">
-      <header className="flex items-center justify-between gap-3 border-b border-border px-5 py-4">
-        <h2 className="flex items-center gap-2.5 font-display text-base font-semibold text-text-primary">
-          {icon}
-          {title}
-        </h2>
+    <section className="glass-panel flex h-full flex-col overflow-hidden rounded-card">
+      <header className="flex items-center justify-between gap-3 px-5 py-4">
+        <div className="flex min-w-0 flex-col gap-[3px]">
+          <h2 className="flex items-center gap-2.5 font-display text-[15px] font-normal tracking-[-0.2px] text-text-primary">
+            {icon}
+            {title}
+          </h2>
+          {subtitle ? (
+            <p className="text-[12px] text-text-secondary">{subtitle}</p>
+          ) : null}
+        </div>
 
         {count !== undefined && count > 0 ? (
-          <span className="rounded-pill bg-danger/15 px-2.5 py-0.5 text-xs font-semibold text-danger">
+          <span className="grid size-[26px] shrink-0 place-items-center rounded-pill bg-accent text-[12px] font-normal text-g-50">
             {count}
           </span>
         ) : null}
@@ -29,15 +36,18 @@ export function PanelCard({
         {seeAllHref ? (
           <Link
             href={seeAllHref}
-            className="text-[13px] font-semibold text-brand-violet transition-opacity hover:opacity-80"
+            className="flex shrink-0 items-center gap-1 rounded-sm text-[12px] font-normal text-text-primary transition-opacity duration-150 hover:opacity-60 focus-visible:ring-2 focus-visible:ring-ink/40 focus-visible:outline-none"
           >
             {DASHBOARD_COPY.seeAll}
+            <ChevronRight size={13} strokeWidth={1.5} aria-hidden />
           </Link>
         ) : null}
       </header>
 
+      <div className="h-px bg-border/60" />
+
       {isEmpty ? (
-        <p className="px-5 py-8 text-center text-[13px] text-text-muted">
+        <p className="px-5 py-8 text-center text-[12px] text-text-muted">
           {emptyText}
         </p>
       ) : (

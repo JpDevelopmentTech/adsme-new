@@ -13,8 +13,9 @@ import { createSupabaseConnectionRepository } from "@/infrastructure/repositorie
 import { createServerSupabaseClient } from "@/infrastructure/supabase/server-supabase-client";
 
 /**
- * Desvincula la cuenta de TikTok. Las campañas importadas caen con ella por la
- * clave foránea, igual que en Meta.
+ * Desvincula TikTok Ads por completo: se van todas sus cuentas de anunciante.
+ * Las campañas importadas caen con cada conexión por la clave foránea, igual
+ * que en Meta.
  */
 export async function disconnectTiktokAction(): Promise<void> {
   const supabase = await createServerSupabaseClient();
@@ -23,9 +24,11 @@ export async function disconnectTiktokAction(): Promise<void> {
   if (!user) redirect(LOGIN_ROUTE);
 
   const connections = createSupabaseConnectionRepository(supabase);
-  const connection = await connections.findByPlatform("tiktok");
+  const accounts = await connections.listByPlatform("tiktok");
 
-  if (connection) await connections.deleteConnection(connection.id);
+  await Promise.all(
+    accounts.map((account) => connections.deleteConnection(account.id)),
+  );
 
   revalidatePath(CONNECTIONS_ROUTE);
   revalidatePath(CAMPAIGNS_ROUTE);

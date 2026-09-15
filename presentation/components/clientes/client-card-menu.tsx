@@ -25,9 +25,9 @@ export function ClientCardMenu({ client, size = 34 }: ClientCardMenuProps) {
         trigger={() => (
           <span
             style={{ width: size, height: size }}
-            className="grid place-items-center rounded-md border border-border bg-card text-text-secondary transition-colors hover:border-border-strong hover:text-text-primary"
+            className="grid place-items-center rounded-md text-g-500 transition-colors duration-150 hover:bg-white/70 hover:text-text-primary"
           >
-            <Ellipsis size={size >= 34 ? 18 : 16} aria-hidden />
+            <Ellipsis size={16} aria-hidden />
           </span>
         )}
       >

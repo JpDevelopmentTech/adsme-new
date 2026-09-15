@@ -12,19 +12,19 @@ const PEAK_HEIGHT = 88;
 const STACK = [...PLATFORM_ORDER].reverse();
 
 /** Opacidad de un día cuyo importe todavía es una previsión, no gasto medido. */
-const PLANNED_OPACITY = 0.45;
+const PLANNED_OPACITY = 0.42;
 
 /**
- * Un día del mes. Los días que aún no han llegado se dibujan como un carril
- * vacío: el hueco a la derecha es la información, no un fallo de datos. Los que
- * ya pasaron pero siguen sin dato importado se pintan atenuados, para que no se
- * confundan con el gasto que sí se midió.
+ * Un día del mes, dibujado sobre el panel oscuro. Los días que aún no han
+ * llegado se marcan con un carril vacío: el hueco a la derecha es la
+ * información, no un fallo de datos. Los que ya pasaron pero siguen sin dato
+ * importado se pintan atenuados, para que no se confundan con el gasto medido.
  */
 export function SpendColumn({ day, max }: SpendColumnProps) {
   if (day.state === "pending") {
     return (
-      <div className="flex flex-1 flex-col justify-end rounded-t-[4px] bg-card-elevated">
-        <span className="h-[3px] rounded-[2px] bg-border-strong" />
+      <div className="flex flex-1 flex-col justify-end">
+        <span className="h-[3px] rounded-pill bg-white/20" />
       </div>
     );
   }
@@ -40,13 +40,13 @@ export function SpendColumn({ day, max }: SpendColumnProps) {
 
   return (
     <div
-      className="flex flex-1 flex-col justify-end gap-px overflow-hidden rounded-t-[3px]"
+      className="flex flex-1 flex-col justify-end gap-px"
       style={day.source === "planned" ? { opacity: PLANNED_OPACITY } : undefined}
     >
-      {segments.map((segment) => (
+      {segments.map((segment, index) => (
         <span
           key={segment.key}
-          className="min-h-[2px] shrink-0"
+          className={`min-h-[2px] shrink-0 ${index === 0 ? "rounded-t-[5px]" : ""}`}
           style={{
             height: `${(segment.amount / max) * PEAK_HEIGHT}%`,
             backgroundColor: segment.color,

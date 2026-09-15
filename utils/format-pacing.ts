@@ -9,8 +9,8 @@ export function formatPacing(
   const points = Math.round(spendPercent - calendarPercent);
   const unit = Math.abs(points) === 1 ? "pt" : "pts";
 
-  if (points >= 1) return `${points} ${unit} sobre el ritmo`;
-  if (points <= -1) return `${Math.abs(points)} ${unit} bajo el ritmo`;
+  if (points >= 1) return `${points} ${unit} por delante del calendario`;
+  if (points <= -1) return `${Math.abs(points)} ${unit} por detrás del calendario`;
 
-  return "al ritmo del mes";
+  return "al ritmo del calendario";
 }

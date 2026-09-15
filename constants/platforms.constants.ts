@@ -7,23 +7,45 @@ import type { PlatformIconProps } from "@/types/ui.types";
 
 interface PlatformMeta {
   label: string;
-  /** Color de marca aplicado al icono, tal como está en el `.pen`. */
+  /** Abreviatura de la plataforma para rótulos compactos. */
+  mono: string;
+  /** Color de marca aplicado al icono. */
   color: string;
   /**
-   * Color de las áreas de datos (barras, rieles, leyendas). El rosa de TikTok
-   * es indistinguible del rojo de YouTube cuando se pintan uno junto a otro,
-   * así que ahí se usa su cian, que también es color oficial de la marca,
-   * rebajado en luminosidad para que se lea sobre las superficies claras.
+   * Color con el que la plataforma aparece en áreas de datos (barras, rieles,
+   * leyendas). Es la única dimensión del producto donde el color ya significa
+   * algo antes de leer, así que aquí sí manda el color y no el tono.
+   *
+   * TikTok usa su cian rebajado en luminosidad en vez de su rosa: pintado junto
+   * al rojo de YouTube en áreas contiguas, el rosa es indistinguible.
    */
   chartColor: string;
   Icon: ComponentType<PlatformIconProps>;
 }
 
 export const PLATFORM_META: Record<JobPlatform, PlatformMeta> = {
-  youtube: { label: "YouTube", color: "#FF3B30", chartColor: "#FF3B30", Icon: YoutubeIcon },
-  meta: { label: "Meta", color: "#0866FF", chartColor: "#0866FF", Icon: MetaIcon },
-  tiktok: { label: "TikTok", color: "#FE2C55", chartColor: "#0B8C99", Icon: TiktokIcon },
+  youtube: {
+    label: "YouTube",
+    mono: "YT",
+    color: "#d90429",
+    chartColor: "#d90429",
+    Icon: YoutubeIcon,
+  },
+  meta: {
+    label: "Meta",
+    mono: "M",
+    color: "#0866ff",
+    chartColor: "#0866ff",
+    Icon: MetaIcon,
+  },
+  tiktok: {
+    label: "TikTok",
+    mono: "TT",
+    color: "#0b8c99",
+    chartColor: "#0b8c99",
+    Icon: TiktokIcon,
+  },
 };
 
-/** Color neutro de la parte que aportan los trabajos sin plataforma vinculada. */
-export const UNASSIGNED_CHART_COLOR = "#C7CADA";
+/** Tono neutro de la parte que aportan los trabajos sin plataforma vinculada. */
+export const UNASSIGNED_CHART_COLOR = "#8d99ae";

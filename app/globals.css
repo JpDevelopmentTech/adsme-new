@@ -1,70 +1,140 @@
 @import "tailwindcss";
 
 /*
- * Design tokens de adsme — espejo 1:1 de las variables definidas en `adsme.pen`.
- * Mapeo token Pencil -> utilidad Tailwind:
- *   $bg-base -> canvas | $card-2 -> card-elevated | $brand-* -> brand-* | $text-* -> text-*
+ * Sistema de diseño de adsme — espejo de las variables de `adsme.pen`.
+ *
+ * La estructura (fondos, texto, bordes) se construye con una rampa neutra de
+ * nueve tintes del space-indigo. El color no decora: identifica plataformas en
+ * los datos y marca la acción. Eso es lo que evita que un panel de cifras se
+ * lea como una escala de grises.
  */
 @theme {
-  --color-canvas: #f4f5fa;
-  --color-surface: #ffffff;
-  --color-card: #ffffff;
-  --color-card-elevated: #f1f2f8;
+  /* Rampa neutra — tintes de #2b2d42 entre el platino y el indigo */
+  --color-g-50: #edf2f4;
+  --color-g-100: #e3eaee;
+  --color-g-200: #d5dde3;
+  --color-g-300: #c8d1da;
+  --color-g-400: #aab5c4;
+  --color-g-500: #8d99ae;
+  --color-g-600: #5a6580;
+  --color-g-700: #414861;
+  --color-g-800: #2b2d42;
 
-  --color-border: #e2e4ef;
-  --color-border-strong: #c7cada;
+  /* Acento de marca: la acción y el ahora. */
+  --color-accent: #d90429;
+  --color-accent-bright: #ef233c;
 
-  --color-brand-violet: #7c3aed;
-  --color-brand-magenta: #db2777;
+  /* Color de dato: una plataforma, un color. Es lo único que el usuario ya
+     reconoce sin leer, así que es donde el color trabaja de verdad. */
+  --color-yt: #d90429;
+  --color-meta: #0866ff;
+  --color-tiktok: #0b8c99;
+  --color-unassigned: #8d99ae;
 
-  --color-data-cyan: #0891b2;
-  --color-data-lime: #4d7c0f;
+  --color-canvas: #c8d1da;
+  --color-surface: #e3eaee;
+  --color-card: #edf2f4;
+  --color-card-elevated: #e3eaee;
 
-  --color-success: #059669;
+  --color-border: #c8d1da;
+  --color-border-strong: #aab5c4;
+  --color-ink: #2b2d42;
+
+  /* Alias heredados: las pantallas aún no migradas caen al sistema nuevo
+     en vez de quedarse sin estilo. */
+  --color-brand-violet: #2b2d42;
+  --color-brand-magenta: #d90429;
+  --color-data-cyan: #0866ff;
+  --color-data-lime: #0b8c99;
+
+  /* Estado. El rojo de marca ya está ocupado, así que el error usa un rojo
+     claramente más oscuro y nunca va solo: siempre con icono o texto. */
+  --color-success: #1a7f5a;
   --color-warning: #b45309;
-  --color-danger: #e11d48;
+  --color-danger: #a4161a;
 
-  --color-text-primary: #15141e;
-  --color-text-secondary: #5a596e;
-  --color-text-muted: #8a899b;
+  --color-text-primary: #2b2d42;
+  --color-text-secondary: #414861;
+  --color-text-muted: #5a6580;
 
-  /* El .pen especifica Space Grotesk + Inter; se sustituyeron por una pareja
-     geométrica con más carácter en titulares y mejor lectura en datos densos. */
-  --font-display: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
-  --font-body: var(--font-plus-jakarta-sans), ui-sans-serif, system-ui, sans-serif;
+  /* Poppins en todos los roles: display y cuerpo comparten familia y se
+     separan por peso (300 por defecto, 500 para lo enfático). */
+  --font-display: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
 
-  --radius-sm: 10px;
-  --radius-md: 14px;
-  --radius-card: 20px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-tile: 16px;
+  --radius-card: 22px;
   --radius-pill: 999px;
 }
 
-/* Gradiente de marca (violeta -> magenta a -45º) usado en botones primarios y acentos. */
-@utility bg-brand-gradient {
-  background-image: linear-gradient(
-    135deg,
-    var(--color-brand-violet) 0%,
-    var(--color-brand-magenta) 100%
-  );
+/*
+ * Fondo del panel. Las manchas de color son lo que el vidrio refracta: sin
+ * ellas un panel translúcido es indistinguible de uno opaco, y la pantalla
+ * entera se lee como una escala de grises por muy pigmentada que sea la paleta.
+ */
+@utility bg-ambient {
+  background-color: var(--color-canvas);
+  background-image:
+    radial-gradient(58% 52% at 4% 0%, #edf2f4 0%, #edf2f400 70%),
+    radial-gradient(46% 38% at 100% -8%, #ef233c33 0%, #ef233c00 72%),
+    radial-gradient(44% 40% at 102% 60%, #0b8c9930 0%, #0b8c9900 72%),
+    radial-gradient(54% 48% at -4% 84%, #0866ff2b 0%, #0866ff00 72%),
+    radial-gradient(72% 58% at 64% 110%, #2b2d4247 0%, #2b2d4200 74%);
+  background-attachment: fixed;
 }
 
-/* Fondo radial del panel visual de autenticación. */
+/* Lámina de vidrio: translúcida, desenfocada y con el canto superior iluminado. */
+@utility glass-panel {
+  background-color: color-mix(in srgb, var(--color-g-50) 74%, transparent);
+  backdrop-filter: blur(40px) saturate(160%);
+  -webkit-backdrop-filter: blur(40px) saturate(160%);
+  border: 1px solid #f7fafbf2;
+  box-shadow:
+    inset 0 1px 0 #ffffffe6,
+    0 24px 56px #2b2d4229,
+    0 2px 6px #2b2d421a;
+}
+
+/* Vidrio de los controles embebidos en un panel (campos, chips, botones icono). */
+@utility glass-field {
+  background-color: #f7fafbd9;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 1px 3px #2b2d4214;
+}
+
+/* Elevación suave, en cuatro niveles. */
+@utility shadow-float {
+  box-shadow:
+    0 4px 12px #2b2d4229,
+    0 1px 2px #2b2d421a;
+}
+
+@utility shadow-lift {
+  box-shadow:
+    0 10px 24px #2b2d4233,
+    0 2px 4px #2b2d4229;
+}
+
+/* Gradiente heredado por las pantallas sin migrar. */
+@utility bg-brand-gradient {
+  background-image: linear-gradient(135deg, #414861 0%, #2b2d42 100%);
+}
+
 @utility bg-auth-aurora {
   background-image: radial-gradient(
     150% 130% at 25% 15%,
-    #ede9fe 0%,
-    #f6f4ff 60%,
+    #edf2f4 0%,
+    #d5dde3 60%,
     var(--color-canvas) 100%
   );
 }
 
-/* Halo magenta difuminado que acompaña al ecualizador. */
 @utility bg-magenta-glow {
-  background-image: radial-gradient(
-    closest-side,
-    #db277740 0%,
-    #db277700 100%
-  );
+  background-image: radial-gradient(closest-side, #d9042940 0%, #d9042900 100%);
 }
 
 @keyframes equalizer-pulse {
@@ -88,8 +158,27 @@
   }
 }
 
-/* Fija el tema claro también en los controles nativos (scrollbars, selectores
-   de fecha, autofill) para que no hereden el esquema del sistema. */
+@keyframes loader-bar {
+  0%,
+  100% {
+    transform: scaleY(0.3);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+@utility animate-loader-bar {
+  transform-origin: center;
+  animation: loader-bar 0.9s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-loader-bar {
+    animation: none;
+  }
+}
+
 html {
   color-scheme: light;
 }
@@ -98,4 +187,5 @@ body {
   background-color: var(--color-canvas);
   color: var(--color-text-primary);
   font-family: var(--font-body);
+  font-weight: 300;
 }

@@ -1,9 +1,9 @@
 import type { Job } from "@/domain/entities/job";
 import type { Campaign } from "@/domain/entities/campaign";
-import type { Connection, ConnectionPlatform } from "@/domain/entities/connection";
-import type { RefObject } from "react";
+import type { ConnectionPlatform } from "@/domain/entities/connection";
+import type { ReactNode, RefObject } from "react";
 import type { JobFormat, JobPlatform } from "@/domain/entities/job";
-import type { FilterSelectOption, StatStripItem } from "@/types/ui.types";
+import type { FilterSelectOption } from "@/types/ui.types";
 
 export interface JobBasicsValues {
   title: string;
@@ -25,10 +25,50 @@ export interface JobWizardStepperProps {
   skippedSteps?: number[];
 }
 
+/**
+ * Ficha del trabajo que acompaña a todos los pasos. Cada campo es `null`
+ * mientras no se haya rellenado: la ficha va completándose a la vista.
+ */
+export interface JobWizardSummaryData {
+  title: string | null;
+  clientName: string | null;
+  format: string | null;
+  coverUrl: string | null;
+  period: string | null;
+  investment: string | null;
+  platforms: string | null;
+  report: string | null;
+}
+
+export interface JobWizardSummaryProps {
+  summary: JobWizardSummaryData;
+}
+
+export interface JobWizardLayoutProps {
+  currentStep: number;
+  skippedSteps?: number[];
+  summary: JobWizardSummaryData;
+  children: ReactNode;
+}
+
+export interface WizardSectionProps {
+  label: string;
+  children: ReactNode;
+}
+
+export interface JobWizardPanelProps {
+  title: string;
+  subtitle: string;
+  footer: ReactNode;
+  children: ReactNode;
+}
+
 export interface JobBasicsFieldsProps {
   values: JobBasicsValues;
   errors: JobBasicsErrors;
   clientOptions: FilterSelectOption<string>[];
+  /** Portada elegida, para la caja de subida. */
+  cover: JobCoverUploaderProps;
   onChange: <TField extends keyof JobBasicsValues>(
     field: TField,
     value: JobBasicsValues[TField],
@@ -44,7 +84,6 @@ export interface JobFormState {
 export interface JobBasicsFormProps {
   /** Clientes disponibles para asociar el trabajo, tomados de Supabase. */
   clientOptions: FilterSelectOption<string>[];
-  title: string;
   initialValues: JobBasicsValues;
   /** Presente solo al editar; su ausencia hace que la acción dé de alta. */
   jobId?: string;
@@ -53,12 +92,6 @@ export interface JobBasicsFormProps {
 
 /** Qué debe pasar tras guardar: quedarse en el listado o seguir al paso 2. */
 export type JobWizardIntent = "draft" | "next";
-
-export interface JobWizardHeaderProps {
-  title: string;
-  isPending: boolean;
-  onIntent: (intent: JobWizardIntent) => void;
-}
 
 export interface JobWizardFooterProps {
   isPending: boolean;
@@ -72,12 +105,12 @@ export interface JobCoverUploaderProps {
   inputRef: RefObject<HTMLInputElement | null>;
 }
 
-export interface PlatformCampaignCardProps {
+export interface PlatformCampaignRowProps {
   platform: ConnectionPlatform;
   label: string;
-  /** Conexión de esa plataforma, o `null` si la cuenta no está vinculada. */
-  connection: Connection | null;
-  /** Campañas importadas de esa cuenta, sobre las que busca el usuario. */
+  /** Hay al menos una cuenta de esa plataforma vinculada. */
+  isConnected: boolean;
+  /** Campañas importadas de sus cuentas, sobre las que busca el usuario. */
   campaigns: Campaign[];
   /** Campañas ya asociadas a este trabajo. */
   linked: Campaign[];
@@ -98,10 +131,6 @@ export interface ReportPreviewDeviceProps {
   kpis: { value: string; label: string }[];
   /** Reparto por plataforma; vacío si el trabajo no incluye ninguna. */
   platforms: JobPlatformSplit[];
-}
-
-export interface JobPublishReviewProps {
-  items: StatStripItem[];
 }
 
 export interface ReportLinkProtectionFormProps {

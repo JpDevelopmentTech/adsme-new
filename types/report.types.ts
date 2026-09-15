@@ -59,7 +59,8 @@ export interface ReportPreviewProps {
   totals: ReportTotals;
   platforms: ReportPlatformMetrics[];
   /** Curva de cada plataforma; falta la que todavía no tiene serie importada. */
-  trends: ReportTrends;
+  /** Serie diaria del lanzamiento; `null` si todavía no hay ningún día con entrega. */
+  growth: ReportGrowth | null;
   /** Plataforma seleccionada en las pestañas; `null` las muestra todas. */
   activePlatform: JobPlatform | null;
   /** URL pública del propio reporte, para el botón de compartir. */
@@ -74,11 +75,9 @@ export interface ReportPreviewProps {
 
 export interface ReportTopbarProps {
   subtitle: string;
-  platforms: JobPlatform[];
-  activePlatform: JobPlatform | null;
-  /** Ruta del reporte, base sobre la que se arman los enlaces de las pestañas. */
-  basePath: string;
+  /** Última importación de métricas; `null` mientras no haya ninguna. */
   syncedAt: string | null;
+  /** Momento de render en ISO, para que «hace X» no varíe en hidratación. */
   now: string;
   reportUrl: string;
 }
@@ -111,20 +110,10 @@ export interface ReportMetricGridProps {
   metrics: ReportMetric[];
 }
 
-export interface ReportPlatformSectionProps {
-  metrics: ReportPlatformMetrics;
-  /** Inversión total del reporte, para expresar el peso de esta plataforma. */
-  totalSpend: number;
-}
-
 export interface ArtistHeroProps {
   artist: ReportArtist;
   headline: ReportHeadline | null;
   activeCampaigns: number;
-}
-
-export interface ReportSplitCardProps {
-  platforms: ReportPlatformMetrics[];
 }
 
 export interface ReportAdPreviewProps {
@@ -183,32 +172,51 @@ export interface ReportKeyword {
   volume: string;
 }
 
-/** Serie temporal de una métrica, para el gráfico de evolución. */
-export interface ReportSeries {
-  label: string;
-  points: number[];
-  /** Etiquetas del eje horizontal, repartidas de extremo a extremo. */
-  ticks: string[];
+/** Un día del lanzamiento, con las reproducciones repartidas por plataforma. */
+export interface ReportGrowthDay {
+  date: string;
+  byPlatform: Record<JobPlatform, number>;
+  total: number;
+  /** El día todavía no ha llegado: se dibuja como carril vacío, no como cero. */
+  isPending: boolean;
 }
 
-/** Curvas del reporte por plataforma; ausente la que no tiene datos diarios. */
-export type ReportTrends = Partial<Record<JobPlatform, ReportSeries>>;
-
-export interface ReportTrendChartProps {
-  series: ReportSeries;
-  subtitle: string;
-  /** Color de la línea y del degradado, según la plataforma. */
-  color: string;
-  /** Marca la curva como dato de muestra en lugar de métrica importada. */
-  isSample?: boolean;
+/** Serie diaria del lanzamiento entero, ya apilada por plataforma. */
+export interface ReportGrowth {
+  days: ReportGrowthDay[];
+  /** Día más alto; fija la escala vertical de las barras. */
+  peak: number;
+  /** Dónde cae hoy sobre el período, en porcentaje, para rotular el eje. */
+  todayPercent: number;
 }
 
-export interface ReportTrendSectionProps {
-  platform: JobPlatform;
-  /** Serie importada de la plataforma; `undefined` si todavía no hay ninguna. */
-  series: ReportSeries | undefined;
-  /** Período que cubre la curva, ya formateado para el subtítulo. */
+export interface ReportGrowthPanelProps {
+  growth: ReportGrowth;
+  /** Período de la pauta, ya formateado, para el subtítulo. */
   period: string;
+}
+
+export interface ReportGrowthColumnProps {
+  day: ReportGrowthDay;
+  peak: number;
+}
+
+export interface ReportSummaryStripProps {
+  totals: ReportTotals;
+  /** Presupuesto comprometido del trabajo, para el porcentaje gastado. */
+  investment: number;
+}
+
+export interface ReportPlatformsPanelProps {
+  platforms: ReportPlatformMetrics[];
+  activePlatform: JobPlatform | null;
+  basePath: string;
+}
+
+export interface ReportPlatformColumnProps {
+  metrics: ReportPlatformMetrics;
+  /** Reproducciones de todo el lanzamiento, para el peso de esta plataforma. */
+  totalPlays: number;
 }
 
 export interface ReportTerritoriesCardProps {

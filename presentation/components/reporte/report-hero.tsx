@@ -1,7 +1,4 @@
-import { Calendar } from "lucide-react";
-import { JOB_STATUS_BADGE } from "@/constants/client-detail.constants";
 import { REPORT_COPY } from "@/constants/report.constants";
-import { StatusBadge } from "@/presentation/components/ui/status-badge";
 import type { ReportHeroProps } from "@/types/report.types";
 import { formatJobPeriod } from "@/utils/format-job-period";
 
@@ -12,49 +9,50 @@ import { formatJobPeriod } from "@/utils/format-job-period";
  * forma real de un arte de disco.
  */
 export function ReportHero({ job, headline }: ReportHeroProps) {
-  const status = JOB_STATUS_BADGE[job.status];
-
   return (
-    <section className="flex flex-col-reverse gap-7 rounded-card border border-border bg-[linear-gradient(150deg,#EDE9FE_0%,#FFFFFF_75%)] p-7 md:flex-row md:items-center">
-      <div className="flex min-w-0 flex-1 flex-col items-start gap-3.5">
-        <StatusBadge label={status.label} tone={status.tone} />
-
-        <p className="text-sm font-semibold tracking-[3px] text-text-secondary uppercase">
-          {job.clientName}
-        </p>
-
-        <h1 className="font-display text-3xl leading-[1.1] font-bold text-text-primary lg:text-[40px]">
-          {job.title}
-        </h1>
-
-        <p className="flex items-center gap-2.5 text-sm text-text-secondary">
-          <Calendar size={15} aria-hidden />
-          {formatJobPeriod(job.startsOn, job.endsOn)} · {job.format} ·{" "}
-          {REPORT_COPY.liveReport}
-        </p>
-
-        {headline ? (
-          <div className="flex flex-col gap-1.5 pt-2">
-            <p
-              className="font-display text-[42px] leading-[1.05] font-bold text-text-primary lg:text-[56px]"
-              style={{ textShadow: "0 0 24px #7C3AED66" }}
-            >
-              {headline.value}
-            </p>
-            <p className="text-[15px] text-text-secondary">{headline.caption}</p>
-          </div>
-        ) : null}
-      </div>
-
+    <section className="flex flex-col gap-7 rounded-card bg-ink/94 p-7 shadow-lift backdrop-blur-xl md:flex-row md:items-center">
       {job.coverUrl ? (
         // Portada servida desde Storage con URL pública; `next/image` no aporta aquí.
         // eslint-disable-next-line @next/next/no-img-element
         <img
           src={job.coverUrl}
           alt={`Portada de ${job.title}`}
-          className="aspect-square w-full shrink-0 rounded-md object-cover md:w-[296px]"
+          className="aspect-square w-full shrink-0 rounded-tile object-cover md:w-60"
         />
       ) : null}
+
+      <div className="flex min-w-0 flex-1 flex-col items-start gap-3.5">
+        <p className="flex items-center gap-[7px] rounded-pill border border-g-50/30 px-[11px] py-1">
+          <span aria-hidden className="size-[7px] rounded-pill bg-accent-bright" />
+          <span className="text-[11px] text-g-50">{REPORT_COPY.live}</span>
+        </p>
+
+        <div className="flex flex-col gap-[5px]">
+          <p className="text-[11px] font-medium tracking-[2.6px] text-g-400 uppercase">
+            {job.clientName}
+          </p>
+          <h1 className="font-display text-[40px] leading-[1.05] font-light tracking-[-1.4px] text-g-50">
+            {job.title}
+          </h1>
+          <p className="text-[12.5px] text-g-400">
+            {job.format} · {formatJobPeriod(job.startsOn, job.endsOn)} ·{" "}
+            {REPORT_COPY.liveReport.toLowerCase()}
+          </p>
+        </div>
+
+        {headline ? (
+          <>
+            <span aria-hidden className="h-px w-full bg-g-50/15" />
+
+            <div className="flex flex-col gap-1">
+              <p className="font-display text-[62px] leading-none font-light tracking-[-2.6px] text-g-50">
+                {headline.value}
+              </p>
+              <p className="text-[14px] text-g-300">{headline.caption}</p>
+            </div>
+          </>
+        ) : null}
+      </div>
     </section>
   );
 }

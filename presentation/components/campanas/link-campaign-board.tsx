@@ -2,6 +2,7 @@
 
 import { CircleUser, Link2, Search, X } from "lucide-react";
 import { useActionState, useMemo, useState } from "react";
+import { CONNECTIONS_COPY } from "@/constants/connections.constants";
 import { LINK_CAMPAIGN_COPY } from "@/constants/link-campaign.constants";
 import type { ConnectionPlatform } from "@/domain/entities/connection";
 import { linkCampaignsAction } from "@/presentation/actions/link-campaigns-action";
@@ -28,7 +29,13 @@ export function LinkCampaignBoard({
     message: null,
   });
 
-  const account = connections.find((item) => item.platform === platform);
+  // Una plataforma puede alimentar adsme desde varias cuentas: el listado las
+  // junta todas y cada campaña dice de cuál viene.
+  const accounts = connections.filter((item) => item.platform === platform);
+  const accountLabel =
+    accounts.length === 1
+      ? `${accounts[0].accountLabel} · ${accounts[0].externalAccountId}`
+      : CONNECTIONS_COPY.accounts(accounts.length);
 
   // El filtrado es local: la lista ya está cargada y así responde al instante.
   const visible = useMemo(() => {
@@ -73,10 +80,10 @@ export function LinkCampaignBoard({
             }}
           />
 
-          {account ? (
+          {accounts.length > 0 ? (
             <span className="flex items-center gap-2.5 rounded-md border border-border bg-card-elevated px-3.5 py-2 text-[13px] text-text-primary">
               <CircleUser size={15} className="text-text-muted" aria-hidden />
-              {account.accountLabel} · {account.externalAccountId}
+              {accountLabel}
             </span>
           ) : null}
         </div>
@@ -92,7 +99,7 @@ export function LinkCampaignBoard({
           />
         </label>
 
-        {!account ? (
+        {accounts.length === 0 ? (
           <p className="py-8 text-center text-[13px] text-text-muted">
             {LINK_CAMPAIGN_COPY.noConnection}
           </p>

@@ -1,15 +1,19 @@
 import type { ClientAvatarGradient } from "@/domain/entities/client";
 
-/** Paleta de gradientes de avatar tomada de las tarjetas de `B2 · Clientes`. */
+/**
+ * Paleta de gradientes de avatar. Cada entrada mezcla un tono del sistema con
+ * el indigo profundo: así todas quedan lo bastante oscuras para que las
+ * iniciales en claro pasen contraste, sea cual sea el cliente que toque.
+ */
 const AVATAR_GRADIENTS: ClientAvatarGradient[] = [
-  { from: "#7C3AED", to: "#DB2777" },
-  { from: "#DB2777", to: "#E11D48" },
-  { from: "#0891B2", to: "#7C3AED" },
-  { from: "#4D7C0F", to: "#0891B2" },
-  { from: "#B45309", to: "#DB2777" },
-  { from: "#7C3AED", to: "#0891B2" },
-  { from: "#E11D48", to: "#7C3AED" },
-  { from: "#DB2777", to: "#7C3AED" },
+  { from: "#414861", to: "#2b2d42" },
+  { from: "#0866ff", to: "#2b2d42" },
+  { from: "#0b8c99", to: "#2b2d42" },
+  { from: "#d90429", to: "#2b2d42" },
+  { from: "#5a6580", to: "#2b2d42" },
+  { from: "#2b2d42", to: "#0866ff" },
+  { from: "#ef233c", to: "#d90429" },
+  { from: "#0b8c99", to: "#0866ff" },
 ];
 
 /**

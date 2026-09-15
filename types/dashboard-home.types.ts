@@ -1,11 +1,9 @@
 import type { ReactNode } from "react";
-import type { KpiDeltaTone, KpiTone } from "@/constants/dashboard.constants";
 import type {
   ActivityItem,
   DashboardAlert,
   DashboardMetrics,
   MonthSpend,
-  PlatformShare,
   SpendDay,
 } from "@/domain/entities/dashboard";
 import type { JobListing } from "@/domain/entities/job-listing";
@@ -13,21 +11,32 @@ import type { JobListing } from "@/domain/entities/job-listing";
 export interface KpiCardProps {
   label: string;
   value: string;
-  icon: ReactNode;
-  tone: KpiTone;
-  /** Cifra destacada bajo el valor; se omite cuando no hay con qué comparar. */
-  delta?: string;
-  deltaLabel?: string;
-  deltaTone?: KpiDeltaTone;
-  /** Sustituye a la línea de delta; lo usa el riel de ritmo del KPI principal. */
+  /** Contexto bajo la cifra: qué hace buena o mala noticia a ese número. */
+  note?: string;
+  /** Marca de tinta junto al pie cuando el dato pide una acción. */
+  isFlagged?: boolean;
+  /** Sustituye a la línea de pie; lo usa el riel de ritmo del KPI principal. */
   footer?: ReactNode;
-  /** Halo de color tras el valor, reservado a la métrica principal. */
-  glow?: boolean;
 }
 
-export interface KpiRowProps {
+/** El panel oscuro que abre `B1`: cifra del mes, ritmo y gráfica en un objeto. */
+export interface MonthHeroProps {
   metrics: DashboardMetrics;
   spend: MonthSpend;
+  /** Estado de la última importación de métricas, rotulado en micro. */
+  status: string;
+}
+
+export interface PortfolioStripProps {
+  metrics: DashboardMetrics;
+}
+
+export interface PortfolioStatProps {
+  label: string;
+  value: string;
+  note: string;
+  /** Punto de acento junto al pie cuando el dato pide una acción. */
+  isFlagged?: boolean;
 }
 
 export interface PacingRailProps {
@@ -40,8 +49,9 @@ export interface PacingRailProps {
 
 export interface PanelCardProps {
   title: string;
+  subtitle?: string;
   icon?: ReactNode;
-  /** Contador junto al título, como la píldora de alertas del diseño. */
+  /** Contador junto al título, como el cuadro de alertas del diseño. */
   count?: number;
   seeAllHref?: string;
   isEmpty: boolean;
@@ -64,7 +74,15 @@ export interface ActivityPanelProps {
   now: string;
 }
 
-export interface MonthSpendChartProps {
+export interface SpendPlotProps {
+  spend: MonthSpend;
+  /** Importe del día más alto del mes, que fija la altura máxima de la barra. */
+  max: number;
+  /** Descripción de la serie para quien no ve las barras. */
+  label: string;
+}
+
+export interface SpendAxisProps {
   spend: MonthSpend;
 }
 
@@ -76,12 +94,4 @@ export interface SpendColumnProps {
 
 export interface SpendLegendProps {
   hasUnassigned: boolean;
-}
-
-export interface PlatformsPanelProps {
-  platforms: PlatformShare[];
-}
-
-export interface PlatformShareRowProps {
-  share: PlatformShare;
 }

@@ -36,20 +36,51 @@ export const CLIENTS_SUMMARY_COPY = {
   monthInvestment: (month: string) => `Inversión de ${month.toLowerCase()}`,
 } as const;
 
-/** Textos de la tarjeta de cliente. */
-export const CLIENT_CARD_COPY = {
-  investedIn: (month: string) => `Invertido en ${month.toLowerCase()}`,
-  activeJobs: (count: number) =>
-    count === 1 ? "1 activo" : `${count} activos`,
-  totalJobs: (count: number) =>
-    count === 1 ? "de 1 trabajo" : `de ${count} trabajos`,
+/** Textos de la fila de cliente. */
+export const CLIENT_ROW_COPY = {
+  jobs: (active: number, total: number) =>
+    total === 1
+      ? `${active} de 1 trabajo`
+      : `${active} de ${total} trabajos`,
+  noJobs: "sin trabajos",
   noCampaigns: "Sin campañas activas",
-  lastActivity: (relative: string) => `Última actividad ${relative}`,
-  addedAt: (relative: string) => `Añadido ${relative}`,
+  lastActivity: (relative: string) => `actividad ${relative}`,
+  /** Un cliente en pausa no tiene «actividad»: tiene tiempo parado. */
+  stale: (relative: string) => `sin cambios ${relative}`,
+  addedAt: (relative: string) => `añadido ${relative}`,
+  noInvestment: "—",
 } as const;
+
+/** Cabeceras de la tabla de cartera, en su orden de lectura. */
+export const CLIENTS_TABLE_COLUMNS = {
+  client: "Cliente",
+  investment: "Inversión del mes",
+  jobs: "Trabajos",
+  status: "Estado",
+} as const;
+
+/** Textos de la banda de cartera que encabeza el listado. */
+export const PORTFOLIO_COPY = {
+  eyebrow: (month: string) => `Cartera de ${month.toLowerCase()}`,
+  spread: (count: number) =>
+    count === 1 ? "en 1 cliente" : `repartidos entre ${count} clientes`,
+  working: (count: number) => `${count} trabajando`,
+  paused: (count: number) => `${count} en pausa`,
+  empty: (count: number) => `${count} sin trabajos`,
+  liveCampaigns: (count: number) =>
+    count === 1 ? "1 campaña en vivo" : `${count} campañas en vivo`,
+  more: (count: number) => `+${count}`,
+  stackLabel: "Clientes de la cartera",
+} as const;
+
+/** Caras que se apilan antes de resumir el resto en un «+N». */
+export const MAX_STACKED_AVATARS = 5;
 
 export const CLIENTS_COPY = {
   title: "Clientes",
+  count: (total: number) => (total === 1 ? "1 cliente" : `${total} clientes`),
+  results: (total: number) =>
+    total === 1 ? "1 resultado" : `${total} resultados`,
   newClient: "Nuevo cliente",
   searchPlaceholder: "Buscar por nombre o @usuario…",
   filterStatus: "Filtrar por estado",

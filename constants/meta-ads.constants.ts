@@ -124,21 +124,26 @@ export const META_PICK_ACCOUNT_PARAM = "cuenta";
 
 export const META_PICK_ACCOUNT_VALUE = "elegir";
 
+/**
+ * Misma marca cuando quien abre el selector es el menú de la conexión. Se
+ * distingue de la anterior solo para poder explicar la pantalla de otra forma:
+ * al volver del OAuth hay que elegir, después solo se está cambiando.
+ */
+export const META_PICK_ACCOUNT_MANAGE = "gestionar";
+
 export const META_ACCOUNT_COPY = {
-  current: "Importando de",
-  change: "Cambiar cuenta",
-  title: "Elige la cuenta publicitaria",
+  title: "Elige tus cuentas publicitarias",
   subtitle:
-    "adsme importará las campañas de la cuenta que elijas. Puedes cambiarla cuando quieras.",
-  confirm: "Usar esta cuenta",
+    "adsme importará las campañas de todas las cuentas que marques. Puedes cambiarlas cuando quieras.",
+  confirm: "Guardar cuentas",
   cancel: "Cancelar",
   loading: "Consultando tus cuentas en Meta…",
   empty:
     "Meta no devolvió ninguna cuenta para este acceso. Vuelve a Reautorizar y, en la pantalla de Meta, marca las cuentas publicitarias a las que quieres dar acceso.",
   warning:
-    "Al cambiar de cuenta se eliminan las campañas importadas de la anterior. Las que estuvieran vinculadas a un trabajo perderán ese vínculo y habrá que volver a asociarlas.",
+    "Las cuentas que desmarques se desconectarán y se eliminarán sus campañas importadas. Las que estuvieran vinculadas a un trabajo perderán ese vínculo y habrá que volver a asociarlas.",
   pickAfterConnect:
-    "Tienes varias cuentas publicitarias en Meta. Elige de cuál quieres importar las campañas.",
+    "Tienes varias cuentas publicitarias en Meta. Marca todas aquellas de las que quieras importar campañas.",
 } as const;
 
 export const META_ERRORS = {
@@ -150,8 +155,10 @@ export const META_ERRORS = {
     "La cuenta autorizada no tiene cuentas publicitarias accesibles. Si las tuyas están en un Business Manager, revisa que hayas aceptado el permiso de gestión del negocio.",
   adAccountsFailed: "Meta no pudo devolver tus cuentas publicitarias.",
   unknownAdAccount:
-    "Esa cuenta publicitaria ya no está entre las que autorizaste en Meta.",
-  accountSwitchFailed: "No pudimos cambiar la cuenta publicitaria.",
+    "Alguna de esas cuentas publicitarias ya no está entre las que autorizaste en Meta.",
+  noAccountsSelected:
+    "Marca al menos una cuenta publicitaria. Para dejar de importar de Meta usa Desconectar.",
+  accountsUpdateFailed: "No pudimos guardar las cuentas publicitarias elegidas.",
   syncFailed: "No pudimos importar las campañas de Meta.",
   dailyFailed:
     "Importamos las campañas, pero no pudimos actualizar su histórico día a día.",

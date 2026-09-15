@@ -143,30 +143,12 @@ export interface FilterSelectProps<TValue extends string> {
   onClear?: () => void;
 }
 
-export interface CopyCodeChipProps {
-  /** Parte legible que se muestra, como el código corto de un enlace. */
-  code: string;
-  /** Texto completo que se copia al portapapeles. */
-  value: string;
-  label: string;
-}
-
 export interface SegmentedControlProps<TValue extends string> {
   /** Nombre accesible del grupo; el control no muestra etiqueta propia. */
   label: string;
   value: TValue;
   options: FilterSelectOption<TValue>[];
   onChange: (value: TValue) => void;
-}
-
-export interface StatStripItem {
-  /** Cifra ya formateada; el componente no interpreta números. */
-  value: string;
-  label: string;
-}
-
-export interface StatStripProps {
-  items: StatStripItem[];
 }
 
 export type StatusTone =
@@ -252,3 +234,22 @@ export interface ToggleGroupProps {
   title: string;
   children: ReactNode;
 }
+
+export interface ModalSheetProps {
+  isOpen: boolean;
+  /** Nombre accesible del diálogo; el contenido pone su propio título visible. */
+  label: string;
+  onClose: () => void;
+  children: ReactNode;
+}
+
+export interface ScreenLoaderProps {
+  isActive: boolean;
+  /** Qué está pasando, en una frase. */
+  title: string;
+  /** Segunda línea: cuánto tarda o por qué conviene esperar. */
+  hint?: string;
+}
+
+/** La lámina saca el estado del formulario que la contiene, no de una prop. */
+export type FormScreenLoaderProps = Omit<ScreenLoaderProps, "isActive">;

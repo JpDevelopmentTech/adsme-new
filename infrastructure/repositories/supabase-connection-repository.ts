@@ -1,7 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type {
   Connection,
-  ConnectionAccountUpdate,
   ConnectionDraft,
   ConnectionPlatform,
   ConnectionStatus,
@@ -67,10 +66,28 @@ export function createSupabaseConnectionRepository(supabase: SupabaseClient) {
     },
 
     /**
-     * La conexión vigente de una plataforma. La clave única de la tabla es
-     * `(owner_id, platform, external_account_id)`, así que dos filas de la misma
-     * plataforma son representables; ordenar y limitar evita que ese caso haga
-     * fallar la consulta y la app diga «no conectado» teniendo conexión.
+     * Todas las cuentas conectadas de una plataforma, de la más antigua a la
+     * más reciente. La clave única de la tabla es `(owner_id, platform,
+     * external_account_id)`, así que una misma plataforma puede tener varias
+     * filas: una por cuenta publicitaria elegida.
+     */
+    async listByPlatform(platform: ConnectionPlatform): Promise<Connection[]> {
+      const { data, error } = await supabase
+        .from(CONNECTIONS_TABLE)
+        .select(CONNECTION_COLUMNS)
+        .eq("platform", platform)
+        .order("created_at", { ascending: true })
+        .returns<ConnectionRow[]>();
+
+      if (error) return [];
+
+      return data.map(toConnection).filter((item): item is Connection => item !== null);
+    },
+
+    /**
+     * La primera conexión de una plataforma. Solo sirve donde la cuenta es
+     * única por definición, como Google Ads: Meta y TikTok admiten varias y
+     * quedarse con una dejaría fuera las demás.
      */
     async findByPlatform(
       platform: ConnectionPlatform,
@@ -138,37 +155,6 @@ export function createSupabaseConnectionRepository(supabase: SupabaseClient) {
             : {}),
           token_expires_at: tokens.tokenExpiresAt,
           status: "conectado",
-        })
-        .eq("id", connectionId);
-
-      return !error;
-    },
-
-    /**
-     * Apunta la conexión a otra cuenta publicitaria del mismo acceso. No toca
-     * los tokens: el permiso concedido cubre todas las cuentas del usuario.
-     * `extra` se fusiona con lo ya guardado en vez de reemplazarlo.
-     */
-    async updateAccount(
-      connectionId: string,
-      account: ConnectionAccountUpdate,
-    ): Promise<boolean> {
-      const { data: current } = await supabase
-        .from(CONNECTIONS_TABLE)
-        .select("extra_json")
-        .eq("id", connectionId)
-        .maybeSingle<{ extra_json: Record<string, unknown> | null }>();
-
-      const { error } = await supabase
-        .from(CONNECTIONS_TABLE)
-        .update({
-          account_label: account.label,
-          external_account_id: account.externalAccountId,
-          ...(account.loginCustomerId !== undefined
-            ? { login_customer_id: account.loginCustomerId }
-            : {}),
-          extra_json: { ...(current?.extra_json ?? {}), ...(account.extra ?? {}) },
-          last_synced_at: null,
         })
         .eq("id", connectionId);
 

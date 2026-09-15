@@ -1,13 +1,59 @@
 import type { JobFormat } from "@/domain/entities/job";
 import type { JobBasicsValues } from "@/types/job-wizard.types";
 
-/** Los cuatro pasos del asistente, con la etiqueta que muestra `B6`. */
+/**
+ * Los cuatro pasos del asistente. El 3 todavía no tiene pantalla y el flujo
+ * salta del 2 al 4: la nota lo dice en el propio indicador en vez de prometer
+ * un paso que luego se omite en silencio.
+ */
 export const JOB_WIZARD_STEPS = [
-  { number: 1, label: "Datos básicos" },
-  { number: 2, label: "Campañas" },
-  { number: 3, label: "Reporte del cliente" },
-  { number: 4, label: "Enlace" },
+  { number: 1, label: "Datos básicos", note: null },
+  { number: 2, label: "Campañas", note: null },
+  { number: 3, label: "Reporte del cliente", note: "Se configura después" },
+  { number: 4, label: "Enlace", note: null },
 ] as const;
+
+/** Los tres bloques en que se agrupan los campos del paso 1. */
+export const JOB_WIZARD_SECTIONS = {
+  what: "Qué se lanza",
+  when: "Cuándo corre la pauta",
+  howMuch: "Cuánto se invierte",
+} as const;
+
+/** Ficha lateral que acompaña a todos los pasos. */
+export const JOB_WIZARD_SUMMARY = {
+  eyebrow: "Así va el trabajo",
+  untitled: "Trabajo sin nombre",
+  noClient: "Sin cliente",
+  pending: "Pendiente",
+  period: "Período",
+  investment: "Inversión",
+  platforms: "Pauta",
+  report: "Reporte",
+  reportReady: "Enlace listo",
+  platformsCount: (linked: number, total: number) =>
+    `${linked} de ${total} plataformas`,
+  note: "Puedes guardar como borrador y seguir en otro momento.",
+} as const;
+
+/** Título y subtítulo del panel de cada paso. */
+export const JOB_STEP_COPY = {
+  one: {
+    title: "Datos básicos",
+    subtitle:
+      "Lo mínimo para poder empezar a pautar. Todo se puede editar después.",
+  },
+  two: {
+    title: "Campañas",
+    subtitle:
+      "Vincula la campaña de cada plataforma que quieras incluir. La inversión se repartirá entre las que actives.",
+  },
+  four: {
+    title: "Enlace del cliente",
+    subtitle:
+      "Esto es lo que recibe el artista. Se abre sin cuenta y se actualiza solo.",
+  },
+} as const;
 
 export const JOB_FORMATS = ["Single", "EP", "Álbum"] as const satisfies readonly JobFormat[];
 
@@ -17,8 +63,8 @@ export const JOB_WIZARD_COPY = {
   editTitle: "Editar trabajo",
   saveDraft: "Guardar borrador",
   coverLabel: "Portada de la canción",
-  coverTitle: "Arrastra la portada aquí",
-  coverHint: "o haz clic para explorar · JPG/PNG/WebP · 1400×1400 px",
+  coverTitle: "Arrastra la portada",
+  coverHint: "JPG · PNG · 1400 px",
   coverRemove: "Quitar portada",
   titleLabel: "Nombre de la canción",
   titlePlaceholder: "Corazón de Neón",
@@ -26,8 +72,8 @@ export const JOB_WIZARD_COPY = {
   clientPlaceholder: "Selecciona un cliente",
   formatLabel: "Tipo de lanzamiento",
   periodLabel: "Período de la campaña",
-  startLabel: "Inicio de la campaña",
-  endLabel: "Fin de la campaña",
+  startLabel: "Inicio",
+  endLabel: "Fin",
   investmentLabel: "Inversión en pauta",
   investmentHint: "Se reparte entre las plataformas que incluyas en el paso 2.",
   investmentCurrency: "COP",
@@ -91,10 +137,14 @@ export const STEP_TWO_COPY = {
   link: "Vincular",
   linked: "Vinculada",
   linkedHint: "campaña vinculada a este trabajo",
+  linkedCount: (count: number) =>
+    count === 1 ? "1 campaña vinculada" : `${count} campañas vinculadas`,
   empty: "Ninguna campaña vinculada aún. Busca por ID o etiqueta para asociarla.",
   emptyDisconnected: (platform: string) =>
     `No hay ninguna cuenta de ${platform} conectada.`,
   next: "Siguiente: Enlace",
+  note:
+    "Puedes dejar plataformas sin vincular y añadirlas más adelante desde el trabajo.",
   skippedStep:
     "La configuración del reporte llega más adelante: por ahora el asistente pasa directo al enlace del cliente.",
 } as const;

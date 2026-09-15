@@ -28,10 +28,8 @@ export function FilterSelect<TValue extends string>({
   return (
     <div
       className={cn(
-        "flex shrink-0 items-center rounded-pill border transition-colors",
-        isDefault
-          ? "border-border bg-card hover:border-border-strong"
-          : "border-brand-violet/50 bg-brand-violet/15",
+        "glass-field flex shrink-0 items-center rounded-md transition-colors duration-150",
+        isDefault ? "hover:border-border-strong" : "border-ink bg-ink/10",
       )}
     >
       <DropdownMenu
@@ -41,23 +39,23 @@ export function FilterSelect<TValue extends string>({
         trigger={() => (
           <span
             className={cn(
-              "flex items-center gap-2 py-[9px] pl-3.5",
-              canClear ? "pr-1.5" : "pr-3.5",
+              "flex items-center gap-[7px] py-2 pl-3",
+              canClear ? "pr-1.5" : "pr-3",
             )}
           >
             <span
               className={cn(
-                "text-[13px] font-medium",
-                isDefault ? "text-text-secondary" : "text-brand-violet",
+                "text-[12px]",
+                isDefault ? "font-light text-text-secondary" : "font-normal text-text-primary",
               )}
             >
               {label}
             </span>
             {icon ?? (
               <ChevronDown
-                size={15}
+                size={14}
                 aria-hidden
-                className={isDefault ? "text-text-muted" : "text-brand-violet/70"}
+                className={isDefault ? "text-text-muted" : "text-text-secondary"}
               />
             )}
           </span>

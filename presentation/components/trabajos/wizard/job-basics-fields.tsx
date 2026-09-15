@@ -1,6 +1,12 @@
 import { ArrowRight } from "lucide-react";
 import { CURRENCY_SYMBOL } from "@/constants/currency.constants";
-import { JOB_FORMATS, JOB_WIZARD_COPY } from "@/constants/job-wizard.constants";
+import {
+  JOB_FORMATS,
+  JOB_WIZARD_COPY,
+  JOB_WIZARD_SECTIONS,
+} from "@/constants/job-wizard.constants";
+import { JobCoverUploader } from "@/presentation/components/trabajos/wizard/job-cover-uploader";
+import { WizardSection } from "@/presentation/components/trabajos/wizard/wizard-section";
 import { CurrencyField } from "@/presentation/components/ui/currency-field";
 import { DateField } from "@/presentation/components/ui/date-field";
 import { SearchableSelect } from "@/presentation/components/ui/searchable-select";
@@ -9,109 +15,144 @@ import { TextField } from "@/presentation/components/ui/text-field";
 import { TextareaField } from "@/presentation/components/ui/textarea-field";
 import type { JobBasicsFieldsProps } from "@/types/job-wizard.types";
 import type { JobFormat } from "@/domain/entities/job";
+import { formatDailyAmount } from "@/utils/format-daily-amount";
+import { formatDuration } from "@/utils/format-duration";
 import { formatThousands } from "@/utils/format-thousands";
+import { parseThousands } from "@/utils/parse-thousands";
 
+const CHIP_CLASSES =
+  "flex h-[42px] shrink-0 items-center rounded-md border border-border bg-g-100 px-3.5 text-[13px] text-text-primary";
+
+/**
+ * Los campos del paso 1, agrupados por la pregunta que responden en vez de
+ * apilados. Cada grupo devuelve su cálculo derivado —duración, coste diario—
+ * en el momento en que sirve para decidir, no en la pantalla siguiente.
+ */
 export function JobBasicsFields({
   values,
   errors,
   clientOptions,
+  cover,
   onChange,
 }: JobBasicsFieldsProps) {
+  const duration = formatDuration(values.startsOn, values.endsOn);
+  const dailyAmount = formatDailyAmount(
+    parseThousands(values.investment),
+    values.startsOn,
+    values.endsOn,
+  );
+
   return (
-    <div className="flex flex-1 flex-col gap-[18px]">
-      <TextField
-        id="title"
-        name="title"
-        surface="elevated"
-        label={JOB_WIZARD_COPY.titleLabel}
-        placeholder={JOB_WIZARD_COPY.titlePlaceholder}
-        value={values.title}
-        error={errors.title}
-        onChange={(event) => onChange("title", event.target.value)}
-      />
+    <>
+      <WizardSection label={JOB_WIZARD_SECTIONS.what}>
+        <div className="flex flex-col gap-5 lg:flex-row lg:items-start">
+          <JobCoverUploader {...cover} />
 
-      <div className="flex flex-col gap-4 sm:flex-row">
-        <SearchableSelect
-          id="clientId"
-          name="clientId"
-          surface="elevated"
-          label={JOB_WIZARD_COPY.clientLabel}
-          placeholder={JOB_WIZARD_COPY.clientPlaceholder}
-          options={clientOptions}
-          defaultValue={values.clientId}
-          error={errors.clientId}
-        />
+          <div className="flex min-w-0 flex-1 flex-col gap-3.5">
+            <TextField
+              id="title"
+              name="title"
+              surface="elevated"
+              label={JOB_WIZARD_COPY.titleLabel}
+              placeholder={JOB_WIZARD_COPY.titlePlaceholder}
+              value={values.title}
+              error={errors.title}
+              onChange={(event) => onChange("title", event.target.value)}
+            />
 
-        <SelectField
-          id="format"
-          name="format"
-          surface="elevated"
-          label={JOB_WIZARD_COPY.formatLabel}
-          options={JOB_FORMATS}
-          value={values.format}
-          error={errors.format}
-          onChange={(event) => onChange("format", event.target.value as JobFormat)}
-        />
-      </div>
+            <div className="flex flex-col gap-3.5 sm:flex-row">
+              <SearchableSelect
+                id="clientId"
+                name="clientId"
+                surface="elevated"
+                label={JOB_WIZARD_COPY.clientLabel}
+                placeholder={JOB_WIZARD_COPY.clientPlaceholder}
+                options={clientOptions}
+                defaultValue={values.clientId}
+                error={errors.clientId}
+              />
 
-      <fieldset className="flex flex-col gap-2">
-        <legend className="mb-2 text-[13px] font-medium text-text-secondary">
-          {JOB_WIZARD_COPY.periodLabel}
-        </legend>
-
-        <div className="flex items-start gap-3">
-          <DateField
-            id="startsOn"
-            name="startsOn"
-            surface="elevated"
-            label={JOB_WIZARD_COPY.startLabel}
-            value={values.startsOn}
-            error={errors.startsOn}
-            onChange={(event) => onChange("startsOn", event.target.value)}
-          />
-          <ArrowRight
-            size={18}
-            aria-hidden
-            className="mt-3.5 shrink-0 text-text-muted"
-          />
-          <DateField
-            id="endsOn"
-            name="endsOn"
-            surface="elevated"
-            label={JOB_WIZARD_COPY.endLabel}
-            value={values.endsOn}
-            error={errors.endsOn}
-            onChange={(event) => onChange("endsOn", event.target.value)}
-          />
+              <SelectField
+                id="format"
+                name="format"
+                surface="elevated"
+                label={JOB_WIZARD_COPY.formatLabel}
+                options={JOB_FORMATS}
+                value={values.format}
+                error={errors.format}
+                onChange={(event) =>
+                  onChange("format", event.target.value as JobFormat)
+                }
+              />
+            </div>
+          </div>
         </div>
-      </fieldset>
+      </WizardSection>
 
-      <CurrencyField
-        id="investment"
-        name="investment"
-        surface="elevated"
-        label={JOB_WIZARD_COPY.investmentLabel}
-        hint={JOB_WIZARD_COPY.investmentHint}
-        symbol={CURRENCY_SYMBOL}
-        currency={JOB_WIZARD_COPY.investmentCurrency}
-        placeholder="0"
-        value={values.investment}
-        error={errors.investment}
-        onChange={(event) =>
-          onChange("investment", formatThousands(event.target.value))
-        }
-      />
+      <WizardSection label={JOB_WIZARD_SECTIONS.when}>
+        <div className="flex flex-wrap items-end gap-3">
+          <div className="min-w-[150px] flex-1">
+            <DateField
+              id="startsOn"
+              name="startsOn"
+              surface="elevated"
+              label={JOB_WIZARD_COPY.startLabel}
+              value={values.startsOn}
+              error={errors.startsOn}
+              onChange={(event) => onChange("startsOn", event.target.value)}
+            />
+          </div>
 
-      <TextareaField
-        id="description"
-        name="description"
-        surface="elevated"
-        label={JOB_WIZARD_COPY.descriptionLabel}
-        placeholder={JOB_WIZARD_COPY.descriptionPlaceholder}
-        value={values.description}
-        error={errors.description}
-        onChange={(event) => onChange("description", event.target.value)}
-      />
-    </div>
+          <ArrowRight size={16} aria-hidden className="mb-3 shrink-0 text-g-400" />
+
+          <div className="min-w-[150px] flex-1">
+            <DateField
+              id="endsOn"
+              name="endsOn"
+              surface="elevated"
+              label={JOB_WIZARD_COPY.endLabel}
+              value={values.endsOn}
+              error={errors.endsOn}
+              onChange={(event) => onChange("endsOn", event.target.value)}
+            />
+          </div>
+
+          {duration ? <p className={CHIP_CLASSES}>{duration}</p> : null}
+        </div>
+      </WizardSection>
+
+      <WizardSection label={JOB_WIZARD_SECTIONS.howMuch}>
+        <div className="flex flex-wrap items-end gap-3">
+          <CurrencyField
+            id="investment"
+            name="investment"
+            surface="elevated"
+            label={JOB_WIZARD_COPY.investmentLabel}
+            hint={JOB_WIZARD_COPY.investmentHint}
+            symbol={CURRENCY_SYMBOL}
+            currency={JOB_WIZARD_COPY.investmentCurrency}
+            placeholder="0"
+            value={values.investment}
+            error={errors.investment}
+            onChange={(event) =>
+              onChange("investment", formatThousands(event.target.value))
+            }
+          />
+
+          {dailyAmount ? <p className={CHIP_CLASSES}>{dailyAmount}</p> : null}
+        </div>
+
+        <TextareaField
+          id="description"
+          name="description"
+          surface="elevated"
+          label={JOB_WIZARD_COPY.descriptionLabel}
+          placeholder={JOB_WIZARD_COPY.descriptionPlaceholder}
+          value={values.description}
+          error={errors.description}
+          onChange={(event) => onChange("description", event.target.value)}
+        />
+      </WizardSection>
+    </>
   );
 }

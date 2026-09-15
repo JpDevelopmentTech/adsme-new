@@ -4,19 +4,23 @@ import type { ImportedCampaignRowProps } from "@/types/connections.types";
 import { cn } from "@/utils/cn";
 import { formatCompactCurrency } from "@/utils/format-compact-currency";
 
+const CELL_CLASSES = "py-3 text-[12.5px] font-light";
+
 /** Una campaña de la tabla: de dónde vino, a qué trabajo alimenta y cuánto trae. */
 export function ImportedCampaignRow({ campaign }: ImportedCampaignRowProps) {
   return (
-    <tr className="border-b border-border last:border-b-0">
-      <td className="px-[18px] py-4 text-[13px] font-semibold text-text-primary">
+    <tr className="border-t border-border/60">
+      <td
+        className={`${CELL_CLASSES} truncate pr-4 pl-5 text-[13px] font-normal text-text-primary`}
+      >
         {campaign.name}
       </td>
 
-      <td className="px-[18px] py-4">
-        <span className="flex items-center gap-2 text-[13px] whitespace-nowrap text-text-secondary">
+      <td className={`${CELL_CLASSES} pr-4 text-text-secondary`}>
+        <span className="flex items-center gap-2 truncate">
           <span
             aria-hidden
-            className="size-[7px] shrink-0 rounded-full"
+            className="size-[7px] shrink-0 rounded-pill"
             style={{
               backgroundColor: PLATFORM_META[campaign.platform].chartColor,
             }}
@@ -27,20 +31,23 @@ export function ImportedCampaignRow({ campaign }: ImportedCampaignRowProps) {
 
       <td
         className={cn(
-          "px-[18px] py-4 text-[13px]",
-          campaign.jobLabel
-            ? "text-text-secondary"
-            : "font-semibold text-warning",
+          CELL_CLASSES,
+          "truncate pr-4",
+          campaign.jobLabel ? "text-text-secondary" : "font-normal text-warning",
         )}
       >
         {campaign.jobLabel ?? IMPORTED_CAMPAIGNS_COPY.unlinked}
       </td>
 
-      <td className="px-[18px] py-4 text-[13px] font-semibold whitespace-nowrap text-text-primary">
+      <td
+        className={`${CELL_CLASSES} pr-4 text-right text-[13px] font-normal whitespace-nowrap text-text-primary`}
+      >
         {formatCompactCurrency(campaign.spend)}
       </td>
 
-      <td className="px-[18px] py-4 text-[13px] whitespace-nowrap text-text-muted">
+      <td
+        className={`${CELL_CLASSES} pr-5 text-right text-[12px] whitespace-nowrap text-text-muted`}
+      >
         {campaign.syncedAtLabel}
       </td>
     </tr>

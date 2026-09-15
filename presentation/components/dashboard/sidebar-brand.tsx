@@ -7,9 +7,9 @@ export function SidebarBrand() {
   return (
     <Link
       href={DASHBOARD_ROUTE}
-      className="flex px-2.5 pt-2 pb-5 transition-opacity hover:opacity-80"
+      className="flex px-[11px] py-1 transition-opacity duration-100 hover:opacity-70"
     >
-      <BrandWordmark className="h-6" />
+      <BrandWordmark className="h-[22px]" />
     </Link>
   );
 }

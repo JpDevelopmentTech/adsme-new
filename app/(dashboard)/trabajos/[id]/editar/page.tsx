@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { JOB_WIZARD_COPY } from "@/constants/job-wizard.constants";
 import { createGetJob } from "@/domain/use-cases/get-job";
 import { createListClients } from "@/domain/use-cases/list-clients";
 import { createSupabaseClientRepository } from "@/infrastructure/repositories/supabase-client-repository";
@@ -28,7 +27,6 @@ export default async function EditarTrabajoPage({
   return (
     <JobBasicsForm
       jobId={job.id}
-      title={JOB_WIZARD_COPY.editTitle}
       initialValues={toJobBasicsValues(job)}
       initialCoverUrl={job.coverUrl}
       clientOptions={toClientOptions(clients)}

@@ -25,8 +25,8 @@ export function JobRowMenu({ job }: JobRowMenuProps) {
         align="end"
         label={`Acciones de ${job.title}`}
         trigger={() => (
-          <span className="grid size-9 place-items-center rounded-md border border-border bg-card text-text-secondary transition-colors hover:border-border-strong hover:text-text-primary">
-            <Ellipsis size={18} aria-hidden />
+          <span className="grid size-[34px] place-items-center rounded-md text-g-500 transition-colors duration-150 hover:bg-white/70 hover:text-text-primary">
+            <Ellipsis size={16} aria-hidden />
           </span>
         )}
       >

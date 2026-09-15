@@ -36,6 +36,10 @@ export const REPORT_GATE_COPY = {
   fallbackBody:
     "Pídele la clave a tu equipo de adsme para ver los resultados de este lanzamiento.",
   placeholder: "Clave del reporte",
+  pitchTitle: "El reporte en vivo de tu lanzamiento",
+  pitchBody:
+    "Alcance, reproducciones e inversión de tus campañas, actualizados cada hora.",
+  pitchPlatforms: "YouTube · Meta · TikTok",
   submit: "Ver reporte",
   help: "El enlace es privado: la clave la define quien lo compartió.",
   invalid: "La clave no es correcta. Inténtalo de nuevo.",

@@ -52,6 +52,7 @@ export function CampaignPickerItem({
           </span>
           <span className="truncate text-xs text-text-muted">
             ID {campaign.externalCampaignId}
+            {campaign.accountLabel ? ` · ${campaign.accountLabel}` : ""}
             {campaign.jobId ? " · ya vinculada" : ""}
           </span>
         </span>

@@ -36,7 +36,7 @@ export function DateField({
           aria-invalid={Boolean(error)}
           aria-describedby={error ? `${id}-error` : undefined}
           className={cn(
-            "min-w-0 flex-1 bg-transparent text-sm text-text-primary outline-none [color-scheme:dark]",
+            "min-w-0 flex-1 bg-transparent text-sm text-text-primary outline-none [color-scheme:light]",
             "[&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0",
             "[&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:w-full",
             "[&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-0",

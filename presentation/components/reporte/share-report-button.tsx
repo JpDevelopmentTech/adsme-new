@@ -18,16 +18,14 @@ export function ShareReportButton({ url, label }: ShareReportButtonProps) {
       type="button"
       onClick={() => copy(url)}
       className={cn(
-        "flex items-center gap-2 rounded-pill border px-[22px] py-3 text-sm font-semibold transition-colors",
-        hasCopied
-          ? "border-success/40 text-success"
-          : "border-border-strong text-text-primary hover:bg-card",
+        "glass-field flex cursor-pointer items-center gap-[7px] rounded-md px-[13px] py-2 text-[12px] font-normal transition-colors duration-150 focus-visible:ring-2 focus-visible:ring-ink/40 focus-visible:outline-none",
+        hasCopied ? "border-success/50 text-success" : "text-text-primary hover:border-border-strong",
       )}
     >
       {hasCopied ? (
-        <Check size={18} aria-hidden />
+        <Check size={14} strokeWidth={1.75} aria-hidden />
       ) : (
-        <Share2 size={18} aria-hidden />
+        <Share2 size={14} strokeWidth={1.5} aria-hidden />
       )}
       {hasCopied ? REPORT_COPY.copied : label}
     </button>

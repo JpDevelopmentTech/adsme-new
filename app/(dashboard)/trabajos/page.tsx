@@ -1,24 +1,26 @@
-import { Plus } from "lucide-react";
 import type { Metadata } from "next";
-import { JOBS_COPY } from "@/constants/jobs.constants";
-import { DEFAULT_JOB_LIST_QUERY, isFilteredJobQuery } from "@/domain/entities/job-query";
+import {
+  DEFAULT_JOB_LIST_QUERY,
+  isFilteredJobQuery,
+} from "@/domain/entities/job-query";
 import { createListJobs } from "@/domain/use-cases/list-jobs";
 import { createSupabaseJobRepository } from "@/infrastructure/repositories/supabase-job-repository";
 import { createServerSupabaseClient } from "@/infrastructure/supabase/server-supabase-client";
-import { PageHeader } from "@/presentation/components/dashboard/page-header";
 import { JobsEmpty } from "@/presentation/components/trabajos/jobs-empty";
+import { JobsSummaryBand } from "@/presentation/components/trabajos/jobs-summary-band";
 import { JobsTable } from "@/presentation/components/trabajos/jobs-table";
-import { JobsToolbar } from "@/presentation/components/trabajos/jobs-toolbar";
-import { NEW_JOB_ROUTE } from "@/constants/routes.constants";
-import { PrimaryLink } from "@/presentation/components/ui/primary-link";
 import { buildJobClientOptions } from "@/utils/build-job-client-options";
+import { buildJobsSummary } from "@/utils/build-jobs-summary";
 import { toIsoDate } from "@/utils/month-range";
 import { parseJobListQuery } from "@/utils/parse-job-list-query";
-import { summarizeJobs } from "@/utils/summarize-jobs";
 
 export const metadata: Metadata = { title: "Trabajos · adsme" };
 
-/** Pantalla `B5 · Trabajos Lista`: todos los trabajos de todos los clientes. */
+/**
+ * Pantalla `B5 · Trabajos`: el listado leído como línea de tiempo. Todas las
+ * filas comparten eje, así que los períodos se comparan entre sí y la marca de
+ * hoy cruza la tabla entera.
+ */
 export default async function TrabajosPage({
   searchParams,
 }: PageProps<"/trabajos">) {
@@ -30,39 +32,23 @@ export default async function TrabajosPage({
     listJobs(query),
     listJobs(DEFAULT_JOB_LIST_QUERY),
   ]);
-  const isFiltered = isFilteredJobQuery(query);
   const today = toIsoDate(new Date());
+
+  // Sin ningún trabajo todavía no hay cartera que resumir ni nada que filtrar.
+  if (allJobs.length === 0) return <JobsEmpty isFiltered={false} />;
 
   return (
     <>
-      <PageHeader
-        title={JOBS_COPY.title}
-        subtitle={summarizeJobs(jobs, allJobs, isFiltered)}
-        actions={
-          <PrimaryLink href={NEW_JOB_ROUTE}>
-            <Plus size={18} strokeWidth={2} aria-hidden />
-            {JOBS_COPY.newJob}
-          </PrimaryLink>
-        }
+      <JobsSummaryBand summary={buildJobsSummary(allJobs, today)} />
+
+      <JobsTable
+        jobs={jobs}
+        totalJobs={allJobs.length}
+        today={today}
+        query={query}
+        clientOptions={buildJobClientOptions(allJobs)}
+        isFiltered={isFilteredJobQuery(query)}
       />
-
-      {allJobs.length > 0 ? (
-        <JobsToolbar
-          query={query}
-          clientOptions={buildJobClientOptions(allJobs)}
-        />
-      ) : null}
-
-      {jobs.length === 0 ? (
-        <JobsEmpty isFiltered={isFiltered} />
-      ) : (
-        <JobsTable
-          jobs={jobs}
-          totalJobs={allJobs.length}
-          today={today}
-          sort={query.sort}
-        />
-      )}
     </>
   );
 }

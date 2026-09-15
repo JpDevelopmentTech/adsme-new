@@ -32,6 +32,20 @@ export const REPORT_COPY = {
   crossSummaryTitle: "Resumen del lanzamiento · las tres plataformas juntas",
   audienceSectionTitle: "Tu público · quién vio tus anuncios",
   liveReport: "Reporte en vivo",
+  live: "En vivo",
+  allPlatforms: "Todas",
+  platformsTitle: "Dónde te vieron",
+  platformsSubtitle: "Reparto de las reproducciones entre plataformas",
+  platformFoot: (campaigns: number, spend: string) =>
+    `${campaigns} ${campaigns === 1 ? "campaña" : "campañas"} · ${spend}`,
+  growthTitle: "Cómo fue creciendo",
+  growthSubtitle: (period: string) => `Reproducciones por día · ${period}`,
+  growthToday: "hoy",
+  growthEmpty:
+    "Todavía no hay días con entrega que dibujar. En cuanto la pauta empiece a moverse, aparecerán aquí automáticamente.",
+  adEyebrow: "YouTube · in-stream saltable",
+  adBody:
+    "El creativo que se mostró antes de los vídeos durante todo el período. Quien no lo saltó vio los primeros cinco segundos completos.",
   share: "Compartir",
   copied: "Enlace copiado",
   updated: (relative: string) => `Actualizado ${relative}`,
@@ -49,7 +63,7 @@ export const REPORT_COPY = {
   noMetricsTitle: "Todavía no hay métricas que mostrar",
   noMetricsBody:
     "Este lanzamiento aún no tiene campañas vinculadas. En cuanto empiecen a entregar, sus resultados aparecerán aquí automáticamente.",
-  adPreviewTitle: "Vista previa del anuncio",
+  adPreviewTitle: "Así se veía tu anuncio",
   adPreviewTag: "In-stream · Saltable",
   adBadge: "Anuncio",
   adSkip: "Saltar anuncio",
@@ -67,6 +81,18 @@ export const REPORT_COPY = {
     }`,
   view: "Ver",
   noLaunchLink: "Sin enlace",
+} as const;
+
+/** Las tres cifras de contexto que acompañan al titular del reporte. */
+export const REPORT_SUMMARY_COPY = {
+  plays: "Reproducciones",
+  engagement: "Interacciones",
+  spend: "Inversión",
+  campaigns: (count: number) =>
+    count === 1 ? "1 campaña" : `${count} campañas`,
+  social: (count: number) =>
+    `${count} ${count === 1 ? "comentario o compartido" : "comentarios y compartidos"}`,
+  budget: (percent: string) => `${percent} del presupuesto`,
 } as const;
 
 /** Encabezados de la tabla de lanzamientos del reporte consolidado. */

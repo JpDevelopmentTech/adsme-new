@@ -1,9 +1,7 @@
-import type { JobPlatform } from "@/domain/entities/job";
 import type {
   ReportAudience,
   ReportHouseholds,
   ReportKeyword,
-  ReportSeries,
   ReportTerritory,
 } from "@/types/report.types";
 
@@ -17,41 +15,12 @@ import type {
  * Google Ads.
  *
  * La curva de evolución ya **no** es de muestra: la sirve
- * `campaign_daily_metrics`. `SAMPLE_TREND_BY_PLATFORM` solo entra cuando una
- * plataforma aún no tiene serie importada.
- *
+ * `campaign_daily_metrics`.
  * Al conectar los datos reales, borra este archivo y apaga
  * `SHOW_SAMPLE_REPORT_SECTIONS`.
  */
-const TICKS = ["1 jul", "8", "15", "22", "30"];
 
 /** Una serie por plataforma: con la misma curva en las tres no se distinguirían. */
-export const SAMPLE_TREND_BY_PLATFORM: Record<JobPlatform, ReportSeries> = {
-  youtube: {
-    label: "Reproducciones en el tiempo",
-    points: [
-      12, 18, 26, 22, 31, 44, 38, 52, 61, 55, 68, 74, 82, 71, 88, 96, 105, 98,
-      112, 124, 118, 133, 141, 129, 148, 157, 166, 154, 172, 188,
-    ],
-    ticks: TICKS,
-  },
-  meta: {
-    label: "Reproducciones de vídeo",
-    points: [
-      30, 42, 38, 55, 61, 58, 72, 84, 79, 91, 88, 103, 97, 112, 124, 118, 131,
-      126, 142, 138, 151, 147, 160, 172, 165, 178, 170, 186, 181, 194,
-    ],
-    ticks: TICKS,
-  },
-  tiktok: {
-    label: "Reproducciones de vídeo",
-    points: [
-      8, 14, 11, 24, 38, 31, 47, 66, 58, 82, 74, 96, 112, 101, 128, 141, 133,
-      158, 172, 164, 186, 178, 197, 189, 206, 214, 203, 221, 216, 229,
-    ],
-    ticks: TICKS,
-  },
-};
 
 export const SAMPLE_TERRITORIES: ReportTerritory[] = [
   { name: "Bogotá", percent: 32 },

@@ -1,28 +1,22 @@
-import { Plus } from "lucide-react";
 import type { Metadata } from "next";
-import { CLIENTS_COPY } from "@/constants/clients.constants";
-import { NEW_CLIENT_ROUTE } from "@/constants/routes.constants";
 import { isFilteredQuery } from "@/domain/entities/client-query";
 import { createListClients } from "@/domain/use-cases/list-clients";
 import { createSupabaseClientRepository } from "@/infrastructure/repositories/supabase-client-repository";
 import { createServerSupabaseClient } from "@/infrastructure/supabase/server-supabase-client";
 import { ClientsEmptyState } from "@/presentation/components/clientes/clients-empty-state";
-import { ClientsGrid } from "@/presentation/components/clientes/clients-grid";
-import { ClientsNoResults } from "@/presentation/components/clientes/clients-no-results";
-import { ClientsToolbar } from "@/presentation/components/clientes/clients-toolbar";
-import { PageHeader } from "@/presentation/components/dashboard/page-header";
-import { PrimaryLink } from "@/presentation/components/ui/primary-link";
-import { StatStrip } from "@/presentation/components/ui/stat-strip";
-import { buildClientsSummary } from "@/utils/build-clients-summary";
+import { ClientsPortfolioBand } from "@/presentation/components/clientes/clients-portfolio-band";
+import { ClientsTable } from "@/presentation/components/clientes/clients-table";
+import { buildPortfolioSummary } from "@/utils/build-portfolio-summary";
 import { formatMonthName } from "@/utils/format-month-name";
+import { maxMonthInvestment } from "@/utils/max-month-investment";
 import { parseClientListQuery } from "@/utils/parse-client-list-query";
-import { summarizeClients } from "@/utils/summarize-clients";
 
 export const metadata: Metadata = { title: "Clientes · adsme" };
 
 /**
- * Pantalla `B2 · Clientes`: la cartera vista por dinero: qué se invierte este
- * mes en cada uno, cómo se reparte entre plataformas y cuál lleva días quieto.
+ * Pantalla `B2 · Clientes`: la cartera vista por dinero. Las filas comparten
+ * una escala común, así que el orden de quién se lleva el presupuesto se lee
+ * sin comparar cifras una a una.
  */
 export default async function ClientesPage({
   searchParams,
@@ -35,44 +29,24 @@ export default async function ClientesPage({
   const clients = await createListClients(repository)(query, now);
   const isFiltered = isFilteredQuery(query);
 
-  const newClientLink = (
-    <PrimaryLink href={NEW_CLIENT_ROUTE}>
-      <Plus size={18} strokeWidth={2} aria-hidden />
-      {CLIENTS_COPY.newClient}
-    </PrimaryLink>
-  );
-
   // Sin filtros y sin resultados significa que el usuario todavía no tiene clientes.
-  if (clients.length === 0 && !isFiltered) {
-    return (
-      <>
-        <PageHeader
-          title={CLIENTS_COPY.title}
-          subtitle={summarizeClients(clients)}
-          actions={newClientLink}
-        />
-        <ClientsEmptyState />
-      </>
-    );
-  }
+  if (clients.length === 0 && !isFiltered) return <ClientsEmptyState />;
 
   return (
     <>
-      <PageHeader title={CLIENTS_COPY.title} actions={newClientLink} />
+      <ClientsPortfolioBand
+        summary={buildPortfolioSummary(clients)}
+        clients={clients}
+        monthName={formatMonthName(now)}
+      />
 
-      <StatStrip items={buildClientsSummary(clients, now, isFiltered)} />
-
-      <ClientsToolbar query={query} />
-
-      {clients.length === 0 ? (
-        <ClientsNoResults />
-      ) : (
-        <ClientsGrid
-          clients={clients}
-          monthName={formatMonthName(now)}
-          nowIso={now.toISOString()}
-        />
-      )}
+      <ClientsTable
+        clients={clients}
+        maxInvestment={maxMonthInvestment(clients)}
+        nowIso={now.toISOString()}
+        query={query}
+        isFiltered={isFiltered}
+      />
     </>
   );
 }

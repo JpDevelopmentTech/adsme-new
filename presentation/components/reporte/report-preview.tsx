@@ -1,6 +1,5 @@
-import Link from "next/link";
-import { Fragment } from "react";
 import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 import {
   REPORT_COPY,
   SHOW_SAMPLE_REPORT_SECTIONS,
@@ -11,60 +10,51 @@ import {
   SAMPLE_KEYWORDS,
   SAMPLE_TERRITORIES,
 } from "@/constants/report-sample.constants";
-import { ReportAdPreview } from "@/presentation/components/reporte/report-ad-preview";
 import { ReportAudienceCard } from "@/presentation/components/reporte/report-audience-card";
 import { ReportHouseholdsCard } from "@/presentation/components/reporte/report-households-card";
 import { ReportKeywordsCard } from "@/presentation/components/reporte/report-keywords-card";
 import { ReportTerritoriesCard } from "@/presentation/components/reporte/report-territories-card";
-import { ReportTrendSection } from "@/presentation/components/reporte/report-trend-section";
+import { ReportAdPreview } from "@/presentation/components/reporte/report-ad-preview";
 import { ReportEmptyMetrics } from "@/presentation/components/reporte/report-empty-metrics";
 import { ReportFooter } from "@/presentation/components/reporte/report-footer";
+import { ReportGrowthPanel } from "@/presentation/components/reporte/report-growth-panel";
 import { ReportHero } from "@/presentation/components/reporte/report-hero";
-import { ReportMetricGrid } from "@/presentation/components/reporte/report-metric-grid";
-import { ReportPlatformSection } from "@/presentation/components/reporte/report-platform-section";
-import { ReportSplitCard } from "@/presentation/components/reporte/report-split-card";
+import { ReportPlatformsPanel } from "@/presentation/components/reporte/report-platforms-panel";
+import { ReportSummaryStrip } from "@/presentation/components/reporte/report-summary-strip";
 import { ReportTopbar } from "@/presentation/components/reporte/report-topbar";
 import type { ReportPreviewProps } from "@/types/report.types";
 import { buildLaunchHeadline } from "@/utils/build-report-headline";
-import { buildCrossMetrics } from "@/utils/build-report-metrics";
 import { formatJobPeriod } from "@/utils/format-job-period";
 import { toIsoDate } from "@/utils/month-range";
 
 /**
- * Reporte del lanzamiento (`C1`–`C4` del diseño). Las secciones por plataforma
- * se filtran con las pestañas de la cabecera; el resumen transversal siempre
- * refleja el lanzamiento completo, se esté filtrando o no.
+ * Reporte del lanzamiento. Se lee como una historia y no como un informe:
+ * cuánta gente llegó, si eso es mucho, dónde te vieron, cómo fue creciendo y
+ * qué se vio. Antes era una sección por plataforma, tres veces lo mismo.
  */
 export function ReportPreview({
   job,
   totals,
   platforms,
-  trends,
+  growth,
   activePlatform,
   reportUrl,
   basePath,
   artistHref,
   now,
 }: ReportPreviewProps) {
-  const visible = activePlatform
-    ? platforms.filter((metrics) => metrics.platform === activePlatform)
-    : platforms;
-
   const period = formatJobPeriod(job.startsOn, job.endsOn);
 
   return (
-    <div className="flex min-h-dvh flex-col">
+    <div className="bg-ambient flex min-h-dvh flex-col">
       <ReportTopbar
         subtitle={`${job.title} · ${job.clientName}`}
-        platforms={platforms.map((metrics) => metrics.platform)}
-        activePlatform={activePlatform}
-        basePath={basePath}
         syncedAt={totals.syncedAt}
         now={now}
         reportUrl={reportUrl}
       />
 
-      <main className="mx-auto flex w-full max-w-[1180px] flex-1 flex-col gap-7 px-6 py-8 lg:px-10">
+      <main className="mx-auto flex w-full max-w-[1020px] flex-1 flex-col gap-5 px-5 py-8">
         <ReportHero
           job={job}
           headline={buildLaunchHeadline(totals.reach, job, toIsoDate(new Date(now)))}
@@ -74,44 +64,26 @@ export function ReportPreview({
           <ReportEmptyMetrics />
         ) : (
           <>
-            {/* «Resumen del lanzamiento · las tres plataformas juntas» */}
-            <div className="flex flex-col gap-5">
-              <h2 className="font-display text-lg font-semibold text-text-primary">
-                {REPORT_COPY.crossSummaryTitle}
-              </h2>
-              <ReportMetricGrid
-                metrics={buildCrossMetrics(totals, job.investment)}
-              />
-              <ReportSplitCard platforms={platforms} />
-            </div>
+            <ReportSummaryStrip totals={totals} investment={job.investment} />
 
-            {/* Cada plataforma: cabecera, sus KPIs y su curva, como en `C2`–`C4`.
-                El creativo cuelga de YouTube, que es donde lo sitúa el diseño. */}
-            {visible.map((metrics) => (
-              <Fragment key={metrics.platform}>
-                <ReportPlatformSection
-                  metrics={metrics}
-                  totalSpend={totals.spend}
-                />
+            <ReportPlatformsPanel
+              platforms={platforms}
+              activePlatform={activePlatform}
+              basePath={basePath}
+            />
 
-                <ReportTrendSection
-                  platform={metrics.platform}
-                  series={trends[metrics.platform]}
-                  period={period}
-                />
+            {growth ? (
+              <ReportGrowthPanel growth={growth} period={period} />
+            ) : null}
 
-                {metrics.platform === "youtube" ? (
-                  <ReportAdPreview job={job} />
-                ) : null}
-              </Fragment>
-            ))}
+            <ReportAdPreview job={job} />
 
+            {/* Territorios, audiencia, hogares y palabras clave siguen
+                alimentados con datos de muestra y van marcados como tales. */}
             {SHOW_SAMPLE_REPORT_SECTIONS ? (
               <>
-                {/* «Tu público · quién vio tus anuncios»: territorios a la
-                    izquierda y audiencia a la derecha, como en el diseño. */}
                 <div className="flex flex-col gap-5">
-                  <h2 className="font-display text-lg font-semibold text-text-primary">
+                  <h2 className="font-display text-[15px] font-normal tracking-[-0.2px] text-text-primary">
                     {REPORT_COPY.audienceSectionTitle}
                   </h2>
 
@@ -131,10 +103,10 @@ export function ReportPreview({
 
         <Link
           href={artistHref}
-          className="flex items-center justify-center gap-2 text-[13px] font-semibold text-brand-violet transition-colors hover:text-brand-magenta"
+          className="flex items-center justify-center gap-2 rounded-sm py-3.5 text-[13px] font-normal text-text-primary transition-opacity duration-150 hover:opacity-60 focus-visible:ring-2 focus-visible:ring-ink/40 focus-visible:outline-none"
         >
           {REPORT_COPY.artistLink(job.clientName)}
-          <ArrowRight size={15} aria-hidden />
+          <ArrowRight size={15} strokeWidth={1.5} aria-hidden />
         </Link>
 
         <ReportFooter label={REPORT_COPY.footer} />

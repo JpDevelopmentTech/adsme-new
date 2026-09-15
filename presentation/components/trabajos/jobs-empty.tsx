@@ -13,7 +13,7 @@ export function JobsEmpty({ isFiltered }: JobsEmptyProps) {
   const { clearParams, isPending } = useQueryParams();
 
   return (
-    <div className="flex flex-col items-center justify-center gap-4 rounded-card border border-dashed border-border bg-surface px-8 py-16 text-center">
+    <div className="flex flex-col items-center justify-center gap-4 px-8 py-16 text-center">
       {isFiltered ? (
         <SearchX size={26} className="text-text-muted" aria-hidden />
       ) : (
@@ -21,7 +21,7 @@ export function JobsEmpty({ isFiltered }: JobsEmptyProps) {
       )}
 
       <div className="flex w-[440px] max-w-full flex-col gap-1.5">
-        <p className="font-display text-base font-bold text-text-primary">
+        <p className="font-display text-[15px] font-normal text-text-primary">
           {isFiltered ? JOBS_EMPTY_COPY.noResultsTitle : JOBS_EMPTY_COPY.title}
         </p>
         <p className="text-[13px] leading-[1.5] text-text-secondary">
@@ -43,7 +43,7 @@ export function JobsEmpty({ isFiltered }: JobsEmptyProps) {
         </SecondaryButton>
       ) : (
         <PrimaryLink href={NEW_JOB_ROUTE}>
-          <Plus size={18} strokeWidth={2} aria-hidden />
+          <Plus size={15} strokeWidth={1.75} aria-hidden />
           {JOBS_COPY.newJob}
         </PrimaryLink>
       )}

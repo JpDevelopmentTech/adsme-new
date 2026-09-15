@@ -4,7 +4,7 @@ import { cn } from "@/utils/cn";
 export function Avatar({
   initials,
   size,
-  fontSize = 14,
+  fontSize = 12,
   shape = "circle",
   gradient,
   imageUrl,
@@ -12,9 +12,9 @@ export function Avatar({
   return (
     <span
       className={cn(
-        "grid shrink-0 place-items-center overflow-hidden font-display font-bold text-white",
+        "grid shrink-0 place-items-center overflow-hidden font-display font-normal tracking-[0.4px] text-g-50",
         shape === "circle" ? "rounded-pill" : "rounded-md",
-        !gradient && "bg-brand-gradient",
+        !gradient && "bg-g-700",
       )}
       style={{
         width: size,

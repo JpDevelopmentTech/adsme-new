@@ -16,6 +16,8 @@ export const JOB_QUERY_PARAMS = {
 
 export const JOBS_COPY = {
   title: "Trabajos",
+  count: (total: number) => (total === 1 ? "1 trabajo" : `${total} trabajos`),
+  results: (shown: number, total: number) => `${shown} de ${total}`,
   newJob: "Nuevo trabajo",
   searchPlaceholder: "Buscar canción o artista…",
   listView: "Ver como lista",
@@ -26,6 +28,38 @@ export const JOBS_COPY = {
   perDay: "/día",
   sortBy: (column: string) => `Ordenar por ${column}`,
 } as const;
+
+/** Textos de la banda que encabeza el listado. */
+export const JOBS_BAND_COPY = {
+  eyebrow: "En pauta ahora mismo",
+  committed: (total: number) =>
+    total === 1
+      ? "comprometidos en 1 trabajo"
+      : `comprometidos en ${total} trabajos`,
+  running: (count: number) => `${count} en curso`,
+  endingSoon: (count: number) =>
+    count === 1 ? "1 acaba esta semana" : `${count} acaban esta semana`,
+  overdue: (count: number) =>
+    count === 1 ? "1 vencido sin cerrar" : `${count} vencidos sin cerrar`,
+  upcoming: (count: number) => `${count} sin empezar`,
+  finished: (count: number) =>
+    count === 1 ? "1 finalizado" : `${count} finalizados`,
+} as const;
+
+/**
+ * Anchos de las columnas de la tabla, en porcentaje del ancho del panel. En
+ * porcentaje y no en píxeles para que la columna del eje conserve su proporción
+ * a cualquier ancho: si se estrechara sola, los tramos dejarían de ser legibles.
+ */
+export const JOB_TABLE_WIDTHS = [
+  "27.26%",
+  "9.55%",
+  "34.2%",
+  "11.11%",
+  "9.55%",
+  "3.65%",
+  "4.69%",
+] as const;
 
 export const JOB_FILTER_PREFIXES = {
   status: "Estado",
@@ -57,23 +91,23 @@ export const JOB_SORT_VALUES: JobSort[] = [
 
 /** Color del tramo de cada trabajo en la línea de tiempo de la columna PERÍODO. */
 export const JOB_SPAN_TONES: Record<JobSpanTone, string> = {
-  running: "bg-brand-violet",
-  syncing: "bg-data-cyan",
-  upcoming: "bg-brand-violet/45",
-  overdue: "bg-danger",
-  muted: "bg-text-muted",
+  running: "bg-ink",
+  syncing: "bg-meta",
+  upcoming: "bg-g-400",
+  overdue: "bg-accent",
+  muted: "bg-g-500",
 };
 
 export const JOB_COUNTDOWN_TONES: Record<CountdownTone, string> = {
   muted: "text-text-muted",
   warning: "text-warning",
-  danger: "text-danger",
+  danger: "text-accent",
 };
 
 /** Encabezados de la tabla, en el orden del diseño. */
 export const JOB_TABLE_COLUMNS = {
   job: "TRABAJO",
-  platforms: "PLATAFORMAS",
+  platforms: "PAUTA",
   period: "PERÍODO",
   investment: "INVERSIÓN",
   status: "ESTADO",

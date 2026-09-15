@@ -3,6 +3,7 @@ import {
   PLATFORM_OF_CONNECTION,
 } from "@/constants/platform-labels.constants";
 import type { Campaign } from "@/domain/entities/campaign";
+import type { Connection } from "@/domain/entities/connection";
 import type { JobListing } from "@/domain/entities/job-listing";
 import type { JobPlatform } from "@/domain/entities/job";
 import type { ImportedCampaign } from "@/domain/entities/platform-connection";
@@ -16,14 +17,24 @@ const ACCOUNT_NAMES: Record<JobPlatform, string> = {
 
 /**
  * Últimas campañas importadas, con el trabajo al que alimentan. Una campaña sin
- * trabajo asociado no llega a ningún reporte, así que se marca en vez de ocultarse.
+ * trabajo asociado no llega a ningún reporte, así que se marca en vez de
+ * ocultarse.
+ *
+ * La cuenta se nombra por su etiqueta real: con varias conectadas en la misma
+ * plataforma, decir «Meta Ads» no distingue de cuál vino cada campaña. Si la
+ * conexión ya no existe queda el nombre de la plataforma.
  */
 export function buildImportedCampaigns(
   campaigns: Campaign[],
   jobs: JobListing[],
+  connections: Connection[],
   nowIso: string,
   limit: number,
 ): ImportedCampaign[] {
+  const accounts = new Map(
+    connections.map((connection) => [connection.id, connection.accountLabel]),
+  );
+
   return campaigns.slice(0, limit).map((campaign) => {
     const platform = PLATFORM_OF_CONNECTION[campaign.platform];
     const job = jobs.find((item) => item.id === campaign.jobId);
@@ -32,7 +43,10 @@ export function buildImportedCampaigns(
       id: campaign.id,
       name: campaign.name,
       platform,
-      accountName: ACCOUNT_NAMES[platform] ?? PLATFORM_LABELS[platform],
+      accountName:
+        accounts.get(campaign.connectionId) ??
+        ACCOUNT_NAMES[platform] ??
+        PLATFORM_LABELS[platform],
       jobLabel: job ? `${job.title} · ${job.artistName}` : null,
       spend: campaign.spend,
       syncedAtLabel: formatRelativeTime(campaign.syncedAt, nowIso),

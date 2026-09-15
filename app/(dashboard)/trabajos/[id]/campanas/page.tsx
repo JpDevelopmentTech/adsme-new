@@ -1,25 +1,24 @@
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PLATFORM_TABS } from "@/constants/link-campaign.constants";
-import {
-  JOB_WIZARD_COPY,
-  STEP_TWO_COPY,
-} from "@/constants/job-wizard.constants";
-import { JOBS_ROUTE } from "@/constants/routes.constants";
+import { JOB_STEP_COPY, JOB_WIZARD_COPY, STEP_TWO_COPY } from "@/constants/job-wizard.constants";
+import { editJobRoute, jobLinkRoute } from "@/constants/routes.constants";
 import { DEFAULT_CAMPAIGN_LIST_QUERY } from "@/domain/entities/campaign";
+import { createGetClient } from "@/domain/use-cases/get-client";
 import { createGetJob } from "@/domain/use-cases/get-job";
 import { createListCampaigns } from "@/domain/use-cases/list-campaigns";
 import { createSupabaseCampaignRepository } from "@/infrastructure/repositories/supabase-campaign-repository";
+import { createSupabaseClientRepository } from "@/infrastructure/repositories/supabase-client-repository";
 import { createSupabaseConnectionRepository } from "@/infrastructure/repositories/supabase-connection-repository";
 import { createSupabaseJobRepository } from "@/infrastructure/repositories/supabase-job-repository";
 import { createServerSupabaseClient } from "@/infrastructure/supabase/server-supabase-client";
-import { PlatformCampaignCard } from "@/presentation/components/trabajos/wizard/platform-campaign-card";
-import { JobWizardStepper } from "@/presentation/components/trabajos/wizard/job-wizard-stepper";
-import { BackLink } from "@/presentation/components/ui/back-link";
+import { JobWizardLayout } from "@/presentation/components/trabajos/wizard/job-wizard-layout";
+import { JobWizardPanel } from "@/presentation/components/trabajos/wizard/job-wizard-panel";
+import { PlatformCampaignRow } from "@/presentation/components/trabajos/wizard/platform-campaign-row";
 import { PrimaryLink } from "@/presentation/components/ui/primary-link";
 import { SecondaryLink } from "@/presentation/components/ui/secondary-link";
-import { editJobRoute, jobLinkRoute } from "@/constants/routes.constants";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { buildWizardSummary } from "@/utils/build-wizard-summary";
 
 export const metadata: Metadata = { title: "Campañas del trabajo · adsme" };
 
@@ -40,61 +39,69 @@ export default async function TrabajoCampanasPage({
 
   if (!job) notFound();
 
+  const client = await createGetClient(
+    createSupabaseClientRepository(supabase),
+  )(job.clientId);
+
+  const linkedPlatforms = new Set(
+    campaigns
+      .filter((campaign) => campaign.jobId === job.id)
+      .map((campaign) => campaign.platform),
+  );
+
   return (
-    <>
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div className="flex flex-col gap-[5px]">
-          <BackLink href={JOBS_ROUTE} label={`Trabajos / ${job.title}`} />
-          <h1 className="font-display text-[26px] font-bold text-text-primary">
-            {JOB_WIZARD_COPY.title}
-          </h1>
+    <JobWizardLayout
+      currentStep={2}
+      summary={buildWizardSummary(job, client?.name ?? null, linkedPlatforms.size)}
+    >
+      <JobWizardPanel
+        title={JOB_STEP_COPY.two.title}
+        subtitle={JOB_STEP_COPY.two.subtitle}
+        footer={
+          <>
+            <SecondaryLink href={editJobRoute(job.id)}>
+              <ArrowLeft size={15} strokeWidth={1.75} aria-hidden />
+              {JOB_WIZARD_COPY.previous}
+            </SecondaryLink>
+
+            <PrimaryLink href={jobLinkRoute(job.id)}>
+              {STEP_TWO_COPY.next}
+              <ArrowRight size={15} strokeWidth={1.75} aria-hidden />
+            </PrimaryLink>
+          </>
+        }
+      >
+        <div className="flex flex-col gap-3.5">
+          {PLATFORM_TABS.map((tab) => {
+            // Una plataforma puede tener varias cuentas conectadas: se busca
+            // entre las campañas de todas ellas, no solo entre las de la primera.
+            const accounts = connections.filter(
+              (item) => item.platform === tab.platform,
+            );
+            const accountIds = new Set(accounts.map((account) => account.id));
+
+            return (
+              <PlatformCampaignRow
+                key={tab.platform}
+                jobId={job.id}
+                platform={tab.platform}
+                label={tab.label}
+                isConnected={accounts.length > 0}
+                campaigns={campaigns.filter((campaign) =>
+                  accountIds.has(campaign.connectionId),
+                )}
+                linked={campaigns.filter(
+                  (campaign) =>
+                    campaign.jobId === job.id &&
+                    campaign.platform === tab.platform,
+                )}
+              />
+            );
+          })}
         </div>
-      </div>
 
-      <JobWizardStepper currentStep={2} />
-
-      <div className="flex flex-col gap-5 rounded-card border border-border bg-card p-7">
-        <p className="text-[13px] leading-[1.4] text-text-secondary">
-          {STEP_TWO_COPY.subtitle}
-        </p>
-
-        {PLATFORM_TABS.map((tab) => {
-          const connection =
-            connections.find((item) => item.platform === tab.platform) ?? null;
-
-          return (
-            <PlatformCampaignCard
-              key={tab.platform}
-              jobId={job.id}
-              platform={tab.platform}
-              label={tab.label}
-              connection={connection}
-              campaigns={campaigns.filter(
-                (campaign) => campaign.connectionId === connection?.id,
-              )}
-              linked={campaigns.filter(
-                (campaign) =>
-                  campaign.jobId === job.id &&
-                  campaign.platform === tab.platform,
-              )}
-            />
-          );
-        })}
-      </div>
-
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <SecondaryLink href={editJobRoute(job.id)}>
-          <ArrowLeft size={18} strokeWidth={2} aria-hidden />
-          {JOB_WIZARD_COPY.previous}
-        </SecondaryLink>
-
-        <div className="flex items-center gap-2.5">
-          <PrimaryLink href={jobLinkRoute(job.id)}>
-            {STEP_TWO_COPY.next}
-            <ArrowRight size={18} strokeWidth={2} aria-hidden />
-          </PrimaryLink>
-        </div>
-      </div>
-    </>
+        <p className="text-[11.5px] text-text-muted">{STEP_TWO_COPY.note}</p>
+      </JobWizardPanel>
+    </JobWizardLayout>
   );
 }

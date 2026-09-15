@@ -8,14 +8,18 @@ import { createSupabaseConnectionRepository } from "@/infrastructure/repositorie
 import { createServerSupabaseClient } from "@/infrastructure/supabase/server-supabase-client";
 import { resolveTiktokAccess } from "@/infrastructure/tiktok/tiktok-access";
 import { fetchAdvertisers } from "@/infrastructure/tiktok/tiktok-oauth";
-import type { TiktokAccountsResult } from "@/types/tiktok-ads.types";
+import type { AccountPickerData } from "@/types/account-picker.types";
+import { toTiktokAccountOption } from "@/utils/to-tiktok-account-option";
 
 /**
- * Cuentas de anunciante que cubre el acceso ya concedido, consultadas bajo
- * demanda en vez de en cada carga de la pantalla. Devuelve la lista vacía si la
- * consulta falla: el selector ya explica qué revisar cuando no llega ninguna.
+ * Cuentas de anunciante que cubre el acceso ya concedido, con las que hoy
+ * alimentan adsme marcadas. Se consultan bajo demanda en vez de en cada carga
+ * de la pantalla.
+ *
+ * Devuelve la lista vacía si la consulta falla: el selector ya explica qué
+ * revisar cuando no llega ninguna cuenta.
  */
-export async function listTiktokAccountsAction(): Promise<TiktokAccountsResult> {
+export async function listTiktokAccountsAction(): Promise<AccountPickerData> {
   const supabase = await createServerSupabaseClient();
   const user = await createGetCurrentUser(
     createSupabaseAuthRepository(supabase),
@@ -24,22 +28,22 @@ export async function listTiktokAccountsAction(): Promise<TiktokAccountsResult> 
   if (!user) redirect(LOGIN_ROUTE);
 
   const connections = createSupabaseConnectionRepository(supabase);
-  const connection = await connections.findByPlatform("tiktok");
+  const connected = await connections.listByPlatform("tiktok");
+  const selectedIds = connected.map((connection) => connection.externalAccountId);
+  // Cualquiera de las conexiones sirve: todas guardan el mismo acceso.
+  const [connection] = connected;
 
-  if (!connection) return { accounts: [], currentId: null };
+  if (!connection) return { options: [], selectedIds: [] };
 
   const access = await resolveTiktokAccess(connection, connections);
 
-  if (access.status !== "ok") {
-    return { accounts: [], currentId: connection.externalAccountId };
-  }
+  if (access.status !== "ok") return { options: [], selectedIds };
 
   try {
-    return {
-      accounts: await fetchAdvertisers(access.accessToken),
-      currentId: connection.externalAccountId,
-    };
+    const advertisers = await fetchAdvertisers(access.accessToken);
+
+    return { options: advertisers.map(toTiktokAccountOption), selectedIds };
   } catch {
-    return { accounts: [], currentId: connection.externalAccountId };
+    return { options: [], selectedIds };
   }
 }

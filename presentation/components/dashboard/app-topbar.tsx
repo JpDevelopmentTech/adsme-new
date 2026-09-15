@@ -1,25 +1,32 @@
 import { Plus } from "lucide-react";
 import { TOPBAR_COPY } from "@/constants/dashboard-copy.constants";
+import { NEW_JOB_ROUTE } from "@/constants/routes.constants";
 import { NotificationsButton } from "@/presentation/components/dashboard/notifications-button";
 import { TopbarSearch } from "@/presentation/components/dashboard/topbar-search";
-import { Avatar } from "@/presentation/components/ui/avatar";
-import { NEW_JOB_ROUTE } from "@/constants/routes.constants";
+import { TopbarTitle } from "@/presentation/components/dashboard/topbar-title";
 import { PrimaryLink } from "@/presentation/components/ui/primary-link";
-import type { AppSidebarProps } from "@/types/dashboard.types";
 
-export function AppTopbar({ user }: AppSidebarProps) {
+/**
+ * Barra superior del panel. Absorbe el título de la pantalla, de modo que el
+ * contenido empieza en el primer dato y no en una segunda cabecera repetida.
+ */
+export function AppTopbar() {
   return (
-    <header className="flex h-[68px] shrink-0 items-center justify-between gap-4 border-b border-border bg-canvas px-7">
-      <TopbarSearch />
+    <header className="glass-panel flex h-16 shrink-0 items-center gap-4 rounded-card px-[18px]">
+      <TopbarTitle />
 
-      <div className="flex items-center gap-4">
-        <PrimaryLink href={NEW_JOB_ROUTE} className="hidden sm:flex">
-          <Plus size={18} strokeWidth={2} aria-hidden />
-          {TOPBAR_COPY.newJob}
-        </PrimaryLink>
-        <NotificationsButton />
-        <Avatar initials={user.initials} size={42} />
+      <div className="flex-1" />
+
+      <div className="hidden items-center gap-4 md:flex">
+        <TopbarSearch />
       </div>
+
+      <PrimaryLink href={NEW_JOB_ROUTE} className="hidden sm:flex">
+        <Plus size={15} strokeWidth={1.75} aria-hidden />
+        {TOPBAR_COPY.newJob}
+      </PrimaryLink>
+
+      <NotificationsButton />
     </header>
   );
 }

@@ -18,6 +18,9 @@ export const TIKTOK_PICK_ACCOUNT_PARAM = "cuenta-tiktok";
 
 export const TIKTOK_PICK_ACCOUNT_VALUE = "elegir";
 
+/** Misma marca cuando quien abre el selector es el menú de la conexión. */
+export const TIKTOK_PICK_ACCOUNT_MANAGE = "gestionar";
+
 /** Margen con el que se renueva el token antes de que caduque de verdad. */
 export const TIKTOK_TOKEN_SKEW_SECONDS = 300;
 
@@ -95,19 +98,18 @@ export const TIKTOK_DAILY_MAX_PAGES = 20;
 export const TIKTOK_PAGE_SIZE = 200;
 
 export const TIKTOK_ACCOUNT_COPY = {
-  change: "Cambiar cuenta",
-  title: "Elige la cuenta de anunciante",
+  title: "Elige tus cuentas de anunciante",
   subtitle:
-    "adsme importará las campañas de la cuenta que elijas. Puedes cambiarla cuando quieras.",
-  confirm: "Usar esta cuenta",
+    "adsme importará las campañas de todas las cuentas que marques. Puedes cambiarlas cuando quieras.",
+  confirm: "Guardar cuentas",
   cancel: "Cancelar",
   loading: "Consultando tus cuentas en TikTok…",
   empty:
     "TikTok no devolvió ninguna cuenta de anunciante para este acceso. Revisa que la app tenga concedidos los permisos de gestión de cuentas.",
   warning:
-    "Al cambiar de cuenta se eliminan las campañas importadas de la anterior. Las que estuvieran vinculadas a un trabajo perderán ese vínculo y habrá que volver a asociarlas.",
+    "Las cuentas que desmarques se desconectarán y se eliminarán sus campañas importadas. Las que estuvieran vinculadas a un trabajo perderán ese vínculo y habrá que volver a asociarlas.",
   pickAfterConnect:
-    "Tienes varias cuentas de anunciante en TikTok. Elige de cuál quieres importar las campañas.",
+    "Tienes varias cuentas de anunciante en TikTok. Marca todas aquellas de las que quieras importar campañas.",
 } as const;
 
 export const TIKTOK_ERRORS = {
@@ -120,8 +122,10 @@ export const TIKTOK_ERRORS = {
     "La cuenta autorizada no tiene cuentas de anunciante accesibles. Revisa que hayas concedido los permisos de gestión de cuentas.",
   advertisersFailed: "TikTok no pudo devolver tus cuentas de anunciante.",
   unknownAdvertiser:
-    "Esa cuenta de anunciante ya no está entre las que autorizaste en TikTok.",
-  accountSwitchFailed: "No pudimos cambiar la cuenta de anunciante.",
+    "Alguna de esas cuentas de anunciante ya no está entre las que autorizaste en TikTok.",
+  noAccountsSelected:
+    "Marca al menos una cuenta de anunciante. Para dejar de importar de TikTok usa Desconectar.",
+  accountsUpdateFailed: "No pudimos guardar las cuentas de anunciante elegidas.",
   syncFailed: "No pudimos importar las campañas de TikTok.",
   dailyFailed:
     "Importamos las campañas, pero no pudimos actualizar su histórico día a día.",

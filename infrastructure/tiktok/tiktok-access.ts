@@ -5,9 +5,20 @@ import type { Connection } from "@/domain/entities/connection";
 import { refreshAccessToken } from "@/infrastructure/tiktok/tiktok-oauth";
 import type { ConnectionRepository } from "@/infrastructure/repositories/supabase-connection-repository";
 
-/** El acceso sirve, no sirve, o falló algo que no dice nada sobre el permiso. */
+/**
+ * El acceso sirve, no sirve, o falló algo que no dice nada sobre el permiso.
+ *
+ * Cuando sirve devuelve el acceso entero, no solo el token: al conectar una
+ * cuenta nueva hay que copiarle también el refresh y la caducidad vigentes, y
+ * tras una renovación los de la conexión que se leyó ya están desfasados.
+ */
 export type TiktokAccess =
-  | { status: "ok"; accessToken: string }
+  | {
+      status: "ok";
+      accessToken: string;
+      refreshToken: string | null;
+      expiresAt: string | null;
+    }
   | { status: "revoked" }
   | { status: "failed" };
 
@@ -30,7 +41,12 @@ export async function resolveTiktokAccess(
   connections: ConnectionRepository,
 ): Promise<TiktokAccess> {
   if (isFresh(connection.tokenExpiresAt)) {
-    return { status: "ok", accessToken: connection.accessToken };
+    return {
+      status: "ok",
+      accessToken: connection.accessToken,
+      refreshToken: connection.refreshToken,
+      expiresAt: connection.tokenExpiresAt,
+    };
   }
 
   if (!connection.refreshToken) {
@@ -52,7 +68,12 @@ export async function resolveTiktokAccess(
       tokenExpiresAt: renewed.expiresAt,
     });
 
-    return { status: "ok", accessToken: renewed.accessToken };
+    return {
+      status: "ok",
+      accessToken: renewed.accessToken,
+      refreshToken: renewed.refreshToken ?? connection.refreshToken,
+      expiresAt: renewed.expiresAt,
+    };
   } catch {
     // Sin saber si fue el permiso o la red, no se toca el estado guardado.
     return { status: "failed" };

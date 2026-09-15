@@ -1,12 +1,8 @@
-import { RefreshCw } from "lucide-react";
 import type { ReportFooterProps } from "@/types/report.types";
 
 /** Pie común de las dos vistas del reporte. */
 export function ReportFooter({ label }: ReportFooterProps) {
   return (
-    <footer className="flex items-center justify-center gap-2 pt-2 text-xs text-text-muted">
-      <RefreshCw size={13} aria-hidden />
-      {label}
-    </footer>
+    <p className="py-4 text-center text-[11.5px] text-text-muted">{label}</p>
   );
 }

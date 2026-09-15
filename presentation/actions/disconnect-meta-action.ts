@@ -13,8 +13,9 @@ import { createSupabaseConnectionRepository } from "@/infrastructure/repositorie
 import { createServerSupabaseClient } from "@/infrastructure/supabase/server-supabase-client";
 
 /**
- * Desvincula Meta Ads. Las campañas importadas caen con la conexión por el
- * `on delete cascade` de la clave foránea.
+ * Desvincula Meta Ads por completo: se van todas sus cuentas, no solo una. Las
+ * campañas importadas caen con cada conexión por el `on delete cascade` de la
+ * clave foránea.
  */
 export async function disconnectMetaAction(): Promise<void> {
   const supabase = await createServerSupabaseClient();
@@ -23,9 +24,11 @@ export async function disconnectMetaAction(): Promise<void> {
   if (!user) redirect(LOGIN_ROUTE);
 
   const connections = createSupabaseConnectionRepository(supabase);
-  const connection = await connections.findByPlatform("meta");
+  const accounts = await connections.listByPlatform("meta");
 
-  if (connection) await connections.deleteConnection(connection.id);
+  await Promise.all(
+    accounts.map((account) => connections.deleteConnection(account.id)),
+  );
 
   revalidatePath(CONNECTIONS_ROUTE);
   revalidatePath(CAMPAIGNS_ROUTE);

@@ -15,5 +15,5 @@ export async function syncTiktokAction(): Promise<void> {
 
   if (!user) redirect(LOGIN_ROUTE);
 
-  finishSync([await syncTiktok(supabase)]);
+  finishSync(await syncTiktok(supabase));
 }
