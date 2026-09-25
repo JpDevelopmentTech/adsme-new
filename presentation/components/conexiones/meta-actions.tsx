@@ -1,4 +1,4 @@
-import { LogIn, RefreshCw, Unlink, Users } from "lucide-react";
+import { LogIn, RefreshCw, Users } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 import { CONNECTIONS_COPY } from "@/constants/connections.constants";
@@ -60,7 +60,10 @@ export function MetaConnectedActions({ isUrgent }: MetaConnectedActionsProps) {
         </SecondaryLink>
       )}
 
-      <ConnectionActionsMenu platform="Meta Ads">
+      <ConnectionActionsMenu
+        platform="Meta Ads"
+        disconnectAction={disconnectMetaAction}
+      >
         {isUrgent ? (
           <Link
             href={PICK_ACCOUNTS_HREF}
@@ -78,13 +81,6 @@ export function MetaConnectedActions({ isUrgent }: MetaConnectedActionsProps) {
             </button>
           </form>
         )}
-
-        <form action={disconnectMetaAction}>
-          <button type="submit" role="menuitem" className={MENU_ITEM_CLASSES}>
-            <Unlink size={15} strokeWidth={1.5} aria-hidden />
-            {CONNECTIONS_COPY.disconnect}
-          </button>
-        </form>
       </ConnectionActionsMenu>
     </>
   );

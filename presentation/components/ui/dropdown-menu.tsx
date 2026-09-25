@@ -50,8 +50,11 @@ export function DropdownMenu({
       {isOpen ? (
         <div
           role="menu"
-          // Elegir una opción cierra el menú, como se espera de cualquier menú.
-          onClick={() => setIsOpen(false)}
+          // Elegir una opción cierra el menú, pero en la siguiente tarea: React
+          // aplica el cambio en una microtarea, antes de que el navegador envíe
+          // el formulario del botón pulsado, y un formulario ya desmontado se
+          // cancela sin avisar — «Desconectar» o «Cerrar sesión» no hacían nada.
+          onClick={() => window.setTimeout(() => setIsOpen(false))}
           className={cn(
             "absolute z-20 min-w-full rounded-md border border-border bg-card-elevated p-1.5 shadow-xl shadow-black/10",
             side === "top" ? "bottom-full mb-2" : "top-full mt-2",

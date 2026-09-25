@@ -1,4 +1,4 @@
-import { LogIn, RefreshCw, Unlink, Users } from "lucide-react";
+import { LogIn, RefreshCw, Users } from "lucide-react";
 import { Suspense } from "react";
 import { CONNECTIONS_COPY } from "@/constants/connections.constants";
 import {
@@ -48,18 +48,14 @@ export function TiktokConnectedActions() {
         {CONNECTIONS_COPY.manage}
       </SecondaryLink>
 
-      <ConnectionActionsMenu platform="TikTok Ads">
+      <ConnectionActionsMenu
+        platform="TikTok Ads"
+        disconnectAction={disconnectTiktokAction}
+      >
         <form action={connectTiktokAction}>
           <button type="submit" role="menuitem" className={MENU_ITEM_CLASSES}>
             <RefreshCw size={15} strokeWidth={1.5} aria-hidden />
             {CONNECTIONS_COPY.reauthorize}
-          </button>
-        </form>
-
-        <form action={disconnectTiktokAction}>
-          <button type="submit" role="menuitem" className={MENU_ITEM_CLASSES}>
-            <Unlink size={15} strokeWidth={1.5} aria-hidden />
-            {CONNECTIONS_COPY.disconnect}
           </button>
         </form>
       </ConnectionActionsMenu>

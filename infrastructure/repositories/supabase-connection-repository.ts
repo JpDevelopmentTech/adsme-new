@@ -181,6 +181,19 @@ export function createSupabaseConnectionRepository(supabase: SupabaseClient) {
     async deleteConnection(connectionId: string): Promise<void> {
       await supabase.from(CONNECTIONS_TABLE).delete().eq("id", connectionId);
     },
+
+    /**
+     * Borra de una vez todas las cuentas de una plataforma. Devuelve si la base
+     * lo aceptó, para que quien desconecta no dé por hecho algo que no ocurrió.
+     */
+    async deleteByPlatform(platform: ConnectionPlatform): Promise<boolean> {
+      const { error } = await supabase
+        .from(CONNECTIONS_TABLE)
+        .delete()
+        .eq("platform", platform);
+
+      return !error;
+    },
   };
 }
 

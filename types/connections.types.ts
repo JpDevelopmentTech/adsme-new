@@ -61,5 +61,15 @@ export interface ConnectionAccessRailProps {
 
 export interface ConnectionActionsMenuProps {
   platform: string;
+  /** Server action que borra todas las cuentas de la plataforma. */
+  disconnectAction: () => Promise<void>;
   children: ReactNode;
+}
+
+export interface DisconnectDialogProps {
+  isOpen: boolean;
+  /** Nombre visible de la plataforma, para el título y el aviso del diálogo. */
+  platform: string;
+  action: () => Promise<void>;
+  onCancel: () => void;
 }

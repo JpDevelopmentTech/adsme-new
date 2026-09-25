@@ -12,6 +12,12 @@ export const CONNECTIONS_COPY = {
   disconnected: "Desconectado",
   notConnectedShort: "Sin conectar",
   disconnect: "Desconectar",
+  disconnectTitle: (platform: string) => `¿Desconectar ${platform}?`,
+  disconnectDescription: (platform: string) =>
+    `Se desvinculan todas las cuentas de ${platform} y se borran sus campañas importadas, que dejarán de aparecer en los trabajos y reportes a los que estaban asignadas. Para recuperarlas tendrás que volver a conectar y a vincularlas.`,
+  disconnectFailed: (platform: string) =>
+    `No se pudo desconectar ${platform}. Inténtalo de nuevo.`,
+  cancel: "Cancelar",
   manage: "Elegir cuentas",
   reauthorize: "Renovar acceso",
   connect: "Conectar cuenta",
