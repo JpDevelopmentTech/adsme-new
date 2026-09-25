@@ -8,10 +8,7 @@ import type { ConnectionsStatusBandProps } from "@/types/connections.types";
  * respuesta, y la pregunta que trae aquí al usuario es si la información está
  * entrando. El titular la contesta y el reloj dice cuándo vuelve a entrar.
  */
-export function ConnectionsStatusBand({
-  status,
-  canSync,
-}: ConnectionsStatusBandProps) {
+export function ConnectionsStatusBand({ status }: ConnectionsStatusBandProps) {
   return (
     <section className="flex flex-wrap items-center gap-[22px] rounded-card bg-ink/94 px-6 py-5 shadow-lift backdrop-blur-xl">
       <SyncClock
@@ -29,7 +26,7 @@ export function ConnectionsStatusBand({
         <p className="text-[12px] text-g-400">{status.detail}</p>
       </div>
 
-      <SyncNowButton isEnabled={canSync} />
+      <SyncNowButton />
     </section>
   );
 }

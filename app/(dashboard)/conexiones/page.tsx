@@ -86,7 +86,6 @@ export default async function ConexionesPage({
           lastSyncedAt,
           now.toISOString(),
         )}
-        canSync={isMetaConnected || isTiktokConnected}
       />
 
       {typeof error === "string" ? <FormAlert message={error} /> : null}

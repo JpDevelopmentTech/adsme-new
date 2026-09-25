@@ -18,11 +18,6 @@ export interface MetaConnectedActionsProps {
   isUrgent: boolean;
 }
 
-export interface SyncNowButtonProps {
-  /** Sin cuenta conectada no hay nada que importar y el botón queda inerte. */
-  isEnabled: boolean;
-}
-
 /** Estado de la importación que encabeza `B10`. */
 export interface ConnectionsStatus {
   /** Minutos hasta la próxima importación; `null` si nunca se ha sincronizado. */
@@ -40,8 +35,6 @@ export interface SyncClockProps {
 
 export interface ConnectionsStatusBandProps {
   status: ConnectionsStatus;
-  /** Sincronizar solo tiene sentido con alguna cuenta conectada. */
-  canSync: boolean;
 }
 
 export interface ConnectionRowProps {
