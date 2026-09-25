@@ -71,3 +71,15 @@ export interface MetaCampaign extends MetaCampaignMetrics {
   objective: string | null;
   startsAt: string | null;
 }
+
+/**
+ * Fila de insights partida por un desglose. Meta devuelve el valor del eje en
+ * el campo que lleva su nombre, así que cada llamada trae solo los que pidió.
+ */
+export interface MetaBreakdownPayload {
+  campaign_id?: string;
+  impressions?: string;
+  age?: string;
+  gender?: string;
+  region?: string;
+}

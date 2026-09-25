@@ -5,11 +5,13 @@ import type { GoogleAdsIngestInput } from "@/validators/google-ads-ingest.valida
 
 const CAMPAIGNS_TABLE = "google_ads_campaigns";
 const DAILY_TABLE = "google_ads_daily";
+const BREAKDOWNS_TABLE = "google_ads_breakdowns";
 
 /** Filas escritas en cada lote, contadas por tabla. */
 export interface GoogleAdsIngestCount {
   campaigns: number;
   daily: number;
+  breakdowns: number;
 }
 
 /**
@@ -23,7 +25,7 @@ export async function saveGoogleAdsExport(
   supabase: SupabaseClient,
   payload: GoogleAdsIngestInput,
 ): Promise<GoogleAdsIngestCount> {
-  const { customerId, campaigns, daily } = payload;
+  const { customerId, campaigns, daily, breakdowns } = payload;
 
   if (campaigns.length > 0) {
     const { error } = await supabase.from(CAMPAIGNS_TABLE).upsert(
@@ -75,5 +77,25 @@ export async function saveGoogleAdsExport(
     if (error) throw error;
   }
 
-  return { campaigns: campaigns.length, daily: daily.length };
+  if (breakdowns.length > 0) {
+    const { error } = await supabase.from(BREAKDOWNS_TABLE).upsert(
+      breakdowns.map((breakdown) => ({
+        customer_id: customerId,
+        external_campaign_id: breakdown.externalCampaignId,
+        kind: breakdown.kind,
+        value: breakdown.value,
+        impressions: breakdown.impressions,
+        ingested_at: new Date().toISOString(),
+      })),
+      { onConflict: "customer_id,external_campaign_id,kind,value" },
+    );
+
+    if (error) throw error;
+  }
+
+  return {
+    campaigns: campaigns.length,
+    daily: daily.length,
+    breakdowns: breakdowns.length,
+  };
 }

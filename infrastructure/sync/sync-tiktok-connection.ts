@@ -10,7 +10,9 @@ import { createImportCampaigns } from "@/domain/use-cases/import-campaigns";
 import { createSupabaseCampaignDailyRepository } from "@/infrastructure/repositories/supabase-campaign-daily-repository";
 import { createSupabaseCampaignRepository } from "@/infrastructure/repositories/supabase-campaign-repository";
 import type { ConnectionRepository } from "@/infrastructure/repositories/supabase-connection-repository";
+import { importBreakdowns } from "@/infrastructure/sync/import-breakdowns";
 import { resolveTiktokAccess } from "@/infrastructure/tiktok/tiktok-access";
+import { createTiktokBreakdownsProvider } from "@/infrastructure/tiktok/tiktok-breakdowns-provider";
 import { TiktokApiError } from "@/infrastructure/tiktok/tiktok-api-error";
 import { fetchTiktokCampaigns } from "@/infrastructure/tiktok/tiktok-campaigns";
 import { createTiktokDailyInsightsProvider } from "@/infrastructure/tiktok/tiktok-daily-insights-provider";
@@ -67,18 +69,27 @@ export async function syncTiktokConnection(
     return syncFailed(TIKTOK_ERRORS.syncFailed);
   }
 
-  // El día a día va después de las campañas porque cada fila cuelga de una de
-  // ellas. Que falle no invalida lo ya importado: se avisa y se sigue.
-  const daily = await importDailyMetrics(
-    supabase,
-    campaignRepository,
-    connection,
-    access.accessToken,
-  );
+  // El día a día y el reparto van después de las campañas porque cuelgan de
+  // ellas. Que fallen no invalida lo ya importado: se avisa y se sigue.
+  const warnings = [
+    await importDailyMetrics(
+      supabase,
+      campaignRepository,
+      connection,
+      access.accessToken,
+    ),
+    await importBreakdowns(
+      supabase,
+      campaignRepository,
+      connection,
+      createTiktokBreakdownsProvider(access.accessToken),
+      TIKTOK_ERRORS.breakdownsFailed,
+    ),
+  ].filter((message): message is string => message !== null);
 
   await connections.markSynced(connection.id);
 
-  return daily ? syncFailed(daily) : { ok: true };
+  return warnings.length > 0 ? syncFailed(warnings.join(" ")) : { ok: true };
 }
 
 /**

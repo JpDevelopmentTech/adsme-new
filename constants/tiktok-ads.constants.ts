@@ -97,6 +97,29 @@ export const TIKTOK_DAILY_MAX_PAGES = 20;
 /** Tope de filas por página; una cuenta rara vez supera este número. */
 export const TIKTOK_PAGE_SIZE = 200;
 
+/**
+ * Informe de audiencia: el reparto por sexo y edad de cada campaña. Es otro
+ * `report_type` del mismo endpoint, no otro endpoint.
+ */
+export const TIKTOK_AUDIENCE_REPORT_TYPE = "AUDIENCE";
+
+export const TIKTOK_AUDIENCE_DIMENSIONS = ["campaign_id", "gender", "age"];
+
+/**
+ * Solo impresiones: es la única métrica que las tres plataformas dan por
+ * desglose, y las tarjetas del reporte son porcentajes.
+ */
+export const TIKTOK_AUDIENCE_METRICS = ["impressions"];
+
+/**
+ * Pide el acumulado de toda la vida de la campaña en vez de un rango. El
+ * reparto de la tarjeta es del lanzamiento entero, así que encadenar ventanas
+ * de 30 días como en la serie diaria sería trabajo para nada.
+ */
+export const TIKTOK_LIFETIME_QUERY = "true";
+
+export const TIKTOK_AUDIENCE_MAX_PAGES = 20;
+
 export const TIKTOK_ACCOUNT_COPY = {
   title: "Elige tus cuentas de anunciante",
   subtitle:
@@ -127,6 +150,8 @@ export const TIKTOK_ERRORS = {
     "Marca al menos una cuenta de anunciante. Para dejar de importar de TikTok usa Desconectar.",
   accountsUpdateFailed: "No pudimos guardar las cuentas de anunciante elegidas.",
   syncFailed: "No pudimos importar las campañas de TikTok.",
+  breakdownsFailed:
+    "Importamos las campañas, pero no pudimos actualizar el reparto por audiencia.",
   dailyFailed:
     "Importamos las campañas, pero no pudimos actualizar su histórico día a día.",
   notConnected: "Conecta TikTok Ads antes de sincronizar.",

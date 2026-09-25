@@ -45,7 +45,9 @@ export function ReportHero({ job, headline }: ReportHeroProps) {
             <span aria-hidden className="h-px w-full bg-g-50/15" />
 
             <div className="flex flex-col gap-1">
-              <p className="font-display text-[62px] leading-none font-light tracking-[-2.6px] text-g-50">
+              {/* La cifra va completa, así que el cuerpo se adapta al ancho:
+                  a 62px fijos, siete dígitos ya se salen de un móvil. */}
+              <p className="font-display text-[clamp(38px,11vw,62px)] leading-none font-light tracking-[-2.6px] text-g-50">
                 {headline.value}
               </p>
               <p className="text-[14px] text-g-300">{headline.caption}</p>

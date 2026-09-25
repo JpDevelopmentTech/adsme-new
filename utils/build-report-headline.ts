@@ -1,6 +1,6 @@
 import type { ReportJob } from "@/domain/entities/report-job";
 import type { ReportHeadline } from "@/types/report.types";
-import { formatCompactNumber } from "@/utils/format-compact-number";
+import { formatExactNumber } from "@/utils/format-exact-number";
 import { daysBetween } from "@/utils/month-range";
 
 /**
@@ -20,7 +20,7 @@ export function buildLaunchHeadline(
   const days = daysBetween(job.startsOn, until);
 
   return {
-    value: formatCompactNumber(reach),
+    value: formatExactNumber(reach),
     caption: `personas han visto ${job.title} en ${days} ${days === 1 ? "día" : "días"}`,
   };
 }
@@ -30,7 +30,7 @@ export function buildArtistHeadline(reach: number): ReportHeadline | null {
   if (reach <= 0) return null;
 
   return {
-    value: formatCompactNumber(reach),
+    value: formatExactNumber(reach),
     caption: "personas han conocido tu música con las campañas de adsme",
   };
 }

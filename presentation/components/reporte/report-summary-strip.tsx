@@ -1,8 +1,9 @@
 import { Fragment } from "react";
 import { REPORT_SUMMARY_COPY } from "@/constants/report.constants";
 import type { ReportSummaryStripProps } from "@/types/report.types";
-import { formatCompactCurrency } from "@/utils/format-compact-currency";
-import { formatCompactNumber, formatPercent, share } from "@/utils/format-compact-number";
+import { formatPercent, share } from "@/utils/format-compact-number";
+import { formatExactCurrency } from "@/utils/format-exact-currency";
+import { formatExactNumber } from "@/utils/format-exact-number";
 
 /**
  * Las tres cifras que dan contexto al titular: qué se reprodujo, cuánto se
@@ -13,17 +14,17 @@ export function ReportSummaryStrip({ totals, investment }: ReportSummaryStripPro
   const stats = [
     {
       label: REPORT_SUMMARY_COPY.plays,
-      value: formatCompactNumber(totals.videoPlays),
+      value: formatExactNumber(totals.videoPlays),
       note: REPORT_SUMMARY_COPY.campaigns(totals.campaigns),
     },
     {
       label: REPORT_SUMMARY_COPY.engagement,
-      value: formatCompactNumber(totals.engagement),
+      value: formatExactNumber(totals.engagement),
       note: REPORT_SUMMARY_COPY.social(totals.comments + totals.shares),
     },
     {
       label: REPORT_SUMMARY_COPY.spend,
-      value: formatCompactCurrency(totals.spend),
+      value: formatExactCurrency(totals.spend),
       note: REPORT_SUMMARY_COPY.budget(
         formatPercent(share(totals.spend, investment)),
       ),

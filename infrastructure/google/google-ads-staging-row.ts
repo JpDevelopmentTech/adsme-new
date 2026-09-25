@@ -1,5 +1,11 @@
+import type { CampaignBreakdownInsight } from "@/domain/entities/campaign-breakdown";
 import type { CampaignDraft } from "@/domain/entities/campaign";
 import type { CampaignDayInsight } from "@/domain/entities/campaign-daily";
+import {
+  toAgeSlice,
+  toGenderSlice,
+  toRegionSlice,
+} from "@/utils/to-breakdown-slice";
 
 /** Fila de `public.google_ads_campaigns`, el buzón que llena el script. */
 export interface GoogleAdsCampaignRow {
@@ -90,4 +96,45 @@ export function toGoogleDayInsight(row: GoogleAdsDailyRow): CampaignDayInsight {
     reactions: Number(row.reactions),
     extra: {},
   };
+}
+
+/**
+ * Fila de `public.google_ads_breakdowns`. El valor llega tal como lo nombra
+ * Google (`AGE_RANGE_25_34`, `FEMALE`, `Antioquia`): normalizarlo es cosa de
+ * adsme, no del script, para no tener dos traducciones que mantener a la vez.
+ */
+export interface GoogleAdsBreakdownRow {
+  external_campaign_id: string;
+  kind: string;
+  value: string;
+  impressions: number;
+}
+
+export const GOOGLE_ADS_BREAKDOWN_COLUMNS =
+  "external_campaign_id, kind, value, impressions";
+
+/**
+ * Convierte la fila del buzón en el tramo que espera el caso de uso. Devuelve
+ * `null` si el eje no es uno de los que el reporte pinta, para que quien llama
+ * la descarte en vez de guardar algo que nadie va a leer.
+ */
+export function toGoogleBreakdownInsight(
+  row: GoogleAdsBreakdownRow,
+): CampaignBreakdownInsight | null {
+  const impressions = Number(row.impressions);
+
+  if (impressions <= 0) return null;
+
+  const slice =
+    row.kind === "age"
+      ? toAgeSlice(row.value, impressions)
+      : row.kind === "gender"
+        ? toGenderSlice(row.value, impressions)
+        : row.kind === "region"
+          ? toRegionSlice(row.value, impressions)
+          : null;
+
+  if (!slice) return null;
+
+  return { ...slice, externalCampaignId: row.external_campaign_id };
 }

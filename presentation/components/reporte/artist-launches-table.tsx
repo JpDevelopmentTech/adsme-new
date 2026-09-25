@@ -6,8 +6,8 @@ import { REPORT_ROUTE_PREFIX } from "@/constants/report-link.constants";
 import { JobCover } from "@/presentation/components/cliente-detalle/job-cover";
 import { StatusBadge } from "@/presentation/components/ui/status-badge";
 import type { ArtistLaunchesTableProps } from "@/types/report.types";
-import { formatCompactCurrency } from "@/utils/format-compact-currency";
-import { formatCompactNumber } from "@/utils/format-compact-number";
+import { formatExactCurrency } from "@/utils/format-exact-currency";
+import { formatExactNumber } from "@/utils/format-exact-number";
 import { resolveClientGradient } from "@/utils/client-gradient";
 
 /** Tabla de lanzamientos del artista, con acceso al reporte de cada uno. */
@@ -55,11 +55,11 @@ export function ArtistLaunchesTable({ launches }: ArtistLaunchesTableProps) {
                 </td>
 
                 <td className="px-5 py-3.5 font-display text-[13px] font-semibold whitespace-nowrap text-text-primary">
-                  {formatCompactNumber(launch.videoPlays)}
+                  {formatExactNumber(launch.videoPlays)}
                 </td>
 
                 <td className="px-5 py-3.5 text-[13px] whitespace-nowrap text-text-secondary">
-                  {formatCompactCurrency(launch.spend)}
+                  {formatExactCurrency(launch.spend)}
                 </td>
 
                 <td className="px-5 py-3.5">

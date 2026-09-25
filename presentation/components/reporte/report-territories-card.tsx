@@ -1,10 +1,14 @@
 import { MapPin } from "lucide-react";
 import { REPORT_COPY } from "@/constants/report.constants";
 import { ReportBarList } from "@/presentation/components/reporte/report-bar-list";
-import { SampleDataBadge } from "@/presentation/components/reporte/sample-data-badge";
 import type { ReportTerritoriesCardProps } from "@/types/report.types";
 
-/** De dónde vino la gente que vio la pauta. */
+/**
+ * De dónde vino la gente que vio la pauta, por región. Es región y no ciudad
+ * porque es la granularidad que las tres plataformas comparten: Google llega a
+ * ciudad, pero Meta se queda en región y TikTok en provincia, y mezclarlas
+ * pondría en la misma barra cosas de distinto tamaño.
+ */
 export function ReportTerritoriesCard({
   territories,
 }: ReportTerritoriesCardProps) {
@@ -15,7 +19,6 @@ export function ReportTerritoriesCard({
           <MapPin size={17} className="text-data-cyan" aria-hidden />
           {REPORT_COPY.territoriesTitle}
         </h2>
-        <SampleDataBadge />
       </header>
 
       <ReportBarList

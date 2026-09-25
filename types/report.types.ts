@@ -61,6 +61,10 @@ export interface ReportPreviewProps {
   /** Curva de cada plataforma; falta la que todavía no tiene serie importada. */
   /** Serie diaria del lanzamiento; `null` si todavía no hay ningún día con entrega. */
   growth: ReportGrowth | null;
+  /** Sexo y edad de quien vio la pauta; `null` si ninguna plataforma lo entregó. */
+  audience: ReportAudience | null;
+  /** Regiones de las que vino la gente; vacío si ninguna plataforma las entregó. */
+  territories: ReportTerritory[];
   /** Plataforma seleccionada en las pestañas; `null` las muestra todas. */
   activePlatform: JobPlatform | null;
   /** URL pública del propio reporte, para el botón de compartir. */
@@ -146,6 +150,37 @@ export interface ArtistPlatformCardsProps {
 }
 
 /** Una porción de un desglose porcentual del reporte. */
+/** Métrica de `ReportPlatformMetrics` que la columna sabe enseñar. */
+export type ReportMetricKey =
+  | "reach"
+  | "impressions"
+  | "videoPlays"
+  | "clicks"
+  | "engagement"
+  | "comments"
+  | "shares"
+  | "reactions";
+
+/** Una métrica ya formateada, lista para pintar en una fila. */
+export interface ReportStat {
+  label: string;
+  value: string;
+}
+
+export interface ReportStatCardProps {
+  stat: ReportStat;
+}
+
+export interface ReportPlatformDetailProps {
+  metrics: ReportPlatformMetrics;
+}
+
+export interface ReportPlatformDetailsProps {
+  platforms: ReportPlatformMetrics[];
+  /** Plataforma elegida en las pestañas; `null` las muestra todas. */
+  activePlatform: JobPlatform | null;
+}
+
 export interface ReportShare {
   label: string;
   percent: number;
@@ -161,17 +196,6 @@ export interface ReportAudience {
   age: ReportShare[];
 }
 
-export interface ReportHouseholds {
-  income: ReportShare[];
-  parental: ReportShare[];
-}
-
-export interface ReportKeyword {
-  term: string;
-  /** Volumen ya formateado, como lo entrega la plataforma. */
-  volume: string;
-}
-
 /** Un día del lanzamiento, con las reproducciones repartidas por plataforma. */
 export interface ReportGrowthDay {
   date: string;
@@ -181,24 +205,40 @@ export interface ReportGrowthDay {
   isPending: boolean;
 }
 
-/** Serie diaria del lanzamiento entero, ya apilada por plataforma. */
+/** Serie diaria del lanzamiento entero, con el desglose por plataforma. */
 export interface ReportGrowth {
   days: ReportGrowthDay[];
-  /** Día más alto; fija la escala vertical de las barras. */
-  peak: number;
+  /**
+   * Día más alto de una sola plataforma. Las áreas se superponen en vez de
+   * apilarse, así que la escala la fija la mayor curva, no la suma de las tres.
+   */
+  platformPeak: number;
+  /** Reproducciones del período por plataforma, para rotular la leyenda. */
+  totals: Record<JobPlatform, number>;
   /** Dónde cae hoy sobre el período, en porcentaje, para rotular el eje. */
   todayPercent: number;
+}
+
+/** Una plataforma como serie del área, en el formato que espera ApexCharts. */
+export interface ReportGrowthSeries {
+  platform: JobPlatform;
+  /** Nombre con el que la plataforma aparece en el tooltip. */
+  name: string;
+  color: string;
+  /** Un punto por día del período; `null` en los que aún no han llegado. */
+  data: { x: string; y: number | null }[];
+}
+
+export interface ReportGrowthChartProps {
+  growth: ReportGrowth;
+  /** Descripción de la gráfica para quien no puede verla. */
+  label: string;
 }
 
 export interface ReportGrowthPanelProps {
   growth: ReportGrowth;
   /** Período de la pauta, ya formateado, para el subtítulo. */
   period: string;
-}
-
-export interface ReportGrowthColumnProps {
-  day: ReportGrowthDay;
-  peak: number;
 }
 
 export interface ReportSummaryStripProps {
@@ -225,14 +265,6 @@ export interface ReportTerritoriesCardProps {
 
 export interface ReportAudienceCardProps {
   audience: ReportAudience;
-}
-
-export interface ReportHouseholdsCardProps {
-  households: ReportHouseholds;
-}
-
-export interface ReportKeywordsCardProps {
-  keywords: ReportKeyword[];
 }
 
 export interface ReportBarListProps {

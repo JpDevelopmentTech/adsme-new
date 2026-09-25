@@ -2,10 +2,15 @@ import { PLATFORM_LABELS } from "@/constants/platform-labels.constants";
 import { PLATFORM_META } from "@/constants/platforms.constants";
 import { REPORT_COPY } from "@/constants/report.constants";
 import type { ReportPlatformColumnProps } from "@/types/report.types";
-import { formatCompactCurrency } from "@/utils/format-compact-currency";
-import { formatCompactNumber, formatPercent, share } from "@/utils/format-compact-number";
+import { formatPercent, share } from "@/utils/format-compact-number";
+import { formatExactCurrency } from "@/utils/format-exact-currency";
+import { formatExactNumber } from "@/utils/format-exact-number";
 
-/** Una plataforma dentro de la comparación: cuánto aportó y con qué esfuerzo. */
+/**
+ * Una plataforma dentro de la comparación: cuánto aportó y con qué esfuerzo. El
+ * resto de sus métricas vive en `ReportPlatformDetails`, que es otra pregunta:
+ * aquí se compara, allí se detalla.
+ */
 export function ReportPlatformColumn({
   metrics,
   totalPlays,
@@ -30,7 +35,7 @@ export function ReportPlatformColumn({
       </div>
 
       <span className="font-display text-[30px] leading-none font-light tracking-[-1.1px] text-text-primary">
-        {formatCompactNumber(metrics.videoPlays)}
+        {formatExactNumber(metrics.videoPlays)}
       </span>
 
       <div aria-hidden className="h-1.5 w-full rounded-pill bg-g-200">
@@ -43,7 +48,7 @@ export function ReportPlatformColumn({
       <span className="text-[11.5px] text-text-muted">
         {REPORT_COPY.platformFoot(
           metrics.campaigns,
-          formatCompactCurrency(metrics.spend),
+          formatExactCurrency(metrics.spend),
         )}
       </span>
     </li>

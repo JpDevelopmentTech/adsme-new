@@ -9,10 +9,12 @@ import { createImportCampaignDailyMetrics } from "@/domain/use-cases/import-camp
 import { createImportCampaigns } from "@/domain/use-cases/import-campaigns";
 import { fetchCampaigns } from "@/infrastructure/meta/meta-api";
 import { MetaApiError } from "@/infrastructure/meta/meta-api-error";
+import { createMetaBreakdownsProvider } from "@/infrastructure/meta/meta-breakdowns-provider";
 import { createMetaDailyInsightsProvider } from "@/infrastructure/meta/meta-daily-insights-provider";
 import { createSupabaseCampaignDailyRepository } from "@/infrastructure/repositories/supabase-campaign-daily-repository";
 import { createSupabaseCampaignRepository } from "@/infrastructure/repositories/supabase-campaign-repository";
 import type { ConnectionRepository } from "@/infrastructure/repositories/supabase-connection-repository";
+import { importBreakdowns } from "@/infrastructure/sync/import-breakdowns";
 import { toMetaCampaignDrafts } from "@/utils/to-meta-campaign-drafts";
 
 /**
@@ -62,13 +64,22 @@ export async function syncMetaConnection(
     return syncFailed(META_ERRORS.syncFailed);
   }
 
-  // El día a día va después de las campañas porque cada fila cuelga de una de
-  // ellas. Que falle no invalida lo ya importado: se avisa y se sigue.
-  const daily = await importDailyMetrics(supabase, campaignRepository, connection);
+  // El día a día y el reparto van después de las campañas porque cuelgan de
+  // ellas. Que fallen no invalida lo ya importado: se avisa y se sigue.
+  const warnings = [
+    await importDailyMetrics(supabase, campaignRepository, connection),
+    await importBreakdowns(
+      supabase,
+      campaignRepository,
+      connection,
+      createMetaBreakdownsProvider(),
+      META_ERRORS.breakdownsFailed,
+    ),
+  ].filter((message): message is string => message !== null);
 
   await connections.markSynced(connection.id);
 
-  return daily ? syncFailed(daily) : { ok: true };
+  return warnings.length > 0 ? syncFailed(warnings.join(" ")) : { ok: true };
 }
 
 /**

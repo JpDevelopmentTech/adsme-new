@@ -117,6 +117,25 @@ export const META_ACTION_TYPES = {
 } as const;
 
 /**
+ * Campos del reparto por audiencia y territorio. Solo impresiones: es la única
+ * métrica que las tres plataformas dan por desglose, y las tarjetas del reporte
+ * son porcentajes.
+ */
+export const META_BREAKDOWN_FIELDS = "campaign_id,impressions";
+
+/**
+ * Ejes que se piden a Meta. Edad y sexo van en la misma llamada —cada fila
+ * aporta a las dos barras— y la región aparte, porque combinarla con la
+ * demografía multiplica las filas sin que el reporte lo aproveche.
+ */
+export const META_AUDIENCE_BREAKDOWNS = "age,gender";
+
+export const META_REGION_BREAKDOWN = "region";
+
+/** Tope de páginas del reparto; con una fila por campaña y tramo no hace falta más. */
+export const META_BREAKDOWN_MAX_PAGES = 30;
+
+/**
  * Marca en la URL con la que la vuelta del OAuth pide elegir cuenta. Solo se
  * añade cuando el usuario tiene más de una: con una sola no hay nada que elegir.
  */
@@ -160,6 +179,8 @@ export const META_ERRORS = {
     "Marca al menos una cuenta publicitaria. Para dejar de importar de Meta usa Desconectar.",
   accountsUpdateFailed: "No pudimos guardar las cuentas publicitarias elegidas.",
   syncFailed: "No pudimos importar las campañas de Meta.",
+  breakdownsFailed:
+    "Importamos las campañas, pero no pudimos actualizar el reparto por audiencia y territorio.",
   dailyFailed:
     "Importamos las campañas, pero no pudimos actualizar su histórico día a día.",
   notConnected: "Conecta Meta Ads antes de sincronizar.",

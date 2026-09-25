@@ -7,6 +7,7 @@ import {
   REPORT_PLATFORM_PARAM,
   REPORT_ROUTE_PREFIX,
 } from "@/constants/report-link.constants";
+import { findReportBreakdowns } from "@/infrastructure/repositories/find-report-breakdowns";
 import { resolveReportContext } from "@/infrastructure/repositories/resolve-report-context";
 import { findReportDailyMetrics } from "@/infrastructure/repositories/supabase-report-daily-repository";
 import {
@@ -17,6 +18,8 @@ import { ExpiredReportLink } from "@/presentation/components/reporte/expired-rep
 import { InvalidReportLink } from "@/presentation/components/reporte/invalid-report-link";
 import { ReportPasswordGate } from "@/presentation/components/reporte/report-password-gate";
 import { ReportPreview } from "@/presentation/components/reporte/report-preview";
+import { buildReportAudience } from "@/utils/build-report-audience";
+import { buildReportTerritories } from "@/utils/build-report-territories";
 import { buildReportTotals } from "@/utils/build-report-totals";
 import { buildReportGrowth } from "@/utils/build-report-growth";
 import { getClientIp } from "@/utils/get-client-ip";
@@ -60,10 +63,11 @@ export default async function ReportePage({
 
   const { supabase, jobId, version } = gate.context;
 
-  const [job, metrics, daily] = await Promise.all([
+  const [job, metrics, daily, breakdowns] = await Promise.all([
     findReportJob(supabase, jobId, version),
     findReportMetrics(supabase, jobId, version),
     findReportDailyMetrics(supabase, jobId, version),
+    findReportBreakdowns(supabase, jobId, version),
   ]);
   if (!job) return <InvalidReportLink />;
 
@@ -84,6 +88,8 @@ export default async function ReportePage({
       totals={buildReportTotals(platforms)}
       platforms={platforms}
       growth={buildReportGrowth(daily, job, toIsoDate(now))}
+      audience={buildReportAudience(breakdowns)}
+      territories={buildReportTerritories(breakdowns)}
       activePlatform={activePlatform}
       basePath={basePath}
       reportUrl={`${resolveOrigin(headerList)}${basePath}`}

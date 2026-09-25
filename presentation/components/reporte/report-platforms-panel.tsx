@@ -45,11 +45,11 @@ export function ReportPlatformsPanel({
 
       <div className="h-px bg-border/60" />
 
-      <ul className="flex flex-wrap items-start gap-y-6 py-[18px]">
+      <ul className="flex flex-wrap items-stretch gap-y-6 py-[18px]">
         {visible.map((metrics, index) => (
           <Fragment key={metrics.platform}>
             {index > 0 ? (
-              <span aria-hidden className="hidden h-[104px] w-px bg-border/60 lg:block" />
+              <span aria-hidden className="hidden w-px self-stretch bg-border/60 lg:block" />
             ) : null}
             <ReportPlatformColumn metrics={metrics} totalPlays={totalPlays} />
           </Fragment>

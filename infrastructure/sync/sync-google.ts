@@ -9,6 +9,7 @@ import { createGetCurrentUser } from "@/domain/use-cases/get-current-user";
 import { createImportCampaignDailyMetrics } from "@/domain/use-cases/import-campaign-daily-metrics";
 import { createImportCampaigns } from "@/domain/use-cases/import-campaigns";
 import { ensureGoogleConnection } from "@/infrastructure/google/ensure-google-connection";
+import { createGoogleBreakdownsProvider } from "@/infrastructure/google/google-breakdowns-provider";
 import { createGoogleDailyInsightsProvider } from "@/infrastructure/google/google-ads-daily-insights-provider";
 import { readStagedCampaigns } from "@/infrastructure/google/google-ads-staging-reader";
 import { toGoogleCampaignDraft } from "@/infrastructure/google/google-ads-staging-row";
@@ -16,6 +17,7 @@ import { createSupabaseAuthRepository } from "@/infrastructure/repositories/supa
 import { createSupabaseCampaignDailyRepository } from "@/infrastructure/repositories/supabase-campaign-daily-repository";
 import { createSupabaseCampaignRepository } from "@/infrastructure/repositories/supabase-campaign-repository";
 import { createSupabaseConnectionRepository } from "@/infrastructure/repositories/supabase-connection-repository";
+import { importBreakdowns } from "@/infrastructure/sync/import-breakdowns";
 
 /**
  * Materializa en el espacio del usuario lo que el script dejó en el buzón.
@@ -54,11 +56,20 @@ export async function syncGoogle(supabase: SupabaseClient): Promise<SyncOutcome>
     return syncFailed(GOOGLE_ADS_ERRORS.syncFailed);
   }
 
-  const daily = await importDailyMetrics(supabase, campaignRepository, connection);
+  const warnings = [
+    await importDailyMetrics(supabase, campaignRepository, connection),
+    await importBreakdowns(
+      supabase,
+      campaignRepository,
+      connection,
+      createGoogleBreakdownsProvider(supabase),
+      GOOGLE_ADS_ERRORS.breakdownsFailed,
+    ),
+  ].filter((message): message is string => message !== null);
 
   await connections.markSynced(connection.id);
 
-  return daily ? syncFailed(daily) : { ok: true };
+  return warnings.length > 0 ? syncFailed(warnings.join(" ")) : { ok: true };
 }
 
 /**

@@ -2,8 +2,10 @@ import "server-only";
 
 import type { SupabaseClient } from "@supabase/supabase-js";
 import {
+  GOOGLE_ADS_BREAKDOWN_COLUMNS,
   GOOGLE_ADS_CAMPAIGN_COLUMNS,
   GOOGLE_ADS_DAILY_COLUMNS,
+  type GoogleAdsBreakdownRow,
   type GoogleAdsCampaignRow,
   type GoogleAdsDailyRow,
 } from "@/infrastructure/google/google-ads-staging-row";
@@ -11,6 +13,7 @@ import { getGoogleAdsCustomerId } from "@/infrastructure/google/google-ads-env";
 
 const CAMPAIGNS_TABLE = "google_ads_campaigns";
 const DAILY_TABLE = "google_ads_daily";
+const BREAKDOWNS_TABLE = "google_ads_breakdowns";
 
 /** Filas por vuelta. Supabase corta en 1000 y la serie diaria supera eso. */
 const PAGE_SIZE = 1_000;
@@ -82,4 +85,21 @@ async function readAllPages<TRow>(
   }
 
   return rows;
+}
+
+/** Reparto por audiencia y territorio del buzón, acotado a la cuenta configurada. */
+export async function readStagedBreakdowns(
+  supabase: SupabaseClient,
+): Promise<GoogleAdsBreakdownRow[]> {
+  return readAllPages<GoogleAdsBreakdownRow>((from, to) => {
+    const request = supabase
+      .from(BREAKDOWNS_TABLE)
+      .select(GOOGLE_ADS_BREAKDOWN_COLUMNS)
+      .order("external_campaign_id", { ascending: true })
+      .range(from, to);
+
+    const customerId = getGoogleAdsCustomerId();
+
+    return customerId ? request.eq("customer_id", customerId) : request;
+  });
 }

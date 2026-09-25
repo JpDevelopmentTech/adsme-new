@@ -1,10 +1,6 @@
 import type { Campaign } from "@/domain/entities/campaign";
-import { formatCompactCurrency } from "@/utils/format-compact-currency";
-
-const COMPACT = new Intl.NumberFormat("es-CO", {
-  notation: "compact",
-  maximumFractionDigits: 1,
-});
+import { formatExactCurrency } from "@/utils/format-exact-currency";
+import { formatExactNumber } from "@/utils/format-exact-number";
 
 /**
  * Los tres KPI de la maqueta del reporte. Salen de las campañas vinculadas al
@@ -15,8 +11,8 @@ export function buildReportKpis(campaigns: Campaign[]) {
     campaigns.reduce((total, campaign) => total + pick(campaign), 0);
 
   return [
-    { value: COMPACT.format(sum((c) => c.videoPlays)), label: "Vistas" },
-    { value: COMPACT.format(sum((c) => c.reach)), label: "Alcance" },
-    { value: formatCompactCurrency(sum((c) => c.spend)), label: "Inversión" },
+    { value: formatExactNumber(sum((c) => c.videoPlays)), label: "Vistas" },
+    { value: formatExactNumber(sum((c) => c.reach)), label: "Alcance" },
+    { value: formatExactCurrency(sum((c) => c.spend)), label: "Inversión" },
   ];
 }

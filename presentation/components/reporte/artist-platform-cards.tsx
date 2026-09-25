@@ -5,12 +5,9 @@ import {
   REPORT_TONE_CLASSES,
 } from "@/constants/report.constants";
 import type { ArtistPlatformCardsProps } from "@/types/report.types";
-import { formatCompactCurrency } from "@/utils/format-compact-currency";
-import {
-  formatCompactNumber,
-  formatPercent,
-  share,
-} from "@/utils/format-compact-number";
+import { formatPercent, share } from "@/utils/format-compact-number";
+import { formatExactCurrency } from "@/utils/format-exact-currency";
+import { formatExactNumber } from "@/utils/format-exact-number";
 import { cn } from "@/utils/cn";
 
 /**
@@ -54,14 +51,14 @@ export function ArtistPlatformCards({ platforms }: ArtistPlatformCardsProps) {
             </header>
 
             <p className="font-display text-[32px] leading-none font-bold text-text-primary">
-              {formatCompactNumber(metrics.videoPlays)}
+              {formatExactNumber(metrics.videoPlays)}
             </p>
 
             <p className="text-xs text-text-muted">
               <span className={cn("font-semibold", tone.text)}>
                 {formatPercent(percent)}
               </span>{" "}
-              de las reproducciones · {formatCompactCurrency(metrics.spend)}{" "}
+              de las reproducciones · {formatExactCurrency(metrics.spend)}{" "}
               invertidos
             </p>
 

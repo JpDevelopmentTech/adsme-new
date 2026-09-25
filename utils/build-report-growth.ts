@@ -14,10 +14,10 @@ function emptyDay(): Record<JobPlatform, number> {
 }
 
 /**
- * Reproducciones día a día del lanzamiento, apiladas por plataforma. Cubre el
- * período entero y no solo hasta hoy: los días que aún no han llegado se marcan
- * como pendientes y se pintan vacíos, que es lo que dice cuánta pauta queda.
- * Sin ningún día con entrega no hay serie que dibujar.
+ * Reproducciones día a día del lanzamiento, desglosadas por plataforma. Cubre
+ * el período entero y no solo hasta hoy: los días que aún no han llegado se
+ * marcan como pendientes y quedan fuera del trazado, que es lo que dice cuánta
+ * pauta queda. Sin ningún día con entrega no hay serie que dibujar.
  */
 export function buildReportGrowth(
   points: ReportDailyPoint[],
@@ -34,23 +34,33 @@ export function buildReportGrowth(
 
   const total = Math.min(daysBetween(job.startsOn, job.endsOn), MAX_DAYS);
   const days: ReportGrowthDay[] = [];
-  let peak = 0;
+  const totals = emptyDay();
+  let platformPeak = 0;
 
   for (let index = 0; index < total; index += 1) {
     const date = shiftIsoDate(job.startsOn, index);
     const byPlatform = byDate.get(date) ?? emptyDay();
-    const sum = PLATFORM_ORDER.reduce(
-      (accumulated, platform) => accumulated + byPlatform[platform],
-      0,
-    );
+    let sum = 0;
 
-    peak = Math.max(peak, sum);
+    for (const platform of PLATFORM_ORDER) {
+      sum += byPlatform[platform];
+      totals[platform] += byPlatform[platform];
+      // La escala la fija la curva más alta de una plataforma: las áreas se
+      // superponen, así que la suma del día dejaría el dibujo aplastado.
+      platformPeak = Math.max(platformPeak, byPlatform[platform]);
+    }
+
     days.push({ date, byPlatform, total: sum, isPending: date > today });
   }
 
-  if (peak === 0) return null;
+  if (platformPeak === 0) return null;
 
   const elapsed = days.filter((day) => !day.isPending).length;
 
-  return { days, peak, todayPercent: (elapsed / days.length) * 100 };
+  return {
+    days,
+    platformPeak,
+    totals,
+    todayPercent: (elapsed / days.length) * 100,
+  };
 }

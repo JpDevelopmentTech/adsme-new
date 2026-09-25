@@ -30,6 +30,17 @@ const daySchema = metricsSchema.extend({
 });
 
 /**
+ * Un tramo del reparto por audiencia o territorio. El valor viaja tal como lo
+ * nombra Google; normalizarlo es cosa de adsme, no del script.
+ */
+const breakdownSchema = z.object({
+  externalCampaignId: z.string().trim().min(1).max(64),
+  kind: z.enum(["age", "gender", "region"]),
+  value: z.string().trim().min(1).max(120),
+  impressions: z.number().int().nonnegative().default(0),
+});
+
+/**
  * Valida lo que envía el script de Google Ads. Los topes por lote acotan el
  * tamaño de cada petición: el script trocea y reenvía, y al ser upsert repetir
  * un lote no duplica nada.
@@ -40,8 +51,10 @@ export const googleAdsIngestSchema = z.object({
   }),
   campaigns: z.array(campaignSchema).max(5_000).default([]),
   daily: z.array(daySchema).max(20_000).default([]),
+  breakdowns: z.array(breakdownSchema).max(20_000).default([]),
 });
 
 export type GoogleAdsIngestInput = z.infer<typeof googleAdsIngestSchema>;
 export type GoogleAdsCampaignInput = z.infer<typeof campaignSchema>;
 export type GoogleAdsDayInput = z.infer<typeof daySchema>;
+export type GoogleAdsBreakdownInput = z.infer<typeof breakdownSchema>;

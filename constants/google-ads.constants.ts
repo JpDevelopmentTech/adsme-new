@@ -24,6 +24,8 @@ export const GOOGLE_ADS_ERRORS = {
     "Todavía no ha llegado ningún dato del script de Google Ads. Revisa que el script esté programado y se haya ejecutado al menos una vez.",
   connectionFailed: "No se pudo preparar la conexión de Google Ads.",
   syncFailed: "No se pudieron importar las campañas de Google Ads.",
+  breakdownsFailed:
+    "Importamos las campañas de Google Ads, pero no pudimos actualizar el reparto por audiencia y territorio.",
   dailyFailed:
     "Las campañas de Google Ads se importaron, pero la serie diaria no.",
 } as const;

@@ -1,43 +1,11 @@
-import { REPORT_PLATFORM_SECTION } from "@/constants/report.constants";
 import type {
   ReportArtist,
   ReportArtistLaunch,
 } from "@/domain/entities/report-artist";
-import type { ReportPlatformMetrics } from "@/domain/entities/report-metrics";
-import type {
-  ReportMetric,
-  ReportMetricNote,
-  ReportTone,
-} from "@/types/report.types";
-import { formatCompactCurrency } from "@/utils/format-compact-currency";
-import {
-  formatCompactNumber,
-  formatPercent,
-  share,
-} from "@/utils/format-compact-number";
-
-function campaignsNote(count: number, tone: ReportTone): ReportMetricNote {
-  return {
-    icon: "campaigns",
-    value: String(count),
-    label: count === 1 ? "campaña" : "campañas",
-    tone,
-  };
-}
-
-/** Lo que el artista reconoce como interacción: comentarios y compartidos. */
-function socialNote(
-  comments: number,
-  shares: number,
-  tone: ReportTone,
-): ReportMetricNote {
-  return {
-    icon: "comments",
-    value: formatCompactNumber(comments + shares),
-    label: "comentarios y compartidos",
-    tone,
-  };
-}
+import type { ReportMetric, ReportMetricNote } from "@/types/report.types";
+import { formatPercent, share } from "@/utils/format-compact-number";
+import { formatExactCurrency } from "@/utils/format-exact-currency";
+import { formatExactNumber } from "@/utils/format-exact-number";
 
 function budgetNote(spend: number, investment: number): ReportMetricNote {
   return {
@@ -58,7 +26,7 @@ export function buildArtistMetrics(artist: ReportArtist): ReportMetric[] {
   return [
     {
       label: "Reproducciones",
-      value: formatCompactNumber(sum((launch) => launch.videoPlays)),
+      value: formatExactNumber(sum((launch) => launch.videoPlays)),
       icon: "views",
       tone: "violet",
       note: {
@@ -70,7 +38,7 @@ export function buildArtistMetrics(artist: ReportArtist): ReportMetric[] {
     },
     {
       label: "Inversión",
-      value: formatCompactCurrency(sum((launch) => launch.spend)),
+      value: formatExactCurrency(sum((launch) => launch.spend)),
       icon: "spend",
       tone: "lime",
       note: budgetNote(
@@ -89,46 +57,6 @@ export function buildArtistMetrics(artist: ReportArtist): ReportMetric[] {
         label: `activas · ${campaigns - active} sin entrega`,
         tone: "magenta",
       },
-    },
-  ];
-}
-
-/**
- * Las tres plataformas muestran exactamente las mismas métricas. Antes cada una
- * enseñaba lo suyo —CPV en YouTube, clics al enlace en Meta, clics al perfil en
- * TikTok—, así que no había forma de compararlas entre sí.
- */
-export function buildPlatformMetrics(
-  metrics: ReportPlatformMetrics,
-): ReportMetric[] {
-  const tone = REPORT_PLATFORM_SECTION[metrics.platform].tone;
-
-  return [
-    {
-      label: "Personas alcanzadas",
-      value: formatCompactNumber(metrics.reach),
-      icon: "reach",
-      tone,
-      note: campaignsNote(metrics.campaigns, tone),
-    },
-    {
-      label: "Reproducciones",
-      value: formatCompactNumber(metrics.videoPlays),
-      icon: "views",
-      tone,
-      note: {
-        icon: "clicks",
-        value: formatCompactNumber(metrics.clicks),
-        label: "clics",
-        tone,
-      },
-    },
-    {
-      label: "Interacciones",
-      value: formatCompactNumber(metrics.engagement),
-      icon: "engagement",
-      tone,
-      note: socialNote(metrics.comments, metrics.shares, tone),
     },
   ];
 }

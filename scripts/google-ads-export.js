@@ -6,10 +6,11 @@
  * Al correr ahí ya está autenticado por la propia sesión de Google, así que no
  * necesita developer token, OAuth ni refresh token.
  *
- * Envía dos cosas por cada cuenta, igual que las integraciones de Meta y TikTok:
- * el acumulado de toda la vida de cada campaña y su serie día a día desde que
- * existe. La primera alimenta las tarjetas del reporte; la segunda, las gráficas
- * de evolución.
+ * Envía tres cosas por cada cuenta, igual que las integraciones de Meta y
+ * TikTok: el acumulado de toda la vida de cada campaña, su serie día a día
+ * desde que existe y su reparto por audiencia y territorio. Alimentan, por ese
+ * orden, las tarjetas del reporte, la gráfica de evolución y las tarjetas de
+ * «Tu público».
  *
  * Si se crea en una cuenta MCC recorre todas sus subcuentas; si se crea dentro
  * de una cuenta suelta, exporta solo esa.
@@ -43,6 +44,9 @@ const DIAS_VISTAS_DIARIAS = 90;
 /** Filas por petición. Trocear evita cuerpos enormes y timeouts. */
 const TAMANO_LOTE = 2000;
 
+/** Territorios por consulta al catálogo de nombres; su `IN` no admite miles. */
+const TAMANO_CATALOGO = 200;
+
 const RUTA_INGESTA = '/api/google-ads/ingest';
 
 /**
@@ -74,8 +78,13 @@ function exportarCuentaActual() {
   const campanas = leerCampanas(entidades);
 
   // Las campañas van primero y solas: la serie diaria de adsme cuelga de ellas.
-  enviar({customerId: customerId, campaigns: campanas, daily: []});
+  enviar({customerId: customerId, campaigns: campanas, daily: [], breakdowns: []});
   console.log(`${customerId}: ${campanas.length} campañas.`);
+
+  const repartos = leerRepartos();
+
+  enviarLotes(customerId, 'breakdowns', repartos);
+  console.log(`${customerId}: ${repartos.length} tramos de audiencia y territorio.`);
 
   const rescate = vistasDeRescate();
   let total = 0;
@@ -83,7 +92,7 @@ function exportarCuentaActual() {
   for (const anio of anios()) {
     const dias = leerSerieDiaria(anio, rescate);
 
-    enviarSerie(customerId, dias);
+    enviarLotes(customerId, 'daily', dias);
     total += dias.length;
 
     if (dias.length > 0) console.log(`${customerId}: ${anio} → ${dias.length} días.`);
@@ -182,6 +191,140 @@ function anios() {
   for (let anio = ANIO_INICIAL; anio <= actual; anio++) lista.push(anio);
 
   return lista;
+}
+
+/**
+ * Reparto por audiencia y territorio de cada campaña, sumado por campaña y
+ * valor.
+ *
+ * Sumarlo aquí no es un lujo: la demografía viene por grupo de anuncios, así
+ * que una campaña con tres grupos devuelve tres filas del mismo tramo, y el
+ * buzón guarda una sola por campaña y valor. Mandar la misma clave dos veces en
+ * el mismo lote hace fallar la escritura entera.
+ *
+ * Los valores viajan tal como los nombra Google (`AGE_RANGE_25_34`, `FEMALE`);
+ * traducirlos al vocabulario común es cosa de adsme, que ya lo hace con lo que
+ * llega de Meta y TikTok.
+ */
+function leerRepartos() {
+  const totales = {};
+
+  acumular(totales, 'age', recolectarOpcional(
+      ['campaign.id', 'ad_group_criterion.age_range.type', 'metrics.impressions'],
+      'FROM age_range_view'), valorDeEdad);
+
+  acumular(totales, 'gender', recolectarOpcional(
+      ['campaign.id', 'ad_group_criterion.gender.type', 'metrics.impressions'],
+      'FROM gender_view'), valorDeSexo);
+
+  acumularRegiones(totales);
+
+  return Object.keys(totales).map(function(clave) {
+    return totales[clave];
+  });
+}
+
+/** Suma las impresiones de cada fila en su tramo, descartando las vacías. */
+function acumular(totales, kind, filas, leerValor) {
+  for (const fila of filas) {
+    const valor = leerValor(fila);
+    const impresiones = Number((fila.metrics || {}).impressions || 0);
+
+    if (!valor || impresiones <= 0) continue;
+
+    const id = String(fila.campaign.id);
+    const clave = `${id}|${kind}|${valor}`;
+
+    if (totales[clave]) {
+      totales[clave].impressions += impresiones;
+      continue;
+    }
+
+    totales[clave] = {
+      externalCampaignId: id,
+      kind: kind,
+      value: valor,
+      impressions: impresiones,
+    };
+  }
+}
+
+function valorDeEdad(fila) {
+  return ((fila.adGroupCriterion || {}).ageRange || {}).type || '';
+}
+
+function valorDeSexo(fila) {
+  return ((fila.adGroupCriterion || {}).gender || {}).type || '';
+}
+
+/**
+ * Territorios con nombre. `geographic_view` devuelve el identificador del lugar
+ * (`geoTargetConstants/20035`), así que hay que cruzarlo con el catálogo: una
+ * región sin nombre no se puede pintar en el reporte.
+ */
+function acumularRegiones(totales) {
+  const campos =
+      ['campaign.id', 'segments.geo_target_region', 'metrics.impressions'];
+
+  // Cada campaña aparece dos veces: por dónde estaba la gente y por lo que le
+  // interesaba. El reporte habla de lo primero; sin el filtro se suman ambas.
+  let filas = recolectarOpcional(campos,
+      "FROM geographic_view WHERE geographic_view.location_type = 'LOCATION_OF_PRESENCE'");
+
+  if (filas.length === 0) filas = recolectarOpcional(campos, 'FROM geographic_view');
+
+  const nombres = leerNombresDeRegion(filas);
+
+  acumular(totales, 'region', filas, function(fila) {
+    return nombres[recursoDeRegion(fila)] || '';
+  });
+}
+
+function recursoDeRegion(fila) {
+  return String((fila.segments || {}).geoTargetRegion || '');
+}
+
+/** Catálogo de nombres, solo de los territorios que salieron en el informe. */
+function leerNombresDeRegion(filas) {
+  const ids = {};
+
+  for (const fila of filas) {
+    const id = recursoDeRegion(fila).split('/').pop();
+
+    if (id) ids[id] = true;
+  }
+
+  const nombres = {};
+  const lista = Object.keys(ids);
+
+  for (let inicio = 0; inicio < lista.length; inicio += TAMANO_CATALOGO) {
+    const tramo = lista.slice(inicio, inicio + TAMANO_CATALOGO);
+
+    for (const fila of recolectarOpcional(
+        ['geo_target_constant.id', 'geo_target_constant.name'],
+        `FROM geo_target_constant WHERE geo_target_constant.id IN (${tramo.join(', ')})`)) {
+      const constante = fila.geoTargetConstant || {};
+
+      nombres[`geoTargetConstants/${constante.id}`] = constante.name;
+    }
+  }
+
+  return nombres;
+}
+
+/**
+ * Consulta que la cuenta puede no soportar. Devuelve lista vacía en vez de
+ * lanzar: el reparto es lo accesorio del reporte y no debe llevarse por delante
+ * la exportación de campañas, que es lo que de verdad importa.
+ */
+function recolectarOpcional(campos, resto) {
+  try {
+    return recolectar(campos, resto);
+  } catch (error) {
+    console.log(`Consulta no soportada (${resto}): ${error}`);
+
+    return [];
+  }
 }
 
 /**
@@ -394,14 +537,18 @@ function recolectar(campos, resto) {
   return filas;
 }
 
-/** Manda la serie diaria troceada; un único cuerpo con un año entero no pasa. */
-function enviarSerie(customerId, dias) {
-  for (let inicio = 0; inicio < dias.length; inicio += TAMANO_LOTE) {
-    enviar({
+/** Manda un bloque troceado; un único cuerpo con un año entero no pasa. */
+function enviarLotes(customerId, campo, filas) {
+  for (let inicio = 0; inicio < filas.length; inicio += TAMANO_LOTE) {
+    const cuerpo = {
       customerId: customerId,
       campaigns: [],
-      daily: dias.slice(inicio, inicio + TAMANO_LOTE),
-    });
+      daily: [],
+      breakdowns: [],
+    };
+
+    cuerpo[campo] = filas.slice(inicio, inicio + TAMANO_LOTE);
+    enviar(cuerpo);
   }
 }
 

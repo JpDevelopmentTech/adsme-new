@@ -2,7 +2,7 @@ import { Eye, Music } from "lucide-react";
 import { PLATFORM_META } from "@/constants/platforms.constants";
 import { STEP_THREE_COPY } from "@/constants/report-config.constants";
 import type { ReportPreviewDeviceProps } from "@/types/job-wizard.types";
-import { formatCompactCurrency } from "@/utils/format-compact-currency";
+import { formatExactCurrency } from "@/utils/format-exact-currency";
 
 /** Alturas de las barras del mini gráfico, tomadas del `.pen`. */
 const BAR_HEIGHTS = [84, 130, 105, 164, 122, 185, 147, 200, 168, 139];
@@ -53,7 +53,9 @@ export function ReportPreviewDevice({
               key={kpi.label}
               className="flex flex-1 flex-col gap-1 rounded-sm border border-border bg-card p-2.5"
             >
-              <span className="font-display text-base font-bold text-brand-violet">
+              {/* Cifras sin abreviar, como en el reporte: a 16px no caben tres
+                  en la fila de la maqueta. */}
+              <span className="font-display text-[13px] font-bold text-brand-violet">
                 {kpi.value}
               </span>
               <span className="text-xs text-text-muted">{kpi.label}</span>
@@ -74,7 +76,7 @@ export function ReportPreviewDevice({
                     {PLATFORM_META[split.platform].label}
                   </span>
                   <span className="text-[10px] font-semibold text-text-primary">
-                    {formatCompactCurrency(split.amount)}
+                    {formatExactCurrency(split.amount)}
                   </span>
                 </div>
                 <div className="h-1 rounded-pill bg-card-elevated">

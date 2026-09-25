@@ -12,18 +12,19 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import type { JobPlatform } from "@/domain/entities/job";
-import type { ReportMetricIcon, ReportTone } from "@/types/report.types";
+import type {
+  ReportMetricIcon,
+  ReportMetricKey,
+  ReportTone,
+} from "@/types/report.types";
+import { formatExactNumber } from "@/utils/format-exact-number";
 
 export const REPORT_COPY = {
-  territoriesTitle: "Territorios y ciudades",
-  territoriesSubtitle: "REPARTO POR CIUDAD",
+  territoriesTitle: "Territorios",
+  territoriesSubtitle: "REPARTO POR REGIÓN",
   audienceTitle: "Audiencia",
   audienceGender: "SEXO",
   audienceAge: "EDAD",
-  householdsTitle: "Ingresos y estado parental",
-  householdsIncome: "INGRESOS DEL HOGAR",
-  householdsParental: "ESTADO PARENTAL",
-  keywordsTitle: "Top palabras clave",
   trendSubtitle: (platform: string) => `Últimos 30 días · ${platform}`,
   trendPeriod: (platform: string, period: string) =>
     `Acumulado del período · ${period} · ${platform}`,
@@ -38,9 +39,12 @@ export const REPORT_COPY = {
   platformsSubtitle: "Reparto de las reproducciones entre plataformas",
   platformFoot: (campaigns: number, spend: string) =>
     `${campaigns} ${campaigns === 1 ? "campaña" : "campañas"} · ${spend}`,
+  detailTitle: "Cada plataforma en detalle",
+  detailSubtitle: "Todo lo que reportó cada cuenta durante el período",
+  detailCampaigns: (campaigns: number) =>
+    `${campaigns} ${campaigns === 1 ? "campaña" : "campañas"}`,
   growthTitle: "Cómo fue creciendo",
   growthSubtitle: (period: string) => `Reproducciones por día · ${period}`,
-  growthToday: "hoy",
   growthEmpty:
     "Todavía no hay días con entrega que dibujar. En cuanto la pauta empiece a moverse, aparecerán aquí automáticamente.",
   adEyebrow: "YouTube · in-stream saltable",
@@ -91,9 +95,29 @@ export const REPORT_SUMMARY_COPY = {
   campaigns: (count: number) =>
     count === 1 ? "1 campaña" : `${count} campañas`,
   social: (count: number) =>
-    `${count} ${count === 1 ? "comentario o compartido" : "comentarios y compartidos"}`,
+    `${formatExactNumber(count)} ${count === 1 ? "comentario o compartido" : "comentarios y compartidos"}`,
   budget: (percent: string) => `${percent} del presupuesto`,
 } as const;
+
+/**
+ * Métricas que cada plataforma enseña, una por tarjeta, en el orden en que le
+ * importan a quien lee el reporte: primero cuánta gente, después cuánto se le
+ * mostró y por último qué hizo con ello. La inversión cierra la serie porque es
+ * la única que no habla de la audiencia sino del bolsillo.
+ */
+export const PLATFORM_STATS: { key: ReportMetricKey; label: string }[] = [
+  { key: "reach", label: "Personas alcanzadas" },
+  { key: "impressions", label: "Impresiones" },
+  { key: "videoPlays", label: "Reproducciones" },
+  { key: "clicks", label: "Clics" },
+  { key: "engagement", label: "Interacciones" },
+  { key: "comments", label: "Comentarios" },
+  { key: "shares", label: "Compartidos" },
+  { key: "reactions", label: "Reacciones" },
+];
+
+/** Cierra la serie de tarjetas; no es una métrica de audiencia como el resto. */
+export const PLATFORM_SPEND_LABEL = "Inversión";
 
 /** Encabezados de la tabla de lanzamientos del reporte consolidado. */
 export const ARTIST_TABLE_HEADERS = [
@@ -113,18 +137,6 @@ export const ARTIST_TABLE_HEADERS = [
  * Cambiar a `false` para que solo aparezcan las plataformas contratadas.
  */
 export const SHOW_ALL_REPORT_PLATFORMS = true;
-
-/**
- * Provisional: territorios, audiencia, evolución y palabras clave se rellenan
- * con los datos de muestra del diseño porque todavía no se importan de las
- * plataformas. Van marcados en pantalla para que nadie los lea como reales.
- * Al conectar los datos de verdad, poner en `false` y borrar
- * `constants/report-sample.constants.ts`.
- */
-export const SHOW_SAMPLE_REPORT_SECTIONS = true;
-
-/** Aviso que acompaña a toda sección alimentada con datos de muestra. */
-export const SAMPLE_DATA_LABEL = "Datos de muestra";
 
 export const REPORT_PLATFORM_SECTION: Record<
   JobPlatform,
