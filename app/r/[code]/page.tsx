@@ -22,6 +22,9 @@ import { buildReportAudience } from "@/utils/build-report-audience";
 import { buildReportTerritories } from "@/utils/build-report-territories";
 import { buildReportTotals } from "@/utils/build-report-totals";
 import { buildReportGrowth } from "@/utils/build-report-growth";
+import { buildCpvComparison } from "@/utils/build-cpv-comparison";
+import { filterVisibleBreakdowns } from "@/utils/filter-visible-breakdowns";
+import { isReportSectionVisible } from "@/utils/is-report-section-visible";
 import { getClientIp } from "@/utils/get-client-ip";
 import { toIsoDate } from "@/utils/month-range";
 import { withAllReportPlatforms } from "@/utils/with-all-report-platforms";
@@ -73,6 +76,8 @@ export default async function ReportePage({
 
   const platforms = withAllReportPlatforms(metrics);
   const now = new Date();
+  const today = toIsoDate(now);
+  const visibleBreakdowns = filterVisibleBreakdowns(breakdowns, job.hiddenSections);
 
   const basePath = `${REPORT_ROUTE_PREFIX}/${code}`;
   const selected = query[REPORT_PLATFORM_PARAM];
@@ -87,9 +92,14 @@ export default async function ReportePage({
       job={job}
       totals={buildReportTotals(platforms)}
       platforms={platforms}
-      growth={buildReportGrowth(daily, job, toIsoDate(now))}
-      audience={buildReportAudience(breakdowns)}
-      territories={buildReportTerritories(breakdowns)}
+      growth={
+        isReportSectionVisible(job.hiddenSections, "growth")
+          ? buildReportGrowth(daily, job, today)
+          : null
+      }
+      cpvComparison={buildCpvComparison(job, metrics, daily, today)}
+      audience={buildReportAudience(visibleBreakdowns)}
+      territories={buildReportTerritories(visibleBreakdowns)}
       activePlatform={activePlatform}
       basePath={basePath}
       reportUrl={`${resolveOrigin(headerList)}${basePath}`}

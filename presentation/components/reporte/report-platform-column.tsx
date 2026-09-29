@@ -14,6 +14,7 @@ import { formatExactNumber } from "@/utils/format-exact-number";
 export function ReportPlatformColumn({
   metrics,
   totalPlays,
+  showSpend,
 }: ReportPlatformColumnProps) {
   const { chartColor } = PLATFORM_META[metrics.platform];
   const percent = share(metrics.videoPlays, totalPlays);
@@ -46,10 +47,12 @@ export function ReportPlatformColumn({
       </div>
 
       <span className="text-[11.5px] text-text-muted">
-        {REPORT_COPY.platformFoot(
-          metrics.campaigns,
-          formatExactCurrency(metrics.spend),
-        )}
+        {showSpend
+          ? REPORT_COPY.platformFoot(
+              metrics.campaigns,
+              formatExactCurrency(metrics.spend),
+            )
+          : REPORT_COPY.detailCampaigns(metrics.campaigns)}
       </span>
     </li>
   );

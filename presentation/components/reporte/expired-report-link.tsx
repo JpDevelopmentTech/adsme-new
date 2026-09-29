@@ -5,7 +5,7 @@ import { REPORT_GATE_COPY } from "@/constants/report-link.constants";
 export function ExpiredReportLink() {
   return (
     <main className="flex min-h-dvh flex-col items-center justify-center gap-5 px-6 text-center">
-      <span className="grid size-24 place-items-center rounded-pill border border-danger/25 bg-card shadow-[0_0_32px_#E11D4833]">
+      <span className="grid size-24 place-items-center rounded-pill border border-danger/25 bg-card">
         <CalendarX size={40} className="text-danger" aria-hidden />
       </span>
 

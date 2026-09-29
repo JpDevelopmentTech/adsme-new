@@ -15,6 +15,7 @@ import type { ReportPlatformDetailsProps } from "@/types/report.types";
 export function ReportPlatformDetails({
   platforms,
   activePlatform,
+  showSpend,
 }: ReportPlatformDetailsProps) {
   const visible = platforms.filter(
     (metrics) =>
@@ -36,7 +37,11 @@ export function ReportPlatformDetails({
       </div>
 
       {visible.map((metrics) => (
-        <ReportPlatformDetail key={metrics.platform} metrics={metrics} />
+        <ReportPlatformDetail
+          key={metrics.platform}
+          metrics={metrics}
+          showSpend={showSpend}
+        />
       ))}
     </section>
   );

@@ -106,6 +106,21 @@ export const META_DAILY_INSIGHT_FIELDS = `${META_INSIGHT_FIELDS},date_start`;
 export const META_DAILY_MAX_PAGES = 60;
 
 /**
+ * Histórico que se pide en la primera importación diaria: 36 meses, dentro de
+ * los ~37 que Meta deja consultar. Se pide con fechas y no con
+ * `date_preset=maximum` porque así se puede partir en ventanas.
+ */
+export const META_DAILY_HISTORY_DAYS = 1095;
+
+/**
+ * Días por consulta de la serie diaria. Pedir los tres años de golpe, un tramo
+ * por campaña y día, hace que Meta responda «An unknown error occurred» en las
+ * cuentas con muchas campañas; en ventanas de un trimestre cada consulta es
+ * ligera.
+ */
+export const META_DAILY_WINDOW_DAYS = 90;
+
+/**
  * Tipos de acción de Meta que interesan. Los nombres no son evidentes: las
  * compartidas llegan como `post` y las reacciones como `post_reaction`.
  */

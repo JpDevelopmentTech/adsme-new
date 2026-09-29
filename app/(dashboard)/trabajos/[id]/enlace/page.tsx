@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { JOB_STEP_COPY, JOB_WIZARD_COPY } from "@/constants/job-wizard.constants";
 import { STEP_FOUR_COPY } from "@/constants/report-config.constants";
-import { JOBS_ROUTE, jobCampaignsRoute } from "@/constants/routes.constants";
+import { JOBS_ROUTE, jobReportRoute } from "@/constants/routes.constants";
 import { DEFAULT_CAMPAIGN_LIST_QUERY } from "@/domain/entities/campaign";
 import { createGetClient } from "@/domain/use-cases/get-client";
 import { createGetJob } from "@/domain/use-cases/get-job";
@@ -55,7 +55,6 @@ export default async function TrabajoEnlacePage({
   return (
     <JobWizardLayout
       currentStep={4}
-      skippedSteps={[3]}
       summary={buildWizardSummary(job, client?.name ?? null, linkedPlatforms.size)}
     >
       <JobWizardPanel
@@ -63,7 +62,7 @@ export default async function TrabajoEnlacePage({
         subtitle={JOB_STEP_COPY.four.subtitle}
         footer={
           <>
-            <SecondaryLink href={jobCampaignsRoute(job.id)}>
+            <SecondaryLink href={jobReportRoute(job.id)}>
               <ArrowLeft size={15} strokeWidth={1.75} aria-hidden />
               {JOB_WIZARD_COPY.previous}
             </SecondaryLink>

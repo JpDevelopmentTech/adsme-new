@@ -62,7 +62,7 @@ export function JobsTable({
                 ))}
               </colgroup>
 
-              <thead className="bg-white/40">
+              <thead className="bg-g-100">
                 <tr>
                   <th className={`${HEADER_CLASSES} pr-3.5 pl-5`}>
                     {JOB_TABLE_COLUMNS.job}

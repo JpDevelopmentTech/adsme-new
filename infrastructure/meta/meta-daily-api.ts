@@ -4,11 +4,11 @@ import {
   META_DAILY_INSIGHT_FIELDS,
   META_DAILY_MAX_PAGES,
   META_GRAPH_URL,
-  META_INSIGHTS_DATE_PRESET,
   META_INSIGHTS_LEVEL,
   META_INSIGHTS_LIMIT,
   META_INSIGHTS_TIME_INCREMENT,
 } from "@/constants/meta-ads.constants";
+import type { DailyRange } from "@/domain/entities/campaign-daily";
 import type { MetaDailyInsightsPayload } from "@/domain/entities/meta-ads";
 import { getJsonOrThrow } from "@/infrastructure/meta/meta-http";
 
@@ -18,22 +18,26 @@ interface DailyInsightsPage {
 }
 
 /**
- * Serie diaria de todas las campañas de la cuenta, un tramo por campaña y día.
+ * Serie diaria de todas las campañas de la cuenta dentro de un tramo de
+ * fechas, un tramo por campaña y día.
  *
  * Con `time_increment=1` cada campaña deja de ser una fila y pasa a ser tantas
  * como días haya estado entregando, así que la respuesta se pagina: se sigue el
  * enlace `paging.next` que devuelve Meta hasta agotarla o llegar al tope.
- *
- * `since` acota la petición al primer día que interesa. Con `null` se pide el
- * histórico completo que la API permite consultar, unos 37 meses.
  */
 export async function fetchCampaignDailyInsights(
   accessToken: string,
   adAccountId: string,
-  since: string | null,
-  until: string,
+  range: DailyRange,
 ): Promise<MetaDailyInsightsPayload[]> {
-  const params = buildDailyParams(accessToken, since, until);
+  const params = new URLSearchParams({
+    level: META_INSIGHTS_LEVEL,
+    time_increment: META_INSIGHTS_TIME_INCREMENT,
+    fields: META_DAILY_INSIGHT_FIELDS,
+    limit: META_INSIGHTS_LIMIT,
+    time_range: JSON.stringify({ since: range.from, until: range.to }),
+    access_token: accessToken,
+  });
 
   let url: string | undefined =
     `${META_GRAPH_URL}/${adAccountId}/insights?${params}`;
@@ -49,25 +53,3 @@ export async function fetchCampaignDailyInsights(
   return rows;
 }
 
-/**
- * Parámetros de la consulta. `time_range` y `date_preset` son excluyentes: el
- * primero para las sincronizaciones incrementales, el segundo para la inicial.
- */
-function buildDailyParams(
-  accessToken: string,
-  since: string | null,
-  until: string,
-): URLSearchParams {
-  const params = new URLSearchParams({
-    level: META_INSIGHTS_LEVEL,
-    time_increment: META_INSIGHTS_TIME_INCREMENT,
-    fields: META_DAILY_INSIGHT_FIELDS,
-    limit: META_INSIGHTS_LIMIT,
-    access_token: accessToken,
-  });
-
-  if (since) params.set("time_range", JSON.stringify({ since, until }));
-  else params.set("date_preset", META_INSIGHTS_DATE_PRESET);
-
-  return params;
-}

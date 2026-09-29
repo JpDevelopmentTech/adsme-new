@@ -9,8 +9,8 @@ import { AppTopbar } from "@/presentation/components/dashboard/app-topbar";
 import { toCurrentUserSummary } from "@/utils/to-current-user-summary";
 
 /**
- * Shell del panel: láminas de vidrio flotando sobre el fondo, con el sidebar y
- * la topbar separados del borde para que se vea el lienzo por debajo.
+ * Shell del panel: el menú y la cabecera se apoyan directamente sobre el fondo
+ * y solo el contenido va en paneles, centrado a un ancho de lectura cómodo.
  * Verifica la sesión en el servidor además del chequeo optimista del proxy.
  */
 export default async function DashboardLayout({
@@ -28,15 +28,15 @@ export default async function DashboardLayout({
   const summary = toCurrentUserSummary(user);
 
   return (
-    <div className="bg-ambient flex h-dvh gap-4 overflow-hidden p-4">
+    <div className="bg-ambient flex h-dvh overflow-hidden">
       <AppSidebar user={summary} />
 
-      <div className="flex min-w-0 flex-1 flex-col gap-4">
-        <AppTopbar />
+      <div className="flex min-w-0 flex-1 flex-col overflow-y-auto">
+        <div className="mx-auto flex w-full max-w-[1200px] flex-1 flex-col px-4 pb-10 sm:px-8">
+          <AppTopbar />
 
-        <main className="flex flex-1 flex-col gap-4 overflow-y-auto">
-          {children}
-        </main>
+          <main className="flex flex-1 flex-col gap-6">{children}</main>
+        </div>
       </div>
     </div>
   );

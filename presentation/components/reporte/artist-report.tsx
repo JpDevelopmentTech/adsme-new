@@ -18,6 +18,7 @@ export function ArtistReport({
   originTitle,
   originHref,
   reportUrl,
+  showSpend,
 }: ArtistReportProps) {
   const activeCampaigns = artist.launches.reduce(
     (total, launch) => total + launch.activeCampaigns,
@@ -61,14 +62,14 @@ export function ArtistReport({
           <h2 className="font-display text-[17px] font-semibold text-text-primary">
             {REPORT_COPY.artistSummary}
           </h2>
-          <ReportMetricGrid metrics={buildArtistMetrics(artist)} />
+          <ReportMetricGrid metrics={buildArtistMetrics(artist, showSpend)} />
         </div>
 
         <div className="flex flex-col gap-5">
           <h2 className="font-display text-[17px] font-semibold text-text-primary">
             {REPORT_COPY.artistLaunches}
           </h2>
-          <ArtistLaunchesTable launches={artist.launches} />
+          <ArtistLaunchesTable launches={artist.launches} showSpend={showSpend} />
         </div>
 
         {artist.platforms.length > 0 ? (
@@ -76,7 +77,7 @@ export function ArtistReport({
             <h2 className="font-display text-[17px] font-semibold text-text-primary">
               {REPORT_COPY.artistPlatforms}
             </h2>
-            <ArtistPlatformCards platforms={artist.platforms} />
+            <ArtistPlatformCards platforms={artist.platforms} showSpend={showSpend} />
           </div>
         ) : null}
 

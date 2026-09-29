@@ -9,9 +9,13 @@ import { SidebarUserCard } from "@/presentation/components/dashboard/sidebar-use
 import { SectionLabel } from "@/presentation/components/ui/section-label";
 import type { AppSidebarProps } from "@/types/dashboard.types";
 
+/**
+ * Menú lateral. Va sin panel propio, sobre el fondo, separado del contenido
+ * por un filete: así no compite con los paneles donde están los datos.
+ */
 export function AppSidebar({ user }: AppSidebarProps) {
   return (
-    <aside className="glass-panel hidden w-60 shrink-0 flex-col gap-[22px] overflow-y-auto rounded-card px-3 py-[22px] lg:flex">
+    <aside className="hidden w-[232px] shrink-0 flex-col gap-7 overflow-y-auto border-r border-border px-3 py-6 lg:flex">
       <SidebarBrand />
 
       {NAV_SECTIONS.map((section) => (

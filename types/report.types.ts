@@ -1,6 +1,7 @@
 import type { JobPlatform } from "@/domain/entities/job";
 import type { ReportArtist, ReportArtistLaunch } from "@/domain/entities/report-artist";
 import type { ReportJob } from "@/domain/entities/report-job";
+import type { ReportSection } from "@/domain/entities/report-section";
 import type {
   ReportPlatformMetrics,
   ReportTotals,
@@ -61,6 +62,8 @@ export interface ReportPreviewProps {
   /** Curva de cada plataforma; falta la que todavía no tiene serie importada. */
   /** Serie diaria del lanzamiento; `null` si todavía no hay ningún día con entrega. */
   growth: ReportGrowth | null;
+  /** Vistas de YouTube presupuestadas frente a generadas; `null` sin optimización de CPV. */
+  cpvComparison: ReportCpvComparison | null;
   /** Sexo y edad de quien vio la pauta; `null` si ninguna plataforma lo entregó. */
   audience: ReportAudience | null;
   /** Regiones de las que vino la gente; vacío si ninguna plataforma las entregó. */
@@ -139,14 +142,18 @@ export interface ArtistReportProps {
   originTitle: string;
   originHref: string;
   reportUrl: string;
+  /** Si el lanzamiento de origen deja ver la inversión. */
+  showSpend: boolean;
 }
 
 export interface ArtistLaunchesTableProps {
   launches: ReportArtistLaunch[];
+  showSpend: boolean;
 }
 
 export interface ArtistPlatformCardsProps {
   platforms: ReportPlatformMetrics[];
+  showSpend: boolean;
 }
 
 /** Una porción de un desglose porcentual del reporte. */
@@ -173,12 +180,14 @@ export interface ReportStatCardProps {
 
 export interface ReportPlatformDetailProps {
   metrics: ReportPlatformMetrics;
+  showSpend: boolean;
 }
 
 export interface ReportPlatformDetailsProps {
   platforms: ReportPlatformMetrics[];
   /** Plataforma elegida en las pestañas; `null` las muestra todas. */
   activePlatform: JobPlatform | null;
+  showSpend: boolean;
 }
 
 export interface ReportShare {
@@ -245,18 +254,23 @@ export interface ReportSummaryStripProps {
   totals: ReportTotals;
   /** Presupuesto comprometido del trabajo, para el porcentaje gastado. */
   investment: number;
+  /** Cifras que el gestor ocultó al cliente. */
+  hiddenSections: ReportSection[];
 }
 
 export interface ReportPlatformsPanelProps {
   platforms: ReportPlatformMetrics[];
   activePlatform: JobPlatform | null;
   basePath: string;
+  showSpend: boolean;
 }
 
 export interface ReportPlatformColumnProps {
   metrics: ReportPlatformMetrics;
   /** Reproducciones de todo el lanzamiento, para el peso de esta plataforma. */
   totalPlays: number;
+  /** Si el pie enseña lo invertido o solo el número de campañas. */
+  showSpend: boolean;
 }
 
 export interface ReportTerritoriesCardProps {
@@ -280,4 +294,55 @@ export interface ReportPasswordGateProps {
   /** Nombre del lanzamiento, si se pudo saber sin abrir el reporte. */
   jobTitle: string | null;
   hasError: boolean;
+}
+
+/** Un día de la comparación de vistas de YouTube, en acumulado. */
+export interface ReportCpvDay {
+  date: string;
+  /** Vistas que el presupuesto compromete hasta ese día, a ritmo constante. */
+  planned: number;
+  /** Vistas reales acumuladas; `null` en los días que aún no han llegado. */
+  actual: number | null;
+}
+
+/**
+ * Vistas presupuestadas frente a las generadas en YouTube. Lo presupuestado
+ * sale de la parte de la inversión que toca a YouTube dividida por el CPV
+ * cobrado; lo generado, de la serie diaria importada de Google Ads.
+ */
+export interface ReportCpvComparison {
+  days: ReportCpvDay[];
+  /** Parte de la inversión del trabajo asignada a YouTube. */
+  budget: number;
+  chargedCpv: number;
+  /** Vistas que compromete el presupuesto en todo el período. */
+  plannedViews: number;
+  /** Lo comprometido hasta hoy, para comparar con lo que ya se generó. */
+  plannedToDate: number;
+  actualToDate: number;
+  /** Lo que ha salido cada vista con el presupuesto consumido hasta hoy. */
+  effectiveCpv: number | null;
+  /** Diferencia de lo generado sobre lo comprometido a la fecha, en porcentaje. */
+  deltaPercent: number | null;
+  isFinished: boolean;
+}
+
+export interface ReportCpvPanelProps {
+  comparison: ReportCpvComparison;
+  /** Con la inversión oculta, las cifras no enseñan el presupuesto. */
+  showSpend: boolean;
+  /** Período de la pauta, ya formateado, para el subtítulo. */
+  period: string;
+}
+
+export interface ReportCpvChartProps {
+  days: ReportCpvDay[];
+  /** Descripción de la gráfica para quien no puede verla. */
+  label: string;
+}
+
+export interface ReportCpvStat {
+  label: string;
+  value: string;
+  note: string;
 }

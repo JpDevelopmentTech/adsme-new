@@ -14,15 +14,15 @@ export function SpendAxis({ spend }: SpendAxisProps) {
 
   return (
     <div className="relative flex items-center justify-between text-[10.5px]">
-      <span className="text-g-500">
+      <span className="text-text-muted">
         {spend.today > EDGE_ROOM ? 1 : null}
       </span>
-      <span className="text-g-500">
+      <span className="text-text-muted">
         {spend.daysInMonth - spend.today > EDGE_ROOM ? spend.daysInMonth : null}
       </span>
 
       <span
-        className="absolute -translate-x-1/2 font-normal text-g-50"
+        className="absolute -translate-x-1/2 font-normal text-text-primary"
         style={{ left: `${todayPercent}%` }}
       >
         {DASHBOARD_COPY.today}

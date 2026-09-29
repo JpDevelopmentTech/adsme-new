@@ -2,16 +2,19 @@ import type { JobFormat } from "@/domain/entities/job";
 import type { JobBasicsValues } from "@/types/job-wizard.types";
 
 /**
- * Los cuatro pasos del asistente. El 3 todavía no tiene pantalla y el flujo
- * salta del 2 al 4: la nota lo dice en el propio indicador en vez de prometer
- * un paso que luego se omite en silencio.
+ * Los cuatro pasos del asistente. `note` sirve para avisar en el propio
+ * indicador cuando un paso se configura en otro momento.
  */
-export const JOB_WIZARD_STEPS = [
+export const JOB_WIZARD_STEPS: readonly {
+  number: number;
+  label: string;
+  note: string | null;
+}[] = [
   { number: 1, label: "Datos básicos", note: null },
   { number: 2, label: "Campañas", note: null },
-  { number: 3, label: "Reporte del cliente", note: "Se configura después" },
+  { number: 3, label: "Reporte del cliente", note: null },
   { number: 4, label: "Enlace", note: null },
-] as const;
+];
 
 /** Los tres bloques en que se agrupan los campos del paso 1. */
 export const JOB_WIZARD_SECTIONS = {
@@ -47,6 +50,11 @@ export const JOB_STEP_COPY = {
     title: "Campañas",
     subtitle:
       "Vincula la campaña de cada plataforma que quieras incluir. La inversión se repartirá entre las que actives.",
+  },
+  three: {
+    title: "Reporte del cliente",
+    subtitle:
+      "Elige qué ve el artista al abrir su enlace. Puedes cambiarlo después sin volver a compartirlo.",
   },
   four: {
     title: "Enlace del cliente",
@@ -142,9 +150,7 @@ export const STEP_TWO_COPY = {
   empty: "Ninguna campaña vinculada aún. Busca por ID o etiqueta para asociarla.",
   emptyDisconnected: (platform: string) =>
     `No hay ninguna cuenta de ${platform} conectada.`,
-  next: "Siguiente: Enlace",
+  next: "Siguiente: Reporte",
   note:
     "Puedes dejar plataformas sin vincular y añadirlas más adelante desde el trabajo.",
-  skippedStep:
-    "La configuración del reporte llega más adelante: por ahora el asistente pasa directo al enlace del cliente.",
 } as const;

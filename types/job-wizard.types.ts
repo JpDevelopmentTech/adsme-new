@@ -3,6 +3,8 @@ import type { Campaign } from "@/domain/entities/campaign";
 import type { ConnectionPlatform } from "@/domain/entities/connection";
 import type { ReactNode, RefObject } from "react";
 import type { JobFormat, JobPlatform } from "@/domain/entities/job";
+import type { ReportSection } from "@/domain/entities/report-section";
+import type { ReportVisibilityGroup } from "@/types/report-visibility.types";
 import type { FilterSelectOption } from "@/types/ui.types";
 
 export interface JobBasicsValues {
@@ -154,4 +156,41 @@ export interface DownloadQrButtonProps {
 export interface ReportQrProps {
   /** Enlace que codifica el QR; es el mismo que se comparte con el cliente. */
   url: string;
+}
+
+export interface ReportSettingsFormProps {
+  jobId: string;
+  /** Inversión del trabajo, para traducir el CPV a vistas mientras se escribe. */
+  investment: number;
+  cpvOptimization: boolean;
+  chargedCpv: number | null;
+  /** Secciones que el cliente no ve, tal como están guardadas. */
+  hiddenSections: ReportSection[];
+  /** Ruta del paso anterior, para el botón «Atrás». */
+  previousHref: string;
+}
+
+/** Estado devuelto por la Server Action del paso 3 hacia el formulario. */
+export interface ReportSettingsFormState {
+  message: string | null;
+  chargedCpvError: string | null;
+}
+
+export interface CpvChargeFieldProps {
+  defaultValue: string;
+  investment: number;
+  error: string | null;
+}
+
+export interface ReportVisibilityGroupCardProps {
+  group: ReportVisibilityGroup;
+  hiddenSections: ReportSection[];
+  onToggle: (section: ReportSection, isVisible: boolean) => void;
+}
+
+export interface CpvOptimizationSectionProps {
+  cpvOptimization: boolean;
+  chargedCpv: number | null;
+  investment: number;
+  error: string | null;
 }

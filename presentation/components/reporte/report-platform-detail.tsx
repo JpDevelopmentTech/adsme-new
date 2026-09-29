@@ -12,9 +12,12 @@ import { buildPlatformStats } from "@/utils/build-platform-stats";
  * ocho, YouTube cuatro—, y esa diferencia de tamaño es justo lo que evita que
  * tres bloques seguidos se lean como la misma sección repetida tres veces.
  */
-export function ReportPlatformDetail({ metrics }: ReportPlatformDetailProps) {
+export function ReportPlatformDetail({
+  metrics,
+  showSpend,
+}: ReportPlatformDetailProps) {
   const { chartColor } = PLATFORM_META[metrics.platform];
-  const stats = buildPlatformStats(metrics);
+  const stats = buildPlatformStats(metrics, showSpend);
 
   if (stats.length === 0) return null;
 

@@ -127,7 +127,7 @@ export function PlatformCampaignRow({
             <button
               type="submit"
               aria-label={`Desvincular ${campaign.name}`}
-              className="grid size-[30px] cursor-pointer place-items-center rounded-sm text-g-500 transition-colors duration-150 hover:bg-white/70 hover:text-text-primary"
+              className="grid size-[30px] cursor-pointer place-items-center rounded-sm text-g-500 transition-colors duration-150 hover:bg-g-100 hover:text-text-primary"
             >
               <X size={15} strokeWidth={1.5} aria-hidden />
             </button>

@@ -7,6 +7,7 @@ import type {
 import type { ReportArtist, ReportArtistLaunch } from "@/domain/entities/report-artist";
 import type { ReportJob } from "@/domain/entities/report-job";
 import type { ReportPlatformMetrics } from "@/domain/entities/report-metrics";
+import { toReportSections } from "@/utils/to-report-sections";
 
 interface ReportJobRow {
   id: string;
@@ -20,6 +21,10 @@ interface ReportJobRow {
   starts_on: string;
   ends_on: string;
   client_name: string;
+  cpv_optimization: boolean;
+  /** `numeric` llega como cadena para no perder precisión. */
+  charged_cpv: number | string | null;
+  hidden_sections: string[] | null;
 }
 
 interface MetricsRow {
@@ -95,6 +100,9 @@ export async function findReportJob(
     startsOn: data.starts_on,
     endsOn: data.ends_on,
     clientName: data.client_name,
+    cpvOptimization: data.cpv_optimization,
+    chargedCpv: data.charged_cpv === null ? null : Number(data.charged_cpv),
+    hiddenSections: toReportSections(data.hidden_sections),
   };
 }
 

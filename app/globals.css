@@ -1,140 +1,113 @@
 @import "tailwindcss";
 
 /*
- * Sistema de diseño de adsme — espejo de las variables de `adsme.pen`.
+ * Sistema de diseño de adsme — calma y pocos colores (29 sep 2026).
  *
- * La estructura (fondos, texto, bordes) se construye con una rampa neutra de
- * nueve tintes del space-indigo. El color no decora: identifica plataformas en
- * los datos y marca la acción. Eso es lo que evita que un panel de cifras se
- * lea como una escala de grises.
+ * La estructura es una rampa neutra con un tinte salvia muy leve: lo bastante
+ * para que la pantalla no se lea en escala de grises, lo bastante poco para no
+ * competir con los datos. El color fuerte lo llevan las plataformas y los
+ * estados; la acción principal va en tinta, no en rojo.
  */
 @theme {
-  /* Rampa neutra — tintes de #2b2d42 entre el platino y el indigo */
-  --color-g-50: #edf2f4;
-  --color-g-100: #e3eaee;
-  --color-g-200: #d5dde3;
-  --color-g-300: #c8d1da;
-  --color-g-400: #aab5c4;
-  --color-g-500: #8d99ae;
-  --color-g-600: #5a6580;
-  --color-g-700: #414861;
-  --color-g-800: #2b2d42;
+  /* Rampa neutra, tintada de salvia. */
+  --color-g-50: #ffffff;
+  --color-g-100: #f7f9f7;
+  --color-g-200: #ecefec;
+  --color-g-300: #dfe4e0;
+  --color-g-400: #c3ccc7;
+  --color-g-500: #8e9994;
+  --color-g-600: #5e6a65;
+  --color-g-700: #4e5b56;
+  --color-g-800: #1f2a27;
 
-  /* Acento de marca: la acción y el ahora. */
-  --color-accent: #d90429;
-  --color-accent-bright: #ef233c;
+  /* La acción y el ahora: tinta para lo que se pulsa, salvia para lo vivo. */
+  --color-accent: #1f2a27;
+  --color-accent-bright: #5c8a74;
 
-  /* Color de dato: una plataforma, un color. Es lo único que el usuario ya
-     reconoce sin leer, así que es donde el color trabaja de verdad. */
-  --color-yt: #d90429;
-  --color-meta: #0866ff;
-  --color-tiktok: #0b8c99;
-  --color-unassigned: #8d99ae;
+  /* Una plataforma, un color: sus tonos de marca, apagados. */
+  --color-yt: #c4553f;
+  --color-meta: #4a6fa5;
+  --color-tiktok: #2e8c87;
+  --color-unassigned: #c3ccc7;
 
-  --color-canvas: #c8d1da;
-  --color-surface: #e3eaee;
-  --color-card: #edf2f4;
-  --color-card-elevated: #e3eaee;
+  --color-canvas: #f1f3f0;
+  --color-surface: #ecefec;
+  --color-card: #ffffff;
+  --color-card-elevated: #f7f9f7;
 
-  --color-border: #c8d1da;
-  --color-border-strong: #aab5c4;
-  --color-ink: #2b2d42;
+  --color-border: #dfe4e0;
+  --color-border-strong: #c3ccc7;
+  --color-ink: #1f2a27;
 
-  /* Alias heredados: las pantallas aún no migradas caen al sistema nuevo
-     en vez de quedarse sin estilo. */
-  --color-brand-violet: #2b2d42;
-  --color-brand-magenta: #d90429;
-  --color-data-cyan: #0866ff;
-  --color-data-lime: #0b8c99;
+  /* Alias heredados, reasignados a tonos tranquilos que no se confunden con
+     ninguna plataforma. */
+  --color-brand-violet: #1f2a27;
+  --color-brand-magenta: #6e8f80;
+  --color-data-cyan: #5b7c8d;
+  --color-data-lime: #7d8f5e;
 
-  /* Estado. El rojo de marca ya está ocupado, así que el error usa un rojo
-     claramente más oscuro y nunca va solo: siempre con icono o texto. */
-  --color-success: #1a7f5a;
-  --color-warning: #b45309;
-  --color-danger: #a4161a;
+  /* Estado: siempre con icono o texto, nunca solo el color. */
+  --color-success: #3d7a5a;
+  --color-warning: #8f5e14;
+  --color-danger: #b03a3a;
 
-  --color-text-primary: #2b2d42;
-  --color-text-secondary: #414861;
-  --color-text-muted: #5a6580;
+  --color-text-primary: #1f2a27;
+  --color-text-secondary: #4e5b56;
+  --color-text-muted: #5e6a65;
 
-  /* Poppins en todos los roles: display y cuerpo comparten familia y se
-     separan por peso (300 por defecto, 500 para lo enfático). */
+  /* Poppins en todos los roles, separados por peso (300 y 400). */
   --font-display: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
   --font-body: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
 
   --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-tile: 16px;
-  --radius-card: 22px;
+  --radius-md: 10px;
+  --radius-tile: 12px;
+  --radius-card: 16px;
   --radius-pill: 999px;
 }
 
-/*
- * Fondo del panel. Las manchas de color son lo que el vidrio refracta: sin
- * ellas un panel translúcido es indistinguible de uno opaco, y la pantalla
- * entera se lee como una escala de grises por muy pigmentada que sea la paleta.
- */
+/* Fondo del panel: liso. La calma empieza por no tener nada detrás. */
 @utility bg-ambient {
   background-color: var(--color-canvas);
-  background-image:
-    radial-gradient(58% 52% at 4% 0%, #edf2f4 0%, #edf2f400 70%),
-    radial-gradient(46% 38% at 100% -8%, #ef233c33 0%, #ef233c00 72%),
-    radial-gradient(44% 40% at 102% 60%, #0b8c9930 0%, #0b8c9900 72%),
-    radial-gradient(54% 48% at -4% 84%, #0866ff2b 0%, #0866ff00 72%),
-    radial-gradient(72% 58% at 64% 110%, #2b2d4247 0%, #2b2d4200 74%);
-  background-attachment: fixed;
 }
 
-/* Lámina de vidrio: translúcida, desenfocada y con el canto superior iluminado. */
+/*
+ * Panel: blanco sólido con filete de 1px. Conserva el nombre heredado para que
+ * todas las pantallas cambien a la vez; ya no es vidrio.
+ */
 @utility glass-panel {
-  background-color: color-mix(in srgb, var(--color-g-50) 74%, transparent);
-  backdrop-filter: blur(40px) saturate(160%);
-  -webkit-backdrop-filter: blur(40px) saturate(160%);
-  border: 1px solid #f7fafbf2;
-  box-shadow:
-    inset 0 1px 0 #ffffffe6,
-    0 24px 56px #2b2d4229,
-    0 2px 6px #2b2d421a;
-}
-
-/* Vidrio de los controles embebidos en un panel (campos, chips, botones icono). */
-@utility glass-field {
-  background-color: #f7fafbd9;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background-color: var(--color-card);
   border: 1px solid var(--color-border);
-  box-shadow: 0 1px 3px #2b2d4214;
 }
 
-/* Elevación suave, en cuatro niveles. */
+/* Controles embebidos en un panel (campos, chips, botones icono). */
+@utility glass-field {
+  background-color: var(--color-card-elevated);
+  border: 1px solid var(--color-border);
+}
+
+/* Elevación mínima, solo para lo que flota (menús, diálogos). */
 @utility shadow-float {
-  box-shadow:
-    0 4px 12px #2b2d4229,
-    0 1px 2px #2b2d421a;
+  box-shadow: 0 1px 2px #1f2a2714;
 }
 
 @utility shadow-lift {
   box-shadow:
-    0 10px 24px #2b2d4233,
-    0 2px 4px #2b2d4229;
+    0 12px 32px #1f2a271f,
+    0 2px 6px #1f2a2714;
 }
 
 /* Gradiente heredado por las pantallas sin migrar. */
 @utility bg-brand-gradient {
-  background-image: linear-gradient(135deg, #414861 0%, #2b2d42 100%);
+  background-image: linear-gradient(135deg, #4e5b56 0%, #1f2a27 100%);
 }
 
 @utility bg-auth-aurora {
-  background-image: radial-gradient(
-    150% 130% at 25% 15%,
-    #edf2f4 0%,
-    #d5dde3 60%,
-    var(--color-canvas) 100%
-  );
+  background-color: var(--color-canvas);
 }
 
 @utility bg-magenta-glow {
-  background-image: radial-gradient(closest-side, #d9042940 0%, #d9042900 100%);
+  background-image: radial-gradient(closest-side, #6e8f8033 0%, #6e8f8000 100%);
 }
 
 @keyframes equalizer-pulse {

@@ -42,7 +42,7 @@ export const AVATAR_ACCEPTED_TYPES = [
 ] as const;
 
 /** Gradiente del avatar de un cliente nuevo, mientras no tenga foto propia. */
-export const DEFAULT_CLIENT_GRADIENT = { from: "#7C3AED", to: "#DB2777" };
+export const DEFAULT_CLIENT_GRADIENT = { from: "#5e6a65", to: "#1f2a27" };
 
 export const EMPTY_CLIENT_FORM_VALUES: ClientFormValues = {
   name: "",

@@ -19,7 +19,7 @@ export function SyncClock({ minutesLeft, elapsedPercent }: SyncClockProps) {
           aria-hidden
           className="absolute inset-0 rounded-pill"
           style={{
-            background: `conic-gradient(var(--color-accent-bright) ${elapsedPercent}%, #ffffff1f 0)`,
+            background: `conic-gradient(var(--color-accent-bright) ${elapsedPercent}%, #1f2a271a 0)`,
             mask,
             WebkitMask: mask,
           }}

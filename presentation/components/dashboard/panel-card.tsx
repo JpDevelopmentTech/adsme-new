@@ -3,7 +3,7 @@ import Link from "next/link";
 import { DASHBOARD_COPY } from "@/constants/dashboard.constants";
 import type { PanelCardProps } from "@/types/dashboard-home.types";
 
-/** Panel de vidrio con cabecera y filas separadas por filete, base de `B1`. */
+/** Panel con cabecera y filas separadas por filete, base de `B1`. */
 export function PanelCard({
   title,
   subtitle,
@@ -28,7 +28,7 @@ export function PanelCard({
         </div>
 
         {count !== undefined && count > 0 ? (
-          <span className="grid size-[26px] shrink-0 place-items-center rounded-pill bg-accent text-[12px] font-normal text-g-50">
+          <span className="grid size-[24px] shrink-0 place-items-center rounded-pill bg-g-200 text-[11.5px] font-normal text-text-primary">
             {count}
           </span>
         ) : null}
@@ -44,7 +44,7 @@ export function PanelCard({
         ) : null}
       </header>
 
-      <div className="h-px bg-border/60" />
+      <div className="h-px bg-border" />
 
       {isEmpty ? (
         <p className="px-5 py-8 text-center text-[12px] text-text-muted">

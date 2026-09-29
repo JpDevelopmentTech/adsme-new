@@ -16,7 +16,7 @@ export function ClientRow({ client, maxInvestment, nowIso }: ClientRowProps) {
   const hasInvestment = client.monthInvestment > 0;
 
   return (
-    <li className="relative flex items-center gap-3.5 border-b border-border/60 px-5 py-3 transition-colors duration-150 last:border-b-0 hover:bg-white/50">
+    <li className="relative flex items-center gap-3.5 border-b border-border/60 px-5 py-3 transition-colors duration-150 last:border-b-0 hover:bg-g-100">
       <Avatar
         initials={client.initials}
         size={40}

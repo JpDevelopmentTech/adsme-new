@@ -41,7 +41,7 @@ export function JobReportLink({ reportUrl, jobTitle }: JobReportLinkProps) {
       onClick={copy}
       title={REPORT_LINK_COPY.copy}
       aria-label={`${REPORT_LINK_COPY.copy}: ${jobTitle}`}
-      className="grid size-7 cursor-pointer place-items-center rounded-sm text-text-secondary transition-colors duration-150 hover:bg-white/70 hover:text-text-primary focus-visible:ring-2 focus-visible:ring-ink/40 focus-visible:outline-none"
+      className="grid size-7 cursor-pointer place-items-center rounded-sm text-text-secondary transition-colors duration-150 hover:bg-g-100 hover:text-text-primary focus-visible:ring-2 focus-visible:ring-ink/40 focus-visible:outline-none"
     >
       {isCopied ? (
         <Check size={15} strokeWidth={1.75} className="text-success" aria-hidden />

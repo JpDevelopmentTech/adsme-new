@@ -18,6 +18,7 @@ import { formatExactNumber } from "@/utils/format-exact-number";
  */
 export function buildPlatformStats(
   metrics: ReportPlatformMetrics,
+  showSpend: boolean,
 ): ReportStat[] {
   const stats = PLATFORM_STATS.flatMap((stat) => {
     const value = metrics[stat.key];
@@ -27,7 +28,7 @@ export function buildPlatformStats(
     return [{ label: stat.label, value: formatExactNumber(value) }];
   });
 
-  if (metrics.spend <= 0) return stats;
+  if (!showSpend || metrics.spend <= 0) return stats;
 
   return [
     ...stats,

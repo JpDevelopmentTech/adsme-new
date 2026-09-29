@@ -119,15 +119,18 @@ export const PLATFORM_STATS: { key: ReportMetricKey; label: string }[] = [
 /** Cierra la serie de tarjetas; no es una métrica de audiencia como el resto. */
 export const PLATFORM_SPEND_LABEL = "Inversión";
 
+/** Columna de la tabla de lanzamientos que se retira con la inversión oculta. */
+export const ARTIST_SPEND_HEADER = "Inversión";
+
 /** Encabezados de la tabla de lanzamientos del reporte consolidado. */
-export const ARTIST_TABLE_HEADERS = [
+export const ARTIST_TABLE_HEADERS: readonly string[] = [
   "Lanzamiento",
   "Tipo",
   "Estado",
   "Views",
-  "Inversión",
+  ARTIST_SPEND_HEADER,
   "Enlace",
-] as const;
+];
 
 /** Nombre comercial y redes de cada plataforma, tal como los escribe el diseño. */
 /**
@@ -205,40 +208,40 @@ export const REPORT_TONE_CLASSES: Record<
     border: "border-warning/40",
   },
   youtube: {
-    chip: "bg-[#FF3B30]/12",
-    icon: "text-[#FF3B30]",
-    text: "text-[#FF3B30]",
-    border: "border-[#FF3B30]/40",
+    chip: "bg-[#C4553F]/12",
+    icon: "text-[#C4553F]",
+    text: "text-[#C4553F]",
+    border: "border-[#C4553F]/40",
   },
   meta: {
-    chip: "bg-[#0866FF]/12",
-    icon: "text-[#0866FF]",
-    text: "text-[#0866FF]",
-    border: "border-[#0866FF]/40",
+    chip: "bg-[#4A6FA5]/12",
+    icon: "text-[#4A6FA5]",
+    text: "text-[#4A6FA5]",
+    border: "border-[#4A6FA5]/40",
   },
   tiktok: {
-    chip: "bg-[#FE2C55]/12",
-    icon: "text-[#FE2C55]",
-    text: "text-[#FE2C55]",
-    border: "border-[#FE2C55]/40",
+    chip: "bg-[#2E8C87]/12",
+    icon: "text-[#2E8C87]",
+    text: "text-[#2E8C87]",
+    border: "border-[#2E8C87]/40",
   },
 };
 
 /** Color del halo de la cifra principal, en el orden de `REPORT_TONE_CLASSES`. */
 export const REPORT_TONE_GLOW: Record<ReportTone, string> = {
-  violet: "#7C3AED66",
-  cyan: "#0891B255",
-  lime: "#4D7C0F55",
-  magenta: "#DB277766",
-  warning: "#B4530955",
-  youtube: "#FF3B3055",
-  meta: "#0866FF66",
-  tiktok: "#FE2C5555",
+  violet: "#1F2A2733",
+  cyan: "#5B7C8D44",
+  lime: "#7D8F5E44",
+  magenta: "#6E8F8044",
+  warning: "#8F5E1444",
+  youtube: "#C4553F55",
+  meta: "#4A6FA566",
+  tiktok: "#2E8C8755",
 };
 
 /** Barras del reparto por plataforma, con el color de cada marca. */
 export const REPORT_PLATFORM_BAR: Record<JobPlatform, string> = {
-  youtube: "linear-gradient(90deg, #FF3B30 0%, #FF3B3099 100%)",
-  meta: "linear-gradient(90deg, #0866FF 0%, #0866FF99 100%)",
-  tiktok: "linear-gradient(90deg, #FE2C55 0%, #25F4EE 100%)",
+  youtube: "linear-gradient(90deg, #C4553F 0%, #C4553F99 100%)",
+  meta: "linear-gradient(90deg, #4A6FA5 0%, #4A6FA599 100%)",
+  tiktok: "linear-gradient(90deg, #2E8C87 0%, #5FB3AE 100%)",
 };

@@ -10,16 +10,17 @@ import { createServerSupabaseClient } from "@/infrastructure/supabase/server-sup
 import { ActiveCampaignsPanel } from "@/presentation/components/dashboard/active-campaigns-panel";
 import { AlertsPanel } from "@/presentation/components/dashboard/alerts-panel";
 import { MonthHero } from "@/presentation/components/dashboard/month-hero";
+import { SpendPanel } from "@/presentation/components/dashboard/spend-panel";
 import { PortfolioStrip } from "@/presentation/components/dashboard/portfolio-strip";
 import { formatRelativeTime } from "@/utils/format-relative-time";
 
 export const metadata: Metadata = { title: "Dashboard · adsme" };
 
 /**
- * Pantalla `B1 · Dashboard`, ordenada por importancia: arriba queda todo lo que
- * contesta «¿va bien el mes y qué se rompió?» —el dinero a la izquierda, lo que
- * exige una decisión a la derecha— y el detalle del portafolio se baja con
- * scroll. El título lo pone la topbar, así que empieza ya en el primer dato.
+ * Pantalla `B1 · Dashboard`, ordenada por importancia: el mes en una cifra y
+ * su ritmo, tres cifras de contexto, la inversión diaria junto a lo que pide
+ * una decisión, y los trabajos en curso. Contesta «¿va bien el mes y qué
+ * necesita mi atención?» antes de hacer scroll.
  */
 export default async function DashboardPage() {
   const supabase = await createServerSupabaseClient();
@@ -39,15 +40,17 @@ export default async function DashboardPage() {
 
   return (
     <>
-      <div className="flex flex-col gap-4 xl:flex-row">
-        <div className="flex min-w-0 flex-1 flex-col gap-4">
-          <MonthHero
-            metrics={summary.metrics}
-            spend={summary.monthSpend}
-            status={status}
-          />
+      <MonthHero
+        metrics={summary.metrics}
+        spend={summary.monthSpend}
+        status={status}
+      />
 
-          <PortfolioStrip metrics={summary.metrics} />
+      <PortfolioStrip metrics={summary.metrics} />
+
+      <div className="flex flex-col gap-6 xl:flex-row xl:items-stretch">
+        <div className="min-w-0 flex-1">
+          <SpendPanel spend={summary.monthSpend} />
         </div>
 
         <div className="xl:w-[340px] xl:shrink-0">

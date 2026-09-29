@@ -3,6 +3,7 @@ import Link from "next/link";
 import { REPORT_COPY } from "@/constants/report.constants";
 import { ReportAudienceCard } from "@/presentation/components/reporte/report-audience-card";
 import { ReportTerritoriesCard } from "@/presentation/components/reporte/report-territories-card";
+import { ReportCpvPanel } from "@/presentation/components/reporte/report-cpv-panel";
 import { ReportAdPreview } from "@/presentation/components/reporte/report-ad-preview";
 import { ReportEmptyMetrics } from "@/presentation/components/reporte/report-empty-metrics";
 import { ReportFooter } from "@/presentation/components/reporte/report-footer";
@@ -12,10 +13,12 @@ import { ReportPlatformDetails } from "@/presentation/components/reporte/report-
 import { ReportPlatformsPanel } from "@/presentation/components/reporte/report-platforms-panel";
 import { ReportSummaryStrip } from "@/presentation/components/reporte/report-summary-strip";
 import { ReportTopbar } from "@/presentation/components/reporte/report-topbar";
+import type { ReportSection } from "@/domain/entities/report-section";
 import type { ReportPreviewProps } from "@/types/report.types";
 import { buildLaunchHeadline } from "@/utils/build-report-headline";
 import { cn } from "@/utils/cn";
 import { formatJobPeriod } from "@/utils/format-job-period";
+import { isReportSectionVisible } from "@/utils/is-report-section-visible";
 import { toIsoDate } from "@/utils/month-range";
 
 /**
@@ -29,6 +32,7 @@ export function ReportPreview({
   totals,
   platforms,
   growth,
+  cpvComparison,
   audience,
   territories,
   activePlatform,
@@ -41,6 +45,9 @@ export function ReportPreview({
   // Con una sola tarjeta no hay dos columnas que repartir: la que haya ocupa
   // el ancho entero en vez de dejar medio panel vacío al lado.
   const hasBothCards = territories.length > 0 && audience !== null;
+  const isVisible = (section: ReportSection) =>
+    isReportSectionVisible(job.hiddenSections, section);
+  const showSpend = isVisible("investment");
 
   return (
     <div className="bg-ambient flex min-h-dvh flex-col">
@@ -54,31 +61,53 @@ export function ReportPreview({
       <main className="mx-auto flex w-full max-w-[1020px] flex-1 flex-col gap-5 px-5 py-8">
         <ReportHero
           job={job}
-          headline={buildLaunchHeadline(totals.reach, job, toIsoDate(new Date(now)))}
+          headline={
+            isVisible("headline")
+              ? buildLaunchHeadline(totals.reach, job, toIsoDate(new Date(now)))
+              : null
+          }
         />
 
         {platforms.length === 0 ? (
           <ReportEmptyMetrics />
         ) : (
           <>
-            <ReportSummaryStrip totals={totals} investment={job.investment} />
+            <ReportSummaryStrip
+              totals={totals}
+              investment={job.investment}
+              hiddenSections={job.hiddenSections}
+            />
 
             {growth ? (
               <ReportGrowthPanel growth={growth} period={period} />
             ) : null}
 
-            <ReportPlatformsPanel
-              platforms={platforms}
-              activePlatform={activePlatform}
-              basePath={basePath}
-            />
+            {cpvComparison ? (
+              <ReportCpvPanel
+                comparison={cpvComparison}
+                period={period}
+                showSpend={showSpend}
+              />
+            ) : null}
 
-            <ReportPlatformDetails
-              platforms={platforms}
-              activePlatform={activePlatform}
-            />
+            {isVisible("platforms") ? (
+              <ReportPlatformsPanel
+                platforms={platforms}
+                activePlatform={activePlatform}
+                basePath={basePath}
+                showSpend={showSpend}
+              />
+            ) : null}
 
-            <ReportAdPreview job={job} />
+            {isVisible("platformDetails") ? (
+              <ReportPlatformDetails
+                platforms={platforms}
+                activePlatform={activePlatform}
+                showSpend={showSpend}
+              />
+            ) : null}
+
+            {isVisible("adPreview") ? <ReportAdPreview job={job} /> : null}
 
             {/* La sección entera desaparece si ninguna plataforma entregó
                 reparto: con campañas pequeñas lo retienen por umbral de
@@ -105,13 +134,15 @@ export function ReportPreview({
           </>
         )}
 
-        <Link
-          href={artistHref}
-          className="flex items-center justify-center gap-2 rounded-sm py-3.5 text-[13px] font-normal text-text-primary transition-opacity duration-150 hover:opacity-60 focus-visible:ring-2 focus-visible:ring-ink/40 focus-visible:outline-none"
-        >
-          {REPORT_COPY.artistLink(job.clientName)}
-          <ArrowRight size={15} strokeWidth={1.5} aria-hidden />
-        </Link>
+        {isVisible("artistReport") ? (
+          <Link
+            href={artistHref}
+            className="flex items-center justify-center gap-2 rounded-sm py-3.5 text-[13px] font-normal text-text-primary transition-opacity duration-150 hover:opacity-60 focus-visible:ring-2 focus-visible:ring-ink/40 focus-visible:outline-none"
+          >
+            {REPORT_COPY.artistLink(job.clientName)}
+            <ArrowRight size={15} strokeWidth={1.5} aria-hidden />
+          </Link>
+        ) : null}
 
         <ReportFooter label={REPORT_COPY.footer} />
       </main>

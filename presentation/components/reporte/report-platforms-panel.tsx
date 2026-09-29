@@ -13,6 +13,7 @@ export function ReportPlatformsPanel({
   platforms,
   activePlatform,
   basePath,
+  showSpend,
 }: ReportPlatformsPanelProps) {
   const totalPlays = platforms.reduce(
     (sum, metrics) => sum + metrics.videoPlays,
@@ -51,7 +52,11 @@ export function ReportPlatformsPanel({
             {index > 0 ? (
               <span aria-hidden className="hidden w-px self-stretch bg-border/60 lg:block" />
             ) : null}
-            <ReportPlatformColumn metrics={metrics} totalPlays={totalPlays} />
+            <ReportPlatformColumn
+              metrics={metrics}
+              totalPlays={totalPlays}
+              showSpend={showSpend}
+            />
           </Fragment>
         ))}
       </ul>

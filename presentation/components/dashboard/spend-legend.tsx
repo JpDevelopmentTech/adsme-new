@@ -6,7 +6,7 @@ import {
 } from "@/constants/platforms.constants";
 import type { SpendLegendProps } from "@/types/dashboard-home.types";
 
-/** Leyenda de la gráfica, sobre el panel oscuro y con el color de las barras. */
+/** Leyenda de la gráfica, con el color de las barras. */
 export function SpendLegend({ hasUnassigned }: SpendLegendProps) {
   const entries = [
     ...PLATFORM_ORDER.map((platform) => ({
@@ -30,7 +30,7 @@ export function SpendLegend({ hasUnassigned }: SpendLegendProps) {
       {entries.map((entry) => (
         <li
           key={entry.key}
-          className="flex items-center gap-[6px] text-[10.5px] text-g-400"
+          className="flex items-center gap-[6px] text-[11px] text-text-secondary"
         >
           <span
             aria-hidden

@@ -19,7 +19,7 @@ export function ArtistHero({
   ).length;
 
   return (
-    <section className="flex flex-wrap items-start gap-5 rounded-card border border-border bg-[linear-gradient(100deg,#F1F2F8_0%,#FFFFFF_60%)] p-6">
+    <section className="flex flex-wrap items-start gap-5 rounded-card border border-border bg-card p-6">
       <Avatar
         initials={getInitials(artist.name, "")}
         size={104}
@@ -37,10 +37,7 @@ export function ArtistHero({
 
         {headline ? (
           <div className="flex flex-col gap-1.5 pt-3">
-            <p
-              className="font-display text-[38px] leading-[1.05] font-bold text-text-primary lg:text-[46px]"
-              style={{ textShadow: "0 0 24px #7C3AED66" }}
-            >
+            <p className="font-display text-[38px] leading-[1.05] font-light text-text-primary lg:text-[46px]">
               {headline.value}
             </p>
             <p className="text-[15px] text-text-secondary">{headline.caption}</p>

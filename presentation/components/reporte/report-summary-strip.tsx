@@ -4,32 +4,42 @@ import type { ReportSummaryStripProps } from "@/types/report.types";
 import { formatPercent, share } from "@/utils/format-compact-number";
 import { formatExactCurrency } from "@/utils/format-exact-currency";
 import { formatExactNumber } from "@/utils/format-exact-number";
+import { isReportSectionVisible } from "@/utils/is-report-section-visible";
 
 /**
  * Las tres cifras que dan contexto al titular: qué se reprodujo, cuánto se
  * interactuó y cuánto costó. Van en una tira y no en tarjetas sueltas para que
  * se lean como un mismo dato en tres partes.
  */
-export function ReportSummaryStrip({ totals, investment }: ReportSummaryStripProps) {
+export function ReportSummaryStrip({
+  totals,
+  investment,
+  hiddenSections,
+}: ReportSummaryStripProps) {
   const stats = [
     {
+      section: "plays" as const,
       label: REPORT_SUMMARY_COPY.plays,
       value: formatExactNumber(totals.videoPlays),
       note: REPORT_SUMMARY_COPY.campaigns(totals.campaigns),
     },
     {
+      section: "engagement" as const,
       label: REPORT_SUMMARY_COPY.engagement,
       value: formatExactNumber(totals.engagement),
       note: REPORT_SUMMARY_COPY.social(totals.comments + totals.shares),
     },
     {
+      section: "investment" as const,
       label: REPORT_SUMMARY_COPY.spend,
       value: formatExactCurrency(totals.spend),
       note: REPORT_SUMMARY_COPY.budget(
         formatPercent(share(totals.spend, investment)),
       ),
     },
-  ];
+  ].filter((stat) => isReportSectionVisible(hiddenSections, stat.section));
+
+  if (stats.length === 0) return null;
 
   return (
     <section className="glass-panel flex flex-wrap items-center gap-y-5 rounded-card py-5">

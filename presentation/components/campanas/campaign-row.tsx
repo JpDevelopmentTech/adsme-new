@@ -32,7 +32,7 @@ export function CampaignRow({
     <li
       className={cn(
         "flex items-center gap-4 border-t border-border/60 px-5 py-[11px] transition-colors duration-150",
-        isSelected ? "bg-accent/6" : "hover:bg-white/40",
+        isSelected ? "bg-accent/6" : "hover:bg-g-100",
       )}
     >
       <input
@@ -110,7 +110,7 @@ export function CampaignRow({
           onClick={() => onLink(campaign.id)}
           title={linkLabel}
           aria-label={linkLabel}
-          className="grid size-7 cursor-pointer place-items-center rounded-sm text-text-muted transition-colors duration-150 hover:bg-white/70 hover:text-text-primary focus-visible:ring-2 focus-visible:ring-ink/40 focus-visible:outline-none"
+          className="grid size-7 cursor-pointer place-items-center rounded-sm text-text-muted transition-colors duration-150 hover:bg-g-100 hover:text-text-primary focus-visible:ring-2 focus-visible:ring-ink/40 focus-visible:outline-none"
         >
           <Link2 size={15} strokeWidth={1.5} aria-hidden />
         </button>

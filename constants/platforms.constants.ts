@@ -27,25 +27,25 @@ export const PLATFORM_META: Record<JobPlatform, PlatformMeta> = {
   youtube: {
     label: "YouTube",
     mono: "YT",
-    color: "#d90429",
-    chartColor: "#d90429",
+    color: "#c4553f",
+    chartColor: "#c4553f",
     Icon: YoutubeIcon,
   },
   meta: {
     label: "Meta",
     mono: "M",
-    color: "#0866ff",
-    chartColor: "#0866ff",
+    color: "#4a6fa5",
+    chartColor: "#4a6fa5",
     Icon: MetaIcon,
   },
   tiktok: {
     label: "TikTok",
     mono: "TT",
-    color: "#0b8c99",
-    chartColor: "#0b8c99",
+    color: "#2e8c87",
+    chartColor: "#2e8c87",
     Icon: TiktokIcon,
   },
 };
 
 /** Tono neutro de la parte que aportan los trabajos sin plataforma vinculada. */
-export const UNASSIGNED_CHART_COLOR = "#8d99ae";
+export const UNASSIGNED_CHART_COLOR = "#c3ccc7";

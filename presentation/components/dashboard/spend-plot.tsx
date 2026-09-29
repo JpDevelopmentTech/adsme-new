@@ -15,7 +15,7 @@ export function SpendPlot({ spend, max, label }: SpendPlotProps) {
           <SpendColumn day={day} max={max} />
 
           {day.day === spend.today ? (
-            <span aria-hidden className="w-[1.5px] shrink-0 rounded-pill bg-g-50/35" />
+            <span aria-hidden className="w-[1.5px] shrink-0 rounded-pill bg-accent-bright" />
           ) : null}
         </Fragment>
       ))}

@@ -1,12 +1,11 @@
-import { Fragment } from "react";
 import { KPI_COPY } from "@/constants/dashboard.constants";
 import { PortfolioStat } from "@/presentation/components/dashboard/portfolio-stat";
 import type { PortfolioStripProps } from "@/types/dashboard-home.types";
 import { formatCompactNumber } from "@/utils/format-compact-number";
 
 /**
- * Alcance, campañas y clientes. Son contexto, no titular: van en una tira fina
- * bajo el dinero del mes en vez de robarle una fila entera con su mismo peso.
+ * Alcance, campañas y clientes. Son contexto, no titular: tres cifras sueltas
+ * bajo el mes, separadas por espacio y un filete, sin tarjetas.
  */
 export function PortfolioStrip({ metrics }: PortfolioStripProps) {
   const pending = metrics.jobsWithoutPlatforms;
@@ -34,14 +33,9 @@ export function PortfolioStrip({ metrics }: PortfolioStripProps) {
   ];
 
   return (
-    <section className="glass-panel flex flex-wrap items-center gap-y-5 rounded-card py-[18px]">
-      {stats.map((stat, index) => (
-        <Fragment key={stat.label}>
-          {index > 0 ? (
-            <span aria-hidden className="hidden h-12 w-px bg-border/60 sm:block" />
-          ) : null}
-          <PortfolioStat {...stat} />
-        </Fragment>
+    <section className="grid gap-5 border-y border-border py-5 sm:grid-cols-3">
+      {stats.map((stat) => (
+        <PortfolioStat key={stat.label} {...stat} />
       ))}
     </section>
   );

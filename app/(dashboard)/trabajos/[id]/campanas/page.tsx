@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PLATFORM_TABS } from "@/constants/link-campaign.constants";
 import { JOB_STEP_COPY, JOB_WIZARD_COPY, STEP_TWO_COPY } from "@/constants/job-wizard.constants";
-import { editJobRoute, jobLinkRoute } from "@/constants/routes.constants";
+import { editJobRoute, jobReportRoute } from "@/constants/routes.constants";
 import { DEFAULT_CAMPAIGN_LIST_QUERY } from "@/domain/entities/campaign";
 import { createGetClient } from "@/domain/use-cases/get-client";
 import { createGetJob } from "@/domain/use-cases/get-job";
@@ -64,7 +64,7 @@ export default async function TrabajoCampanasPage({
               {JOB_WIZARD_COPY.previous}
             </SecondaryLink>
 
-            <PrimaryLink href={jobLinkRoute(job.id)}>
+            <PrimaryLink href={jobReportRoute(job.id)}>
               {STEP_TWO_COPY.next}
               <ArrowRight size={15} strokeWidth={1.75} aria-hidden />
             </PrimaryLink>

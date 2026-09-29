@@ -8,7 +8,7 @@ import { cn } from "@/utils/cn";
 const TAB_CLASSES =
   "rounded-sm px-3 py-1.5 text-[11.5px] transition-colors duration-150 focus-visible:ring-2 focus-visible:ring-ink/40 focus-visible:outline-none";
 const ACTIVE_CLASSES =
-  "bg-white/95 font-normal text-text-primary shadow-[0_1px_3px_#2b2d4229]";
+  "bg-white/95 font-normal text-text-primary shadow-[0_1px_3px_#1f2a271a]";
 
 /**
  * Filtro por plataforma. Son enlaces y no botones: el reporte se sirve entero

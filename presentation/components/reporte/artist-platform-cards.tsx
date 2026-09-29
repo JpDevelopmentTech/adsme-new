@@ -15,7 +15,10 @@ import { cn } from "@/utils/cn";
  * barra marca su peso sobre el total, que es lo que sí podemos medir sin
  * histórico diario.
  */
-export function ArtistPlatformCards({ platforms }: ArtistPlatformCardsProps) {
+export function ArtistPlatformCards({
+  platforms,
+  showSpend,
+}: ArtistPlatformCardsProps) {
   const total = platforms.reduce((sum, metrics) => sum + metrics.videoPlays, 0);
 
   return (
@@ -58,8 +61,8 @@ export function ArtistPlatformCards({ platforms }: ArtistPlatformCardsProps) {
               <span className={cn("font-semibold", tone.text)}>
                 {formatPercent(percent)}
               </span>{" "}
-              de las reproducciones · {formatExactCurrency(metrics.spend)}{" "}
-              invertidos
+              de las reproducciones
+              {showSpend ? ` · ${formatExactCurrency(metrics.spend)} invertidos` : null}
             </p>
 
             <span aria-hidden className="h-2 overflow-hidden rounded-pill bg-surface">

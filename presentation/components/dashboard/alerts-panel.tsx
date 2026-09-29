@@ -40,10 +40,10 @@ export function AlertsPanel({ alerts }: AlertsPanelProps) {
           const Icon = ALERT_ICONS[alert.kind];
 
           return (
-            <li key={alert.id} className="border-b border-border/60 last:border-b-0">
+            <li key={alert.id} className="border-b border-border last:border-b-0">
               <Link
                 href={alert.href}
-                className="flex items-center gap-3 px-5 py-[13px] transition-colors duration-100 hover:bg-white/50"
+                className="flex items-center gap-3 px-5 py-[13px] transition-colors duration-100 hover:bg-g-100"
               >
                 <span className="glass-field grid size-[30px] shrink-0 place-items-center rounded-md">
                   <Icon size={15} strokeWidth={1.5} className="text-text-secondary" aria-hidden />

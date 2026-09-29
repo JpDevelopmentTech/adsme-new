@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
+import { notFound } from "next/navigation";
 import {
   REPORT_ARTIST_SEGMENT,
   REPORT_ROUTE_PREFIX,
@@ -15,6 +16,7 @@ import { InvalidReportLink } from "@/presentation/components/reporte/invalid-rep
 import { ReportPasswordGate } from "@/presentation/components/reporte/report-password-gate";
 import { getClientIp } from "@/utils/get-client-ip";
 import { resolveOrigin } from "@/utils/resolve-origin";
+import { isReportSectionVisible } from "@/utils/is-report-section-visible";
 import { withAllReportPlatforms } from "@/utils/with-all-report-platforms";
 
 export const metadata: Metadata = {
@@ -47,6 +49,8 @@ export default async function ReporteArtistaPage({
     findReportJob(supabase, jobId, version),
   ]);
   if (!artist || !job) return <InvalidReportLink />;
+  // Ocultarlo no es solo quitar el enlace: la página tampoco se abre a mano.
+  if (!isReportSectionVisible(job.hiddenSections, "artistReport")) notFound();
 
   const report = {
     ...artist,
@@ -60,6 +64,7 @@ export default async function ReporteArtistaPage({
       artist={report}
       originTitle={job.title}
       originHref={basePath}
+      showSpend={isReportSectionVisible(job.hiddenSections, "investment")}
       reportUrl={`${resolveOrigin(headerList)}${basePath}/${REPORT_ARTIST_SEGMENT}`}
     />
   );

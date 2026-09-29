@@ -1,11 +1,10 @@
 import type { PacingRailProps } from "@/types/dashboard-home.types";
-import { cn } from "@/utils/cn";
 import { formatPacing } from "@/utils/format-pacing";
 
 /**
- * Ritmo de gasto del mes: el relleno es la parte del plan que cae hasta hoy y
- * la muesca, el punto en el que va el calendario. Verlos separados dice de un
- * vistazo si la inversión está adelantada o atrasada.
+ * Ritmo de gasto del mes, el elemento que abre el dashboard: el trazo en tinta
+ * es la parte del plan que cae hasta hoy y la marca salvia, dónde va el
+ * calendario. Si el trazo pasa la marca, la inversión va adelantada.
  */
 export function PacingRail({
   spendPercent,
@@ -14,36 +13,31 @@ export function PacingRail({
 }: PacingRailProps) {
   const spent = Math.min(100, spendPercent);
   const calendar = Math.min(100, calendarPercent);
-  // La muesca se recorta sobre el tramo gastado; cuando el gasto va por detrás
-  // cae sobre el riel vacío, donde un tono oscuro sería invisible.
-  const isOverSpent = spent >= calendar;
 
   return (
-    <div className="flex flex-col gap-[9px]">
-      <div aria-hidden className="relative h-2 w-full rounded-pill bg-white/15">
+    <div className="flex flex-col gap-2.5">
+      <div aria-hidden className="relative h-4">
+        <div className="absolute inset-x-0 top-1/2 h-1 -translate-y-1/2 rounded-pill bg-g-300" />
         <div
-          className="h-full rounded-pill bg-accent-bright"
+          className="absolute top-1/2 left-0 h-1 -translate-y-1/2 rounded-pill bg-ink"
           style={{ width: `${spent}%` }}
         />
         <span
-          className={cn(
-            "absolute top-0 h-2 w-0.5",
-            isOverSpent ? "bg-ink/70" : "bg-g-50/80",
-          )}
+          className="absolute top-0 h-4 w-0.5 -translate-x-1/2 rounded-pill bg-accent-bright"
           style={{ left: `${calendar}%` }}
         />
       </div>
 
       <p className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
         <span className="flex flex-wrap items-center gap-x-1.5">
-          <span className="text-[12.5px] font-normal text-g-50">
+          <span className="text-[13px] font-normal text-text-primary">
             {Math.round(spendPercent)}% del plan gastado
           </span>
-          <span className="text-[12.5px] text-g-400">
+          <span className="text-[13px] text-text-secondary">
             · {formatPacing(spendPercent, calendarPercent)}
           </span>
         </span>
-        <span className="text-[11.5px] text-g-400">{caption}</span>
+        <span className="text-[12px] text-text-muted">{caption}</span>
       </p>
     </div>
   );

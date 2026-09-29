@@ -16,7 +16,7 @@ export function JobRow({ job, timeline, today }: JobRowProps) {
   const dailyRate = formatDailyRate(job);
 
   return (
-    <tr className="border-b border-border/60 transition-colors duration-150 last:border-b-0 hover:bg-white/50">
+    <tr className="border-b border-border/60 transition-colors duration-150 last:border-b-0 hover:bg-g-100">
       <td className="py-3 pr-3.5 pl-5">
         <div className="flex items-center gap-3.5">
           <JobCover cover={job.cover} imageUrl={job.coverUrl} title={job.title} />

@@ -1,42 +1,42 @@
+/** Textos del paso 3 del asistente: configuración del reporte del cliente. */
 export const STEP_THREE_COPY = {
-  subtitle:
-    "Activa lo que verá el cliente en su reporte. Puedes cambiarlo después sin volver a compartir el enlace.",
+  cpvSection: "Optimización",
+  visibilityCount: (visible: number, total: number) =>
+    visible === total
+      ? "El cliente ve todo el reporte"
+      : `El cliente ve ${visible} de ${total} partes del reporte`,
+  cpvToggle: "Optimización de CPV",
+  cpvToggleHint:
+    "Muestra en el reporte las vistas de YouTube frente a las presupuestadas",
+  cpvLabel: "CPV cobrado al cliente",
+  cpvPlaceholder: "35",
+  cpvUnit: "COP / vista",
+  cpvViews: (views: string, investment: string) =>
+    `Con la inversión de ${investment} equivale a ${views} vistas.`,
+  cpvNoInvestment: "El trabajo aún no tiene inversión para calcular las vistas.",
+  saving: "Guardando el reporte",
+  saveFailed:
+    "No pudimos guardar la configuración del reporte. Inténtalo de nuevo.",
+  next: "Siguiente: Enlace",
+  // Rótulos de la maqueta `ReportPreviewDevice`.
   platformsTitle: "POR PLATAFORMA",
   previewTitle: "Vista previa en vivo",
   liveReport: "Reporte en vivo",
-  next: "Siguiente: Enlace",
 } as const;
 
-/** Secciones y métricas configurables, con su estado inicial según el diseño. */
-export const REPORT_SECTIONS = [
-  {
-    title: "SECCIONES DEL REPORTE",
-    options: [
-      { id: "summary", label: "Resumen general", on: true },
-      { id: "chart", label: "Gráfico de evolución", on: true },
-      { id: "platforms", label: "Desglose por plataforma", on: true },
-      { id: "comparison", label: "Comparativa de campañas", on: false },
-      { id: "notes", label: "Comentarios del equipo", on: false },
-    ],
-  },
-  {
-    title: "MÉTRICAS · YOUTUBE",
-    options: [
-      { id: "yt-views", label: "Vistas", on: true },
-      { id: "yt-ctr", label: "CTR", on: true },
-      { id: "yt-cpv", label: "Costo por vista", on: false },
-    ],
-  },
-  {
-    title: "MÉTRICAS · META Y TIKTOK",
-    options: [
-      { id: "reach", label: "Alcance e impresiones", on: true },
-      { id: "spend", label: "Inversión total", on: true },
-      { id: "engagement", label: "Interacciones", on: true },
-      { id: "cpr", label: "Costo por resultado", on: false },
-    ],
-  },
-] as const;
+/** Campos del formulario del paso 3. */
+export const REPORT_SETTINGS_FIELDS = {
+  jobId: "jobId",
+  cpvOptimization: "cpvOptimization",
+  chargedCpv: "chargedCpv",
+} as const;
+
+/** Mensajes de validación del CPV cobrado. */
+export const CHARGED_CPV_MESSAGES = {
+  required: "Escribe cuánto cobraste por cada vista.",
+  format: "Usa solo números, con hasta dos decimales.",
+  positive: "El CPV tiene que ser mayor que cero.",
+} as const;
 
 export const STEP_FOUR_COPY = {
   shareSection: "Comparte el enlace",

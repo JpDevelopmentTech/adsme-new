@@ -67,7 +67,7 @@ export function CampaignsBoard({
       ) : (
         <div className="overflow-x-auto">
           <div className="min-w-[980px]">
-            <div className="flex items-center gap-4 border-y border-border/60 bg-white/40 px-5 py-[9px]">
+            <div className="flex items-center gap-4 border-y border-border/60 bg-g-100 px-5 py-[9px]">
               <span className={cn(CAMPAIGN_COLUMN_WIDTHS.check, "shrink-0")} />
               <span className={cn(HEADER_CLASSES, "flex-1")}>
                 {CAMPAIGN_TABLE_COLUMNS.campaign}

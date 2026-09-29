@@ -74,7 +74,7 @@ export function ImportedCampaignsPanel({
               ))}
             </colgroup>
 
-            <thead className="bg-white/40">
+            <thead className="bg-g-100">
               <tr>
                 {COLUMNS.map((column, index) => (
                   <th

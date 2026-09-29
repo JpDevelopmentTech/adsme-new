@@ -98,12 +98,24 @@ export const TIKTOK_DAILY_MAX_PAGES = 20;
 export const TIKTOK_PAGE_SIZE = 200;
 
 /**
- * Informe de audiencia: el reparto por sexo y edad de cada campaña. Es otro
- * `report_type` del mismo endpoint, no otro endpoint.
+ * Informe de audiencia: el reparto por sexo, edad y provincia de cada
+ * campaña. Es otro `report_type` del mismo endpoint, no otro endpoint.
  */
 export const TIKTOK_AUDIENCE_REPORT_TYPE = "AUDIENCE";
 
 export const TIKTOK_AUDIENCE_DIMENSIONS = ["campaign_id", "gender", "age"];
+
+/**
+ * El territorio va en un informe aparte: TikTok solo deja cruzar sexo con
+ * edad, no la provincia con ninguno de los dos.
+ */
+export const TIKTOK_REGION_DIMENSIONS = ["campaign_id", "province_id"];
+
+/** El informe da la provincia como id; su nombre sale de `/search/region/`. */
+export const TIKTOK_REGION_CATALOG_PATH = "/search/region/";
+
+/** Idioma en que `/search/region/` devuelve los nombres de lugar. */
+export const TIKTOK_REGION_LANGUAGE = "es";
 
 /**
  * Solo impresiones: es la única métrica que las tres plataformas dan por
@@ -112,11 +124,12 @@ export const TIKTOK_AUDIENCE_DIMENSIONS = ["campaign_id", "gender", "age"];
 export const TIKTOK_AUDIENCE_METRICS = ["impressions"];
 
 /**
- * Pide el acumulado de toda la vida de la campaña en vez de un rango. El
- * reparto de la tarjeta es del lanzamiento entero, así que encadenar ventanas
- * de 30 días como en la serie diaria sería trabajo para nada.
+ * El informe de audiencia no admite `query_lifetime=true` («lifetime metrics
+ * are not supported for audience report»), así que el acumulado se arma
+ * pidiendo el histórico por ventanas y sumando: las impresiones se pueden sumar
+ * entre tramos sin falsear el reparto.
  */
-export const TIKTOK_LIFETIME_QUERY = "true";
+export const TIKTOK_LIFETIME_QUERY = "false";
 
 export const TIKTOK_AUDIENCE_MAX_PAGES = 20;
 

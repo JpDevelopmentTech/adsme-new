@@ -7,12 +7,12 @@ import { TopbarTitle } from "@/presentation/components/dashboard/topbar-title";
 import { PrimaryLink } from "@/presentation/components/ui/primary-link";
 
 /**
- * Barra superior del panel. Absorbe el título de la pantalla, de modo que el
- * contenido empieza en el primer dato y no en una segunda cabecera repetida.
+ * Cabecera del panel. Ya no es una franja: es la primera línea del contenido,
+ * con el título de la pantalla a la izquierda y las acciones a la derecha.
  */
 export function AppTopbar() {
   return (
-    <header className="glass-panel flex h-16 shrink-0 items-center gap-4 rounded-card px-[18px]">
+    <header className="flex shrink-0 items-center gap-3 pt-7 pb-6">
       <TopbarTitle />
 
       <div className="flex-1" />

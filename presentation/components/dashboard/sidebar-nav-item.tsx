@@ -16,21 +16,23 @@ export function SidebarNavItem({ item }: SidebarNavItemProps) {
       href={item.href}
       aria-current={isActive ? "page" : undefined}
       className={cn(
-        "flex items-center gap-[11px] rounded-md px-[11px] py-[9px] transition-colors duration-150",
-        "focus-visible:ring-2 focus-visible:ring-ink/40 focus-visible:outline-none",
-        isActive ? "bg-ink shadow-float" : "hover:bg-white/70",
+        "flex items-center gap-[11px] rounded-md border px-[11px] py-[8px] transition-colors duration-150",
+        "focus-visible:ring-2 focus-visible:ring-ink/30 focus-visible:outline-none",
+        isActive
+          ? "border-border bg-card"
+          : "border-transparent hover:bg-g-200/70",
       )}
     >
       <Icon
         size={17}
         strokeWidth={1.5}
-        className={isActive ? "text-g-50" : "text-text-secondary"}
+        className={isActive ? "text-text-primary" : "text-text-muted"}
         aria-hidden
       />
       <span
         className={cn(
           "flex-1 text-[13px]",
-          isActive ? "font-normal text-g-50" : "font-light text-text-secondary",
+          isActive ? "font-normal text-text-primary" : "font-light text-text-secondary",
         )}
       >
         {item.label}

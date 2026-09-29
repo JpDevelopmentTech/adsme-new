@@ -1,7 +1,11 @@
 import Link from "next/link";
 import { ExternalLink } from "lucide-react";
 import { JOB_STATUS_BADGE } from "@/constants/client-detail.constants";
-import { ARTIST_TABLE_HEADERS, REPORT_COPY } from "@/constants/report.constants";
+import {
+  ARTIST_SPEND_HEADER,
+  ARTIST_TABLE_HEADERS,
+  REPORT_COPY,
+} from "@/constants/report.constants";
 import { REPORT_ROUTE_PREFIX } from "@/constants/report-link.constants";
 import { JobCover } from "@/presentation/components/cliente-detalle/job-cover";
 import { StatusBadge } from "@/presentation/components/ui/status-badge";
@@ -11,13 +15,20 @@ import { formatExactNumber } from "@/utils/format-exact-number";
 import { resolveClientGradient } from "@/utils/client-gradient";
 
 /** Tabla de lanzamientos del artista, con acceso al reporte de cada uno. */
-export function ArtistLaunchesTable({ launches }: ArtistLaunchesTableProps) {
+export function ArtistLaunchesTable({
+  launches,
+  showSpend,
+}: ArtistLaunchesTableProps) {
+  const headers = showSpend
+    ? ARTIST_TABLE_HEADERS
+    : ARTIST_TABLE_HEADERS.filter((header) => header !== ARTIST_SPEND_HEADER);
+
   return (
     <div className="overflow-x-auto rounded-card border border-border bg-card">
       <table className="w-full min-w-[840px] border-collapse">
         <thead className="border-b border-border bg-surface">
           <tr className="text-left text-[11px] font-bold tracking-[0.5px] text-text-muted uppercase">
-            {ARTIST_TABLE_HEADERS.map((header) => (
+            {headers.map((header) => (
               <th key={header} className="px-5 py-3 font-bold">
                 {header}
               </th>
@@ -58,9 +69,11 @@ export function ArtistLaunchesTable({ launches }: ArtistLaunchesTableProps) {
                   {formatExactNumber(launch.videoPlays)}
                 </td>
 
-                <td className="px-5 py-3.5 text-[13px] whitespace-nowrap text-text-secondary">
-                  {formatExactCurrency(launch.spend)}
-                </td>
+                {showSpend ? (
+                  <td className="px-5 py-3.5 text-[13px] whitespace-nowrap text-text-secondary">
+                    {formatExactCurrency(launch.spend)}
+                  </td>
+                ) : null}
 
                 <td className="px-5 py-3.5">
                   {launch.code ? (

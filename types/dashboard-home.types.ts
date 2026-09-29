@@ -27,6 +27,10 @@ export interface MonthHeroProps {
   status: string;
 }
 
+export interface SpendPanelProps {
+  spend: MonthSpend;
+}
+
 export interface PortfolioStripProps {
   metrics: DashboardMetrics;
 }

@@ -2,18 +2,18 @@ import type { ClientAvatarGradient } from "@/domain/entities/client";
 
 /**
  * Paleta de gradientes de avatar. Cada entrada mezcla un tono del sistema con
- * el indigo profundo: así todas quedan lo bastante oscuras para que las
+ * la tinta: así todas quedan lo bastante oscuras para que las
  * iniciales en claro pasen contraste, sea cual sea el cliente que toque.
  */
 const AVATAR_GRADIENTS: ClientAvatarGradient[] = [
-  { from: "#414861", to: "#2b2d42" },
-  { from: "#0866ff", to: "#2b2d42" },
-  { from: "#0b8c99", to: "#2b2d42" },
-  { from: "#d90429", to: "#2b2d42" },
-  { from: "#5a6580", to: "#2b2d42" },
-  { from: "#2b2d42", to: "#0866ff" },
-  { from: "#ef233c", to: "#d90429" },
-  { from: "#0b8c99", to: "#0866ff" },
+  { from: "#4e5b56", to: "#1f2a27" },
+  { from: "#4a6fa5", to: "#1f2a27" },
+  { from: "#2e8c87", to: "#1f2a27" },
+  { from: "#c4553f", to: "#1f2a27" },
+  { from: "#5e6a65", to: "#1f2a27" },
+  { from: "#6e8f80", to: "#1f2a27" },
+  { from: "#5b7c8d", to: "#1f2a27" },
+  { from: "#7d8f5e", to: "#1f2a27" },
 ];
 
 /**

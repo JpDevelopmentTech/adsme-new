@@ -15,8 +15,8 @@ export const GROWTH_STROKE_WIDTH = 2;
  * colores del eje y la rejilla van en el valor literal del sistema.
  */
 export const GROWTH_CHART_COLORS = {
-  grid: "#c8d1da",
-  label: "#5a6580",
+  grid: "#dfe4e0",
+  label: "#5e6a65",
 } as const;
 
 /** Tamaño de los rótulos de ambos ejes. */

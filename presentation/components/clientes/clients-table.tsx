@@ -25,7 +25,7 @@ export function ClientsTable({
 
       <div className="h-px bg-border/60" />
 
-      <div className="hidden items-center gap-3.5 bg-white/40 px-5 py-[9px] text-[10px] font-medium tracking-[0.6px] text-text-muted uppercase lg:flex">
+      <div className="hidden items-center gap-3.5 bg-g-100 px-5 py-[9px] text-[10px] font-medium tracking-[0.6px] text-text-muted uppercase lg:flex">
         <span className="w-[264px] shrink-0">{CLIENTS_TABLE_COLUMNS.client}</span>
         <span className="min-w-0 flex-1">{CLIENTS_TABLE_COLUMNS.investment}</span>
         <span className="w-[100px] shrink-0" />

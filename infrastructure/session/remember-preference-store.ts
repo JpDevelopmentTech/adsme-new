@@ -22,3 +22,13 @@ export async function persistRememberPreference(
     ...(remember ? { maxAge: REMEMBER_SESSION_MAX_AGE_SECONDS } : {}),
   });
 }
+
+/**
+ * Borra la preferencia "Recordarme" al cerrar sesión, para que el siguiente
+ * inicio de sesión en este navegador no herede la elección del anterior.
+ */
+export async function clearRememberPreference(): Promise<void> {
+  const cookieStore = await cookies();
+
+  cookieStore.delete(REMEMBER_SESSION_COOKIE);
+}

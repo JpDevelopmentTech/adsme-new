@@ -32,7 +32,7 @@ export function ActiveCampaignsPanel({ jobs }: ActiveCampaignsPanelProps) {
       isEmpty={ranked.length === 0}
       emptyText={DASHBOARD_COPY.noCampaigns}
     >
-      <div className="hidden items-center gap-4 bg-white/40 px-5 py-[9px] text-[10px] font-medium tracking-[0.6px] text-text-muted uppercase lg:flex">
+      <div className="hidden items-center gap-4 bg-g-100 px-5 py-[9px] text-[10px] font-medium tracking-[0.6px] text-text-muted uppercase lg:flex">
         <span className="w-9 shrink-0">{JOBS_TABLE_COLUMNS.job}</span>
         <span className="min-w-0 flex-1" />
         <span className="w-[136px] shrink-0">{JOBS_TABLE_COLUMNS.period}</span>
@@ -45,14 +45,14 @@ export function ActiveCampaignsPanel({ jobs }: ActiveCampaignsPanelProps) {
         </span>
       </div>
 
-      <ul className="border-t border-border/60">
+      <ul className="border-t border-border">
         {ranked.map((job) => {
           const status = JOB_STATUS_BADGE[job.status];
 
           return (
             <li
               key={job.id}
-              className="flex items-center gap-4 border-b border-border/60 px-5 py-3 transition-colors duration-150 last:border-b-0 hover:bg-white/50"
+              className="flex items-center gap-4 border-b border-border px-5 py-3 transition-colors duration-150 last:border-b-0 hover:bg-g-100"
             >
               <JobCover cover={job.cover} imageUrl={job.coverUrl} title={job.title} />
 
