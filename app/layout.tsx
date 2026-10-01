@@ -14,7 +14,7 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: "adsme",
   description:
-    "El marketing de tu música, medido en tiempo real. Gestiona campañas de YouTube, Meta y TikTok Ads desde un solo lugar.",
+    "El marketing de tu marca, medido en tiempo real. Gestiona campañas de YouTube, Meta y TikTok Ads desde un solo lugar.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

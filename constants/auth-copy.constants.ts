@@ -1,6 +1,6 @@
 /** Textos del módulo de autenticación, tomados literalmente del diseño `A1 · Inicio de sesión`. */
 export const AUTH_SHOWCASE_COPY = {
-  headline: "El marketing de tu música, medido en tiempo real.",
+  headline: "El marketing de tu marca, medido en tiempo real.",
   subheadline:
     "Conecta YouTube, Meta y TikTok Ads, y comparte reportes en vivo con cada artista desde un solo lugar.",
   footnote: "Datos actualizados cada hora · Conexión segura OAuth",
