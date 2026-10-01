@@ -1,7 +1,8 @@
 "use client";
 
-import { SearchX } from "lucide-react";
+import { SearchX, X } from "lucide-react";
 import { CLIENTS_NO_RESULTS_COPY } from "@/constants/client-filters.constants";
+import { EmptyStatePanel } from "@/presentation/components/ui/empty-state-panel";
 import { SecondaryButton } from "@/presentation/components/ui/secondary-button";
 import { useQueryParams } from "@/presentation/hooks/use-query-params";
 
@@ -10,25 +11,20 @@ export function ClientsNoResults() {
   const { clearParams, isPending } = useQueryParams();
 
   return (
-    <div className="flex flex-col items-center justify-center gap-4 px-8 py-16 text-center">
-      <SearchX size={26} className="text-text-muted" aria-hidden />
-      <div className="flex w-[420px] max-w-full flex-col gap-1.5">
-        <p className="font-display text-[15px] font-normal text-text-primary">
-          {CLIENTS_NO_RESULTS_COPY.title}
-        </p>
-        <p className="text-[13px] leading-[1.5] text-text-secondary">
-          {CLIENTS_NO_RESULTS_COPY.subtitle}
-        </p>
-      </div>
-      <SecondaryButton
-        type="button"
-        icon={null}
-        isLoading={isPending}
-        onClick={clearParams}
-        className="px-5 py-2.5 text-[13px]"
-      >
-        {CLIENTS_NO_RESULTS_COPY.action}
-      </SecondaryButton>
-    </div>
+    <EmptyStatePanel
+      icon={<SearchX size={24} strokeWidth={1.5} aria-hidden />}
+      title={CLIENTS_NO_RESULTS_COPY.title}
+      description={CLIENTS_NO_RESULTS_COPY.subtitle}
+      action={
+        <SecondaryButton
+          type="button"
+          icon={<X size={16} strokeWidth={1.75} aria-hidden />}
+          isLoading={isPending}
+          onClick={clearParams}
+        >
+          {CLIENTS_NO_RESULTS_COPY.action}
+        </SecondaryButton>
+      }
+    />
   );
 }

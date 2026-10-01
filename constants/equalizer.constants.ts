@@ -1,9 +1,13 @@
-/** Alturas en px de las barras del ecualizador, tal como están definidas en `adsme.pen`. */
+/** Alturas en px de las 20 barras del ecualizador del login, tal como están en `adsme.pen`. */
 export const EQUALIZER_BAR_HEIGHTS = [
-  28, 52, 80, 44, 66, 88, 40, 72, 34, 60, 84, 48, 30, 68, 54, 78, 38, 62, 26, 50,
+  38, 62, 94, 70, 120, 88, 56, 104, 126, 84, 60, 98, 118, 74, 50, 86, 110, 66, 42, 30,
 ] as const;
 
-/** Opacidades cíclicas aplicadas a las barras para dar profundidad. */
-export const EQUALIZER_BAR_OPACITIES = [0.4, 0.52, 0.64, 0.76, 0.88] as const;
+/** Altura de la barra más alta: las demás calculan su opacidad respecto a ella. */
+export const EQUALIZER_MAX_HEIGHT_PX = 126;
 
-export const EQUALIZER_BAR_WIDTH_PX = 8;
+/** Opacidad de la barra más baja; la más alta llega a 1. */
+export const EQUALIZER_MIN_OPACITY = 0.35;
+
+/** Retardo entre barras consecutivas de la animación, en ms. */
+export const EQUALIZER_STAGGER_MS = 90;

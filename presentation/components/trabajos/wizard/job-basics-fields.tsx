@@ -1,4 +1,4 @@
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, CalendarRange, Disc3, Wallet } from "lucide-react";
 import { CURRENCY_SYMBOL } from "@/constants/currency.constants";
 import {
   JOB_FORMATS,
@@ -20,8 +20,10 @@ import { formatDuration } from "@/utils/format-duration";
 import { formatThousands } from "@/utils/format-thousands";
 import { parseThousands } from "@/utils/parse-thousands";
 
-const CHIP_CLASSES =
-  "flex h-[42px] shrink-0 items-center rounded-md border border-border bg-g-100 px-3.5 text-[13px] text-text-primary";
+const DURATION_CLASSES =
+  "flex h-[50px] shrink-0 items-center rounded-md bg-lilac/12 px-4 text-sm font-normal text-lilac";
+
+const DAILY_CLASSES = "flex h-[50px] shrink-0 items-center text-lg font-light text-text-primary";
 
 /**
  * Los campos del paso 1, agrupados por la pregunta que responden en vez de
@@ -44,11 +46,11 @@ export function JobBasicsFields({
 
   return (
     <>
-      <WizardSection label={JOB_WIZARD_SECTIONS.what}>
-        <div className="flex flex-col gap-5 lg:flex-row lg:items-start">
+      <WizardSection label={JOB_WIZARD_SECTIONS.what} icon={<Disc3 size={15} strokeWidth={1.5} aria-hidden />}>
+        <div className="flex flex-col gap-[22px] lg:flex-row lg:items-start">
           <JobCoverUploader {...cover} />
 
-          <div className="flex min-w-0 flex-1 flex-col gap-3.5">
+          <div className="flex min-w-0 flex-1 flex-col gap-4">
             <TextField
               id="title"
               name="title"
@@ -89,7 +91,7 @@ export function JobBasicsFields({
         </div>
       </WizardSection>
 
-      <WizardSection label={JOB_WIZARD_SECTIONS.when}>
+      <WizardSection label={JOB_WIZARD_SECTIONS.when} icon={<CalendarRange size={15} strokeWidth={1.5} aria-hidden />}>
         <div className="flex flex-wrap items-end gap-3">
           <div className="min-w-[150px] flex-1">
             <DateField
@@ -103,7 +105,7 @@ export function JobBasicsFields({
             />
           </div>
 
-          <ArrowRight size={16} aria-hidden className="mb-3 shrink-0 text-g-400" />
+          <ArrowRight size={18} strokeWidth={1.5} aria-hidden className="mb-4 shrink-0 text-text-muted" />
 
           <div className="min-w-[150px] flex-1">
             <DateField
@@ -117,11 +119,11 @@ export function JobBasicsFields({
             />
           </div>
 
-          {duration ? <p className={CHIP_CLASSES}>{duration}</p> : null}
+          {duration ? <p className={DURATION_CLASSES}>{duration}</p> : null}
         </div>
       </WizardSection>
 
-      <WizardSection label={JOB_WIZARD_SECTIONS.howMuch}>
+      <WizardSection label={JOB_WIZARD_SECTIONS.howMuch} icon={<Wallet size={15} strokeWidth={1.5} aria-hidden />}>
         <div className="flex flex-wrap items-end gap-3">
           <CurrencyField
             id="investment"
@@ -139,7 +141,7 @@ export function JobBasicsFields({
             }
           />
 
-          {dailyAmount ? <p className={CHIP_CLASSES}>{dailyAmount}</p> : null}
+          {dailyAmount ? <p className={DAILY_CLASSES}>{dailyAmount}</p> : null}
         </div>
 
         <TextareaField

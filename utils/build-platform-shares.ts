@@ -4,14 +4,15 @@ import {
 } from "@/constants/platform-labels.constants";
 import type { Connection } from "@/domain/entities/connection";
 import type { PlatformShare } from "@/domain/entities/dashboard";
+import type { DashboardPeriod } from "@/domain/entities/dashboard-period";
 import type { JobPlatform } from "@/domain/entities/job";
 import type { JobListing } from "@/domain/entities/job-listing";
 import { share } from "@/utils/format-compact-number";
-import { endOfMonth, startOfMonth } from "@/utils/month-range";
+import { overlapsPeriod } from "@/utils/overlaps-period";
 import { tokenDaysLeft } from "@/utils/token-days-left";
 import { worstConnection } from "@/utils/worst-connection";
 
-/** Inversión del mes que corresponde a cada plataforma del trabajo. */
+/** Inversión del período que corresponde a cada plataforma del trabajo. */
 function splitInvestment(job: JobListing): number {
   return job.platforms.length > 0 ? job.investment / job.platforms.length : 0;
 }
@@ -32,24 +33,20 @@ function findConnection(
 }
 
 /**
- * Reparto de la inversión del mes entre las tres plataformas, junto al estado
+ * Reparto de la inversión del período entre las tres plataformas, junto al estado
  * de la conexión que alimenta cada una. Los porcentajes se calculan sobre lo
  * repartido, así que los trabajos sin plataforma no los distorsionan.
  */
 export function buildPlatformShares(
   jobs: JobListing[],
   connections: Connection[],
+  period: DashboardPeriod,
   now: Date,
 ): PlatformShare[] {
-  const monthStart = startOfMonth(now);
-  const monthEnd = endOfMonth(now);
-
-  const monthJobs = jobs.filter(
-    (job) => job.startsOn <= monthEnd && job.endsOn >= monthStart,
-  );
+  const periodJobs = jobs.filter((job) => overlapsPeriod(job, period));
 
   const amounts = PLATFORM_ORDER.map((platform) =>
-    monthJobs
+    periodJobs
       .filter((job) => job.platforms.includes(platform))
       .reduce((total, job) => total + splitInvestment(job), 0),
   );

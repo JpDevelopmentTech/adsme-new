@@ -42,7 +42,7 @@ export function DropdownMenu({
         aria-expanded={isOpen}
         aria-label={label}
         onClick={() => setIsOpen((open) => !open)}
-        className="w-full cursor-pointer rounded-md text-left focus-visible:ring-2 focus-visible:ring-brand-violet/60 focus-visible:outline-none"
+        className="w-full cursor-pointer rounded-[16px] text-left focus-visible:ring-2 focus-visible:ring-lilac focus-visible:outline-none"
       >
         {trigger(isOpen)}
       </button>
@@ -56,7 +56,7 @@ export function DropdownMenu({
           // cancela sin avisar — «Desconectar» o «Cerrar sesión» no hacían nada.
           onClick={() => window.setTimeout(() => setIsOpen(false))}
           className={cn(
-            "absolute z-20 min-w-full rounded-md border border-border bg-card-elevated p-1.5 shadow-xl shadow-black/10",
+            "glass-menu absolute z-20 min-w-full rounded-[16px] p-1.5",
             side === "top" ? "bottom-full mb-2" : "top-full mt-2",
             align === "end" ? "right-0" : "left-0",
           )}

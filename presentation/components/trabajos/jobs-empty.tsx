@@ -1,8 +1,9 @@
 "use client";
 
-import { Disc3, Plus, SearchX } from "lucide-react";
+import { Disc3, Plus, SearchX, X } from "lucide-react";
 import { JOBS_COPY, JOBS_EMPTY_COPY } from "@/constants/jobs.constants";
 import { NEW_JOB_ROUTE } from "@/constants/routes.constants";
+import { EmptyStatePanel } from "@/presentation/components/ui/empty-state-panel";
 import { PrimaryLink } from "@/presentation/components/ui/primary-link";
 import { SecondaryButton } from "@/presentation/components/ui/secondary-button";
 import { useQueryParams } from "@/presentation/hooks/use-query-params";
@@ -12,41 +13,38 @@ import type { JobsEmptyProps } from "@/types/jobs-list.types";
 export function JobsEmpty({ isFiltered }: JobsEmptyProps) {
   const { clearParams, isPending } = useQueryParams();
 
+  if (isFiltered) {
+    return (
+      <EmptyStatePanel
+        icon={<SearchX size={24} strokeWidth={1.5} aria-hidden />}
+        title={JOBS_EMPTY_COPY.noResultsTitle}
+        description={JOBS_EMPTY_COPY.noResultsSubtitle}
+        action={
+          <SecondaryButton
+            type="button"
+            icon={<X size={16} strokeWidth={1.75} aria-hidden />}
+            isLoading={isPending}
+            onClick={clearParams}
+          >
+            {JOBS_EMPTY_COPY.clearFilters}
+          </SecondaryButton>
+        }
+      />
+    );
+  }
+
   return (
-    <div className="flex flex-col items-center justify-center gap-4 px-8 py-16 text-center">
-      {isFiltered ? (
-        <SearchX size={26} className="text-text-muted" aria-hidden />
-      ) : (
-        <Disc3 size={26} className="text-text-muted" aria-hidden />
-      )}
-
-      <div className="flex w-[440px] max-w-full flex-col gap-1.5">
-        <p className="font-display text-[15px] font-normal text-text-primary">
-          {isFiltered ? JOBS_EMPTY_COPY.noResultsTitle : JOBS_EMPTY_COPY.title}
-        </p>
-        <p className="text-[13px] leading-[1.5] text-text-secondary">
-          {isFiltered
-            ? JOBS_EMPTY_COPY.noResultsSubtitle
-            : JOBS_EMPTY_COPY.subtitle}
-        </p>
-      </div>
-
-      {isFiltered ? (
-        <SecondaryButton
-          type="button"
-          icon={null}
-          isLoading={isPending}
-          onClick={clearParams}
-          className="px-5 py-2.5 text-[13px]"
-        >
-          {JOBS_EMPTY_COPY.clearFilters}
-        </SecondaryButton>
-      ) : (
+    <EmptyStatePanel
+      isStandalone
+      icon={<Disc3 size={24} strokeWidth={1.5} aria-hidden />}
+      title={JOBS_EMPTY_COPY.title}
+      description={JOBS_EMPTY_COPY.subtitle}
+      action={
         <PrimaryLink href={NEW_JOB_ROUTE}>
-          <Plus size={15} strokeWidth={1.75} aria-hidden />
+          <Plus size={16} strokeWidth={1.75} aria-hidden />
           {JOBS_COPY.newJob}
         </PrimaryLink>
-      )}
-    </div>
+      }
+    />
   );
 }

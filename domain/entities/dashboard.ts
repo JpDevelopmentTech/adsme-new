@@ -1,20 +1,22 @@
 import type { JobPlatform } from "@/domain/entities/job";
 import type { JobListing } from "@/domain/entities/job-listing";
 
+/** Cifras de contexto del dashboard, todas referidas al período elegido. */
 export interface DashboardMetrics {
   clientsTotal: number;
-  /** Clientes dados de alta en el mes en curso. */
-  clientsThisMonth: number;
-  activeJobs: number;
-  jobsThisMonth: number;
-  /** Pautas por plataforma configuradas en los trabajos activos. */
-  activeCampaigns: number;
-  /** Trabajos activos que todavía no tienen ninguna plataforma vinculada. */
+  /** Clientes con algún trabajo cuya pauta toca el período. */
+  clientsInPeriod: number;
+  /** Trabajos cuya pauta se solapa con el período. */
+  jobsInPeriod: number;
+  /** Pautas por plataforma configuradas en esos trabajos. */
+  campaignsInPeriod: number;
+  /** Trabajos del período que todavía no tienen ninguna plataforma vinculada. */
   jobsWithoutPlatforms: number;
-  /** Inversión sumada de los trabajos cuyo período toca el mes en curso. */
-  monthInvestment: number;
-  /** Personas alcanzadas, sumando las campañas ya importadas. */
-  reachTotal: number;
+  /**
+   * Reproducciones de los días del período, sumando la serie diaria importada.
+   * Sustituye al alcance: las personas únicas no se pueden sumar entre días.
+   */
+  viewsInPeriod: number;
 }
 
 export type ActivityKind = "client-created" | "job-created" | "job-updated";
@@ -42,7 +44,7 @@ export interface DashboardAlert {
   href: string;
 }
 
-/** Un día del mes ya pasado, el de hoy, o todavía por ejecutar. */
+/** Un día del período ya pasado, el de hoy, o todavía por ejecutar. */
 export type SpendDayState = "past" | "today" | "pending";
 
 /**
@@ -52,7 +54,8 @@ export type SpendDayState = "past" | "today" | "pending";
 export type SpendDaySource = "real" | "planned";
 
 export interface SpendDay {
-  day: number;
+  /** Fecha del día en `YYYY-MM-DD`. */
+  date: string;
   state: SpendDayState;
   source: SpendDaySource;
   byPlatform: Record<JobPlatform, number>;
@@ -62,16 +65,19 @@ export interface SpendDay {
 }
 
 /**
- * Inversión día a día del mes: gasto real hasta hoy —desde
+ * Inversión día a día del período: gasto real hasta hoy —desde
  * `campaign_daily_metrics`— y reparto de lo comprometido para lo que queda.
  */
-export interface MonthSpend {
-  monthLabel: string;
-  daysInMonth: number;
-  /** Día del mes en curso, que separa lo ejecutado de lo pendiente. */
-  today: number;
+export interface PeriodSpend {
+  /** Período ya rotulado: «Octubre» o «15 Sep–14 Oct». */
+  label: string;
+  totalDays: number;
+  /** Días del período ya transcurridos, hoy incluido; separa lo ejecutado del plan. */
+  elapsedDays: number;
+  /** Hoy en `YYYY-MM-DD` si cae dentro del período; `null` si no. */
+  today: string | null;
   days: SpendDay[];
-  /** Suma de todo el mes, mezclando lo ya gastado con lo aún planificado. */
+  /** Suma de todo el período, mezclando lo ya gastado con lo aún planificado. */
   planned: number;
   /** Gasto real acumulado de los días que sí tienen serie importada. */
   spent: number;
@@ -80,7 +86,7 @@ export interface MonthSpend {
   /** Importe del día más alto: fija la escala vertical de la gráfica. */
   peakAmount: number;
   hasUnassigned: boolean;
-  /** Si algún día del mes muestra gasto real; con `false` todo es plan. */
+  /** Si algún día del período muestra gasto real; con `false` todo es plan. */
   hasReal: boolean;
 }
 
@@ -96,10 +102,10 @@ export interface PlatformShare {
 
 export interface DashboardSummary {
   metrics: DashboardMetrics;
-  /** Trabajos en curso, para el panel de campañas activas. */
-  activeJobs: JobListing[];
+  /** Trabajos cuya pauta toca el período, para el panel de mayor inversión. */
+  periodJobs: JobListing[];
   alerts: DashboardAlert[];
-  monthSpend: MonthSpend;
+  spend: PeriodSpend;
   platforms: PlatformShare[];
   /** Sincronización más reciente entre todas las conexiones, en ISO. */
   lastSyncedAt: string | null;

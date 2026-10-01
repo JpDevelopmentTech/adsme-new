@@ -7,10 +7,10 @@ import { JOBS_COPY } from "@/constants/jobs.constants";
  */
 export function JobsViewToggle() {
   return (
-    <div className="flex shrink-0 items-center gap-0.5 rounded-md bg-g-200 p-[3px]">
+    <div className="flex h-10 shrink-0 items-center gap-0.5 rounded-pill border border-border bg-surface p-1">
       <span
         aria-current="true"
-        className="grid size-7 place-items-center rounded-sm bg-white/95 text-text-primary shadow-[0_1px_3px_#1f2a271a]"
+        className="grid h-full w-8 place-items-center rounded-pill bg-ink text-g-50"
       >
         <List size={15} strokeWidth={1.5} aria-hidden />
         <span className="sr-only">{JOBS_COPY.listView}</span>
@@ -20,7 +20,7 @@ export function JobsViewToggle() {
         type="button"
         disabled
         title={JOBS_COPY.gridPending}
-        className="grid size-7 cursor-not-allowed place-items-center rounded-sm text-g-400"
+        className="grid h-full w-8 cursor-not-allowed place-items-center rounded-pill text-text-primary opacity-35"
       >
         <LayoutGrid size={15} strokeWidth={1.5} aria-hidden />
         <span className="sr-only">{JOBS_COPY.gridView}</span>

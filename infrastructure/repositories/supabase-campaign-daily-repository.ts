@@ -1,4 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { DAILY_READ_PAGE_SIZE } from "@/constants/campaign-daily.constants";
 import type {
   CampaignDailyDraft,
   CampaignDailyPoint,
@@ -12,6 +13,7 @@ import {
   toCampaignDailyRow,
   type CampaignDailyPointRow,
 } from "@/infrastructure/repositories/campaign-daily-row";
+import { collectPages } from "@/infrastructure/repositories/collect-pages";
 import { toClientError } from "@/infrastructure/repositories/supabase-client-error-mapper";
 import { chunk } from "@/utils/chunk";
 
@@ -29,17 +31,45 @@ export function createSupabaseCampaignDailyRepository(
 ): CampaignDailyRepository {
   return {
     async listDailyPoints(range: DailyRange): Promise<CampaignDailyPoint[]> {
-      const { data, error } = await supabase
-        .from(DAILY_TABLE)
-        .select(CAMPAIGN_DAILY_POINT_COLUMNS)
-        .gte("metric_date", range.from)
-        .lte("metric_date", range.to)
-        .order("metric_date")
-        .returns<CampaignDailyPointRow[]>();
+      const rows = await collectPages(
+        (from, to) =>
+          supabase
+            .from(DAILY_TABLE)
+            .select(CAMPAIGN_DAILY_POINT_COLUMNS)
+            .gte("metric_date", range.from)
+            .lte("metric_date", range.to)
+            .order("metric_date")
+            .order("campaign_id")
+            .range(from, to)
+            .returns<CampaignDailyPointRow[]>(),
+        DAILY_READ_PAGE_SIZE,
+      );
 
-      if (error) throw error;
+      return rows.map(toCampaignDailyPoint);
+    },
 
-      return data.map(toCampaignDailyPoint);
+    async listJobDailyPoints(
+      jobId: string,
+      range: DailyRange,
+    ): Promise<CampaignDailyPoint[]> {
+      const rows = await collectPages(
+        (from, to) =>
+          supabase
+            .from(DAILY_TABLE)
+            .select(CAMPAIGN_DAILY_POINT_COLUMNS)
+            // El filtro sobre la tabla embebida exige el `!inner` de las
+            // columnas: así solo vuelven los días de las campañas del trabajo.
+            .eq("campaigns.job_id", jobId)
+            .gte("metric_date", range.from)
+            .lte("metric_date", range.to)
+            .order("metric_date")
+            .order("campaign_id")
+            .range(from, to)
+            .returns<CampaignDailyPointRow[]>(),
+        DAILY_READ_PAGE_SIZE,
+      );
+
+      return rows.map(toCampaignDailyPoint);
     },
 
     async findLastImportedDate(connectionId: string): Promise<string | null> {

@@ -7,26 +7,26 @@ import { TopbarTitle } from "@/presentation/components/dashboard/topbar-title";
 import { PrimaryLink } from "@/presentation/components/ui/primary-link";
 
 /**
- * Cabecera del panel. Ya no es una franja: es la primera línea del contenido,
- * con el título de la pantalla a la izquierda y las acciones a la derecha.
+ * Cabecera del panel: el título de la sección a la izquierda y, a la derecha,
+ * el buscador, las notificaciones y la acción principal en píldora blanca.
  */
 export function AppTopbar() {
   return (
-    <header className="flex shrink-0 items-center gap-3 pt-7 pb-6">
+    <header className="flex shrink-0 items-center gap-3">
       <TopbarTitle />
 
       <div className="flex-1" />
 
-      <div className="hidden items-center gap-4 md:flex">
+      <div className="hidden md:flex">
         <TopbarSearch />
       </div>
 
+      <NotificationsButton />
+
       <PrimaryLink href={NEW_JOB_ROUTE} className="hidden sm:flex">
-        <Plus size={15} strokeWidth={1.75} aria-hidden />
+        <Plus size={16} strokeWidth={1.75} aria-hidden />
         {TOPBAR_COPY.newJob}
       </PrimaryLink>
-
-      <NotificationsButton />
     </header>
   );
 }

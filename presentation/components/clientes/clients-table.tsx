@@ -5,8 +5,8 @@ import { ClientsToolbar } from "@/presentation/components/clientes/clients-toolb
 import type { ClientsTableProps } from "@/types/client.types";
 
 /**
- * La cartera como lista comparable. Los filtros van dentro del panel, como
- * primera fila: filtran esta tabla y no la página, y ahí es donde se entiende.
+ * La cartera como lista comparable, en vidrio grueso. Los filtros van dentro
+ * del panel, como primera fila: filtran esta tabla y no la página.
  */
 export function ClientsTable({
   clients,
@@ -20,26 +20,21 @@ export function ClientsTable({
     : CLIENTS_COPY.count(clients.length);
 
   return (
-    <section className="glass-panel flex flex-col overflow-hidden rounded-card">
+    <section className="glass-thick flex flex-col rounded-card px-6 pt-5 pb-2.5">
       <ClientsToolbar query={query} resultsLabel={resultsLabel} />
 
-      <div className="h-px bg-border/60" />
-
-      <div className="hidden items-center gap-3.5 bg-g-100 px-5 py-[9px] text-[10px] font-medium tracking-[0.6px] text-text-muted uppercase lg:flex">
-        <span className="w-[264px] shrink-0">{CLIENTS_TABLE_COLUMNS.client}</span>
-        <span className="min-w-0 flex-1">{CLIENTS_TABLE_COLUMNS.investment}</span>
-        <span className="w-[100px] shrink-0" />
-        <span className="w-[140px] shrink-0">{CLIENTS_TABLE_COLUMNS.jobs}</span>
-        <span className="w-24 shrink-0 text-center">
-          {CLIENTS_TABLE_COLUMNS.status}
-        </span>
-        <span className="w-[34px] shrink-0" />
+      <div className="hidden h-9 items-center gap-4 border-b border-border text-xs font-normal text-text-muted lg:flex">
+        <span className="min-w-0 flex-1">{CLIENTS_TABLE_COLUMNS.client}</span>
+        <span className="w-[300px] shrink-0">{CLIENTS_TABLE_COLUMNS.investment}</span>
+        <span className="w-[190px] shrink-0">{CLIENTS_TABLE_COLUMNS.jobs}</span>
+        <span className="w-[130px] shrink-0">{CLIENTS_TABLE_COLUMNS.status}</span>
+        <span className="w-10 shrink-0" />
       </div>
 
       {clients.length === 0 ? (
         <ClientsNoResults />
       ) : (
-        <ul className="border-t border-border/60">
+        <ul>
           {clients.map((client) => (
             <ClientRow
               key={client.id}

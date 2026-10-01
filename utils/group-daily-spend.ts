@@ -8,21 +8,19 @@ export interface RealSpendDay {
 }
 
 /**
- * Agrupa la serie diaria por día del mes. Entran todas las campañas
- * importadas, estén o no vinculadas a un trabajo: el dinero salió de la cuenta
- * publicitaria igual, y el gráfico habla de inversión, no de asignación.
+ * Agrupa la serie diaria por fecha. Entran todas las campañas importadas,
+ * estén o no vinculadas a un trabajo: el dinero salió de la cuenta publicitaria
+ * igual, y el gráfico habla de inversión, no de asignación.
  */
 export function groupDailySpend(
   points: CampaignDailyPoint[],
-): Map<number, RealSpendDay> {
-  const byDay = new Map<number, RealSpendDay>();
+): Map<string, RealSpendDay> {
+  const byDate = new Map<string, RealSpendDay>();
 
   for (const point of points) {
-    // `YYYY-MM-DD`: el día son los dos últimos caracteres, sin pasar por `Date`.
-    const day = Number(point.date.slice(8, 10));
-    if (!Number.isInteger(day) || point.spend <= 0) continue;
+    if (point.spend <= 0) continue;
 
-    const current = byDay.get(day) ?? {
+    const current = byDate.get(point.date) ?? {
       byPlatform: { youtube: 0, meta: 0, tiktok: 0 },
       total: 0,
     };
@@ -30,8 +28,8 @@ export function groupDailySpend(
     current.byPlatform[point.platform] += point.spend;
     current.total += point.spend;
 
-    byDay.set(day, current);
+    byDate.set(point.date, current);
   }
 
-  return byDay;
+  return byDate;
 }

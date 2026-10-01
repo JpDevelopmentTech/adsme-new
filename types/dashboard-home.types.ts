@@ -1,14 +1,15 @@
+import type { LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
 import type {
   ActivityItem,
-  DashboardAlert,
   DashboardMetrics,
-  MonthSpend,
-  SpendDay,
+  PeriodSpend,
 } from "@/domain/entities/dashboard";
 import type { JobListing } from "@/domain/entities/job-listing";
 
 export interface KpiCardProps {
+  /** Icono de la cifra, en su cuadro de vidrio junto al rótulo. */
+  icon?: LucideIcon;
   label: string;
   value: string;
   /** Contexto bajo la cifra: qué hace buena o mala noticia a ese número. */
@@ -19,43 +20,74 @@ export interface KpiCardProps {
   footer?: ReactNode;
 }
 
-/** El panel oscuro que abre `B1`: cifra del mes, ritmo y gráfica en un objeto. */
-export interface MonthHeroProps {
+/** Fila de tarjetas que abre `B1`: la inversión del período y tres cifras de contexto. */
+export interface DashboardKpiRowProps {
   metrics: DashboardMetrics;
-  spend: MonthSpend;
-  /** Estado de la última importación de métricas, rotulado en micro. */
+  spend: PeriodSpend;
+  /** Estado de la última importación de métricas, ya redactado. */
   status: string;
+  /** Si hubo alguna importación: pinta el punto del estado en verde. */
+  isSynced: boolean;
 }
 
-export interface SpendPanelProps {
-  spend: MonthSpend;
+export type PeriodInvestmentCardProps = Omit<DashboardKpiRowProps, "metrics">;
+
+/** Cifra y unidad de un importe compacto, para pintar la unidad más pequeña. */
+export interface CompactAmountParts {
+  value: string;
+  unit: string;
 }
 
-export interface PortfolioStripProps {
-  metrics: DashboardMetrics;
+/** Sentido del ritmo del gasto frente al calendario del período. */
+export type PacingDirection = "ahead" | "behind" | "even";
+
+export interface PacingPillProps {
+  /** Parte del plan mensual que cae en los días ya transcurridos. */
+  spendPercent: number;
+  /** Parte del período ya transcurrida, que marca el ritmo esperado. */
+  calendarPercent: number;
 }
 
-export interface PortfolioStatProps {
+export interface PacingRingsProps extends PacingPillProps {
+  elapsedDays: number;
+  totalDays: number;
+}
+
+export interface KpiTileProps {
+  icon: LucideIcon;
   label: string;
   value: string;
   note: string;
-  /** Punto de acento junto al pie cuando el dato pide una acción. */
+  /** Punto rojo junto al pie cuando el dato pide una acción. */
   isFlagged?: boolean;
 }
 
-export interface PacingRailProps {
-  /** Parte del plan mensual que cae en los días ya transcurridos. */
-  spendPercent: number;
-  /** Parte del mes ya transcurrida, que marca el ritmo esperado. */
-  calendarPercent: number;
-  caption: string;
+export interface SpendPanelProps {
+  spend: PeriodSpend;
+}
+
+export interface SpendAreaChartProps {
+  spend: PeriodSpend;
+  /** Descripción de la serie para quien no ve la gráfica. */
+  label: string;
+}
+
+/** Una serie del área apilada: una plataforma, o la parte sin plataforma. */
+export interface SpendChartSeries {
+  name: string;
+  color: string;
+  data: number[];
+}
+
+export interface SpendLegendProps {
+  hasUnassigned: boolean;
 }
 
 export interface PanelCardProps {
   title: string;
   subtitle?: string;
   icon?: ReactNode;
-  /** Contador junto al título, como el cuadro de alertas del diseño. */
+  /** Contador junto al título. */
   count?: number;
   seeAllHref?: string;
   isEmpty: boolean;
@@ -67,35 +99,9 @@ export interface ActiveCampaignsPanelProps {
   jobs: JobListing[];
 }
 
-export interface AlertsPanelProps {
-  alerts: DashboardAlert[];
-}
-
 /** El feed de actividad ya no vive en el dashboard; el panel espera su sección. */
 export interface ActivityPanelProps {
   items: ActivityItem[];
   /** Momento de render, para calcular «hace X» sin desajustes de hidratación. */
   now: string;
-}
-
-export interface SpendPlotProps {
-  spend: MonthSpend;
-  /** Importe del día más alto del mes, que fija la altura máxima de la barra. */
-  max: number;
-  /** Descripción de la serie para quien no ve las barras. */
-  label: string;
-}
-
-export interface SpendAxisProps {
-  spend: MonthSpend;
-}
-
-export interface SpendColumnProps {
-  day: SpendDay;
-  /** Importe del día más alto del mes, que fija la altura máxima de la barra. */
-  max: number;
-}
-
-export interface SpendLegendProps {
-  hasUnassigned: boolean;
 }

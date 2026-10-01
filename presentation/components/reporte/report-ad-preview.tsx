@@ -1,51 +1,55 @@
-import { Play } from "lucide-react";
+import { Play, SkipForward } from "lucide-react";
 import { REPORT_COPY } from "@/constants/report.constants";
 import type { ReportAdPreviewProps } from "@/types/report.types";
 
 /**
- * Cómo se ve el anuncio en YouTube. Es una maqueta del creativo con la portada
- * real del lanzamiento; no muestra suscriptores ni duración porque esos datos
- * no llegan de la plataforma.
+ * Cómo se ve el anuncio en YouTube. Es una maqueta del reproductor con la
+ * portada real del lanzamiento —la etiqueta amarilla, «Saltar anuncio» y la
+ * barra de progreso son los de YouTube—; no muestra suscriptores ni duración
+ * porque esos datos no llegan de la plataforma.
  */
 export function ReportAdPreview({ job }: ReportAdPreviewProps) {
   return (
-    <section className="glass-panel flex flex-col items-center gap-6 rounded-card p-[22px] lg:flex-row">
-      <div className="relative aspect-video w-full shrink-0 overflow-hidden rounded-tile bg-g-700 lg:w-[480px]">
+    <section className="glass-thick flex flex-col items-center gap-8 rounded-window p-5 sm:p-7 lg:flex-row lg:gap-10">
+      <div className="relative aspect-video w-full shrink-0 overflow-hidden rounded-[20px] bg-black lg:w-[576px]">
         {job.coverUrl ? (
-          // Portada servida desde Storage con URL pública.
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={job.coverUrl}
-            alt={`Creativo de ${job.title}`}
-            className="size-full object-cover"
-          />
+          <>
+            {/* Portada servida desde Storage con URL pública. */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={job.coverUrl} alt="" aria-hidden className="absolute inset-0 size-full scale-125 object-cover opacity-70 blur-[40px]" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={job.coverUrl}
+              alt={`Creativo de ${job.title}`}
+              className="absolute top-[19%] left-1/2 aspect-square w-[26%] -translate-x-1/2 rounded-[14px] object-cover"
+            />
+          </>
         ) : null}
 
-        <span className="absolute inset-0 grid place-items-center">
-          <span className="grid size-14 place-items-center rounded-pill border border-g-50/35 bg-ink/70">
-            <Play size={20} strokeWidth={1.75} className="text-g-50" aria-hidden />
-          </span>
+        <span aria-hidden className="absolute bottom-[10%] left-1/2 grid size-[60px] -translate-x-1/2 place-items-center rounded-pill bg-white/90">
+          <Play size={24} strokeWidth={1.75} className="translate-x-px fill-g-50 text-g-50" />
         </span>
 
-        <span className="absolute top-3.5 left-3.5 rounded-sm bg-ink/80 px-2 py-[3px] text-[10px] text-g-50">
+        <span className="absolute top-4 left-4 rounded-[6px] bg-ad-yellow px-2 py-[3px] text-[11px] font-medium text-ad-ink">
           {REPORT_COPY.adBadge}
         </span>
 
-        <span className="absolute right-3.5 bottom-3.5 rounded-sm border border-g-50/25 bg-ink/80 px-[11px] py-1.5 text-[11px] text-g-50">
+        <span className="absolute right-4 bottom-[18px] flex items-center gap-1.5 rounded-[4px] border border-white/30 bg-black/70 px-3 py-2 text-xs text-white">
           {REPORT_COPY.adSkip}
+          <SkipForward size={13} strokeWidth={1.75} aria-hidden />
+        </span>
+
+        <span aria-hidden className="absolute inset-x-0 bottom-0 h-1 bg-white/20">
+          <span className="block h-full w-[26%] bg-ad-yellow" />
         </span>
       </div>
 
-      <div className="flex min-w-0 flex-1 flex-col gap-2.5">
-        <span className="text-[10px] font-medium tracking-[0.6px] text-text-muted uppercase">
-          {REPORT_COPY.adEyebrow}
-        </span>
-        <h2 className="font-display text-[19px] font-normal tracking-[-0.4px] text-text-primary">
+      <div className="flex min-w-0 flex-1 flex-col gap-3">
+        <span className="text-[11px] font-medium tracking-[1.4px] text-text-muted uppercase">{REPORT_COPY.adEyebrow}</span>
+        <h2 className="text-[32px] leading-tight font-extralight tracking-[-0.6px] text-text-primary">
           {REPORT_COPY.adPreviewTitle}
         </h2>
-        <p className="text-[13px] leading-[1.5] text-text-secondary">
-          {REPORT_COPY.adBody}
-        </p>
+        <p className="text-[15px] leading-[1.6] font-light text-text-secondary">{REPORT_COPY.adBody}</p>
       </div>
     </section>
   );

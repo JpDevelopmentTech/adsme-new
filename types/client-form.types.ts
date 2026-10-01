@@ -41,11 +41,18 @@ export interface ClientFormProps {
   initialAvatarUrl?: string | null;
   /** Presente solo al editar; su ausencia hace que la acción dé de alta. */
   clientId?: string;
+  /** `true` cuando se abre como modal sobre la lista: cerrar vuelve atrás. */
+  isModal?: boolean;
 }
 
 export interface ClientFormHeaderProps {
   title: string;
+  onClose: () => void;
+}
+
+export interface ClientFormFooterProps {
   isPending: boolean;
+  onClose: () => void;
 }
 
 export interface ClientFormFieldsProps {

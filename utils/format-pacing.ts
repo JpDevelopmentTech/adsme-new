@@ -1,5 +1,5 @@
 /**
- * Compara el gasto planificado con el calendario del mes y lo dice en palabras.
+ * Compara el gasto planificado con el calendario del período y lo dice en palabras.
  * Un punto es un punto porcentual de diferencia entre ambos ritmos.
  */
 export function formatPacing(

@@ -6,28 +6,25 @@ import { BrandWordmark } from "@/presentation/components/brand/brand-wordmark";
 /** Columna izquierda del login: marca, propuesta de valor y sello de seguridad. */
 export function AuthShowcasePanel() {
   return (
-    <aside className="relative hidden w-[560px] shrink-0 flex-col justify-between overflow-hidden bg-auth-aurora p-14 lg:flex">
-      <span
-        aria-hidden
-        className="pointer-events-none absolute -left-[120px] top-[380px] size-[420px] bg-magenta-glow blur-[40px]"
-      />
-
-      <div className="relative">
-        <BrandWordmark className="h-8" />
+    <aside className="hidden min-w-0 flex-1 flex-col justify-between self-stretch py-4 lg:flex">
+      <div>
+        <BrandWordmark className="h-[34px]" />
       </div>
 
-      <div className="relative flex w-[400px] max-w-full flex-col gap-6">
-        <h1 className="font-display text-[38px] leading-[1.15] font-bold text-text-primary">
+      <div className="flex flex-col gap-[22px]">
+        <h1 className="max-w-[620px] text-[60px] leading-[1.08] font-extralight tracking-[-0.037em] text-text-primary">
           {AUTH_SHOWCASE_COPY.headline}
         </h1>
-        <p className="text-base leading-[1.5] text-text-secondary">
+        <p className="max-w-[540px] text-lg leading-[1.55] text-text-secondary">
           {AUTH_SHOWCASE_COPY.subheadline}
         </p>
-        <EqualizerBars />
+        <div className="pt-6">
+          <EqualizerBars />
+        </div>
       </div>
 
-      <p className="relative flex items-center gap-2.5 text-[13px] text-text-muted">
-        <ShieldCheck size={18} className="text-data-cyan" aria-hidden />
+      <p className="flex items-center gap-2.5 text-[13px] font-normal text-text-secondary">
+        <ShieldCheck size={16} strokeWidth={1.75} aria-hidden />
         {AUTH_SHOWCASE_COPY.footnote}
       </p>
     </aside>

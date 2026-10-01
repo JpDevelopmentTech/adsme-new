@@ -1,61 +1,40 @@
-import { Plus } from "lucide-react";
-import { JOBS_BAND_COPY, JOBS_COPY } from "@/constants/jobs.constants";
-import { NEW_JOB_ROUTE } from "@/constants/routes.constants";
-import { PrimaryLink } from "@/presentation/components/ui/primary-link";
+import { JOBS_BAND_COPY } from "@/constants/jobs.constants";
+import { PortfolioFigure } from "@/presentation/components/clientes/portfolio-figure";
 import type { JobsSummaryBandProps } from "@/types/jobs-list.types";
 import { formatCompactCurrency } from "@/utils/format-compact-currency";
 
 /**
  * Cabecera del listado: cuánto dinero hay comprometido y en qué estado está la
- * pauta. Los puntos usan el mismo código de color que los tramos de la línea de
- * tiempo, así el resumen y el detalle se leen igual.
+ * pauta. Los puntos usan el mismo color que los tramos de la línea de tiempo y
+ * solo aparecen las cifras que no son cero.
  */
 export function JobsSummaryBand({ summary }: JobsSummaryBandProps) {
   const composition = [
-    { count: summary.running, label: JOBS_BAND_COPY.running, dot: "bg-ink" },
-    {
-      count: summary.endingSoon,
-      label: JOBS_BAND_COPY.endingSoon,
-      dot: "bg-warning",
-    },
-    { count: summary.overdue, label: JOBS_BAND_COPY.overdue, dot: "bg-accent" },
-    { count: summary.upcoming, label: JOBS_BAND_COPY.upcoming, dot: "bg-g-400" },
-    { count: summary.finished, label: JOBS_BAND_COPY.finished, dot: "bg-g-500" },
-  ].filter((item) => item.count > 0);
+    { value: summary.running, label: JOBS_BAND_COPY.runningLabel, dot: "bg-success" },
+    { value: summary.endingSoon, label: JOBS_BAND_COPY.endingSoonLabel, dot: "bg-warning" },
+    { value: summary.overdue, label: JOBS_BAND_COPY.overdueLabel, dot: "bg-danger" },
+    { value: summary.upcoming, label: JOBS_BAND_COPY.upcomingLabel, dot: "bg-text-secondary" },
+    { value: summary.finished, label: JOBS_BAND_COPY.finishedLabel, dot: "bg-lilac" },
+  ].filter((figure) => figure.value > 0);
 
   return (
-    <section className="glass-panel flex flex-wrap items-center gap-6 rounded-card px-6 py-[22px]">
-      <div className="flex min-w-0 flex-1 flex-col gap-1.5">
-        <span className="text-[10px] font-medium tracking-[0.6px] text-text-muted uppercase">
+    <section className="glass-panel flex flex-col gap-7 rounded-card px-7 py-[26px] xl:flex-row xl:items-center xl:gap-8">
+      <div className="flex flex-col gap-1.5 xl:w-[330px] xl:shrink-0">
+        <p className="flex items-center gap-2 text-[13px] font-normal text-text-secondary">
+          <span aria-hidden className="size-2 rounded-pill bg-lilac" />
           {JOBS_BAND_COPY.eyebrow}
-        </span>
-
-        <p className="flex flex-wrap items-end gap-x-2.5">
-          <span className="font-display text-[30px] leading-none font-light tracking-[-1.2px] text-text-primary">
-            {formatCompactCurrency(summary.invested)}
-          </span>
-          <span className="text-[13px] text-text-secondary">
-            {JOBS_BAND_COPY.committed(summary.total)}
-          </span>
         </p>
-
-        <ul className="flex flex-wrap items-center gap-x-4 gap-y-1.5">
-          {composition.map((item) => (
-            <li
-              key={item.dot}
-              className="flex items-center gap-[7px] text-[12px] text-text-secondary"
-            >
-              <span aria-hidden className={`size-[7px] rounded-pill ${item.dot}`} />
-              {item.label(item.count)}
-            </li>
-          ))}
-        </ul>
+        <p className="text-5xl leading-[1.05] font-extralight tracking-[-1.5px] text-text-primary tabular-nums">
+          {formatCompactCurrency(summary.invested)}
+        </p>
+        <p className="text-sm text-text-secondary">{JOBS_BAND_COPY.committed(summary.total)}</p>
       </div>
 
-      <PrimaryLink href={NEW_JOB_ROUTE}>
-        <Plus size={15} strokeWidth={1.75} aria-hidden />
-        {JOBS_COPY.newJob}
-      </PrimaryLink>
+      <ul className="flex flex-1 flex-wrap items-start gap-y-4">
+        {composition.map((figure) => (
+          <PortfolioFigure key={figure.label} {...figure} />
+        ))}
+      </ul>
     </section>
   );
 }

@@ -1,100 +1,92 @@
+import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
-import { ExternalLink } from "lucide-react";
 import { JOB_STATUS_BADGE } from "@/constants/client-detail.constants";
-import {
-  ARTIST_SPEND_HEADER,
-  ARTIST_TABLE_HEADERS,
-  REPORT_COPY,
-} from "@/constants/report.constants";
+import { ARTIST_SPEND_HEADER, ARTIST_TABLE_HEADERS, REPORT_COPY } from "@/constants/report.constants";
 import { REPORT_ROUTE_PREFIX } from "@/constants/report-link.constants";
 import { JobCover } from "@/presentation/components/cliente-detalle/job-cover";
 import { StatusBadge } from "@/presentation/components/ui/status-badge";
 import type { ArtistLaunchesTableProps } from "@/types/report.types";
+import { cn } from "@/utils/cn";
 import { formatExactCurrency } from "@/utils/format-exact-currency";
 import { formatExactNumber } from "@/utils/format-exact-number";
-import { resolveClientGradient } from "@/utils/client-gradient";
+
+/** Ancho y alineación de cada columna, en el orden de `ARTIST_TABLE_HEADERS`. */
+const COLUMN_CLASSES: Record<string, string> = {
+  Lanzamiento: "",
+  Tipo: "w-[120px]",
+  Estado: "w-[140px]",
+  Views: "w-[140px] pr-6 text-right",
+  [ARTIST_SPEND_HEADER]: "w-[160px] pr-6 text-right",
+  Enlace: "w-[120px] pl-2",
+};
 
 /** Tabla de lanzamientos del artista, con acceso al reporte de cada uno. */
-export function ArtistLaunchesTable({
-  launches,
-  showSpend,
-}: ArtistLaunchesTableProps) {
+export function ArtistLaunchesTable({ launches, showSpend }: ArtistLaunchesTableProps) {
   const headers = showSpend
     ? ARTIST_TABLE_HEADERS
     : ARTIST_TABLE_HEADERS.filter((header) => header !== ARTIST_SPEND_HEADER);
 
   return (
-    <div className="overflow-x-auto rounded-card border border-border bg-card">
-      <table className="w-full min-w-[840px] border-collapse">
-        <thead className="border-b border-border bg-surface">
-          <tr className="text-left text-[11px] font-bold tracking-[0.5px] text-text-muted uppercase">
-            {headers.map((header) => (
-              <th key={header} className="px-5 py-3 font-bold">
-                {header}
-              </th>
-            ))}
-          </tr>
-        </thead>
+    <section className="glass-thick flex flex-col rounded-window px-5 pt-6 pb-2.5 sm:px-7">
+      <h2 className="text-2xl font-light text-text-primary">{REPORT_COPY.artistLaunches}</h2>
 
-        <tbody>
-          {launches.map((launch) => {
-            const status = JOB_STATUS_BADGE[launch.status];
+      <div className="overflow-x-auto">
+        <table className="w-full min-w-[820px] border-collapse">
+          <thead>
+            <tr className="h-[52px] border-b border-border text-left text-xs font-normal text-text-muted">
+              {headers.map((header) => (
+                <th key={header} className={cn("pb-2.5 align-bottom font-normal", COLUMN_CLASSES[header])}>
+                  {header}
+                </th>
+              ))}
+            </tr>
+          </thead>
 
-            return (
-              <tr key={launch.id} className="border-b border-border last:border-b-0">
-                <td className="px-5 py-3.5">
-                  <span className="flex items-center gap-3">
-                    <JobCover
-                      cover={resolveClientGradient(launch.id)}
-                      imageUrl={launch.coverUrl}
-                      title={launch.title}
-                    />
-                    <span className="text-sm font-semibold text-text-primary">
-                      {launch.title}
+          <tbody>
+            {launches.map((launch) => {
+              const status = JOB_STATUS_BADGE[launch.status];
+
+              return (
+                <tr key={launch.id} className="h-[78px] border-b border-border last:border-b-0">
+                  <td className="pr-4">
+                    <span className="flex items-center gap-3.5">
+                      <JobCover imageUrl={launch.coverUrl} title={launch.title} size={52} />
+                      <span className="text-base text-text-primary">{launch.title}</span>
                     </span>
-                  </span>
-                </td>
-
-                <td className="px-5 py-3.5 text-[13px] text-text-secondary">
-                  {launch.format}
-                </td>
-
-                <td className="px-5 py-3.5">
-                  <span className="inline-flex">
-                    <StatusBadge label={status.label} tone={status.tone} />
-                  </span>
-                </td>
-
-                <td className="px-5 py-3.5 font-display text-[13px] font-semibold whitespace-nowrap text-text-primary">
-                  {formatExactNumber(launch.videoPlays)}
-                </td>
-
-                {showSpend ? (
-                  <td className="px-5 py-3.5 text-[13px] whitespace-nowrap text-text-secondary">
-                    {formatExactCurrency(launch.spend)}
                   </td>
-                ) : null}
-
-                <td className="px-5 py-3.5">
-                  {launch.code ? (
-                    <Link
-                      href={`${REPORT_ROUTE_PREFIX}/${launch.code}`}
-                      className="flex items-center gap-1.5 text-[13px] font-semibold text-brand-violet transition-colors hover:text-brand-magenta"
-                    >
-                      <ExternalLink size={14} aria-hidden />
-                      {REPORT_COPY.view}
-                    </Link>
-                  ) : (
-                    <span className="text-[13px] text-text-muted">
-                      {REPORT_COPY.noLaunchLink}
+                  <td className="text-sm font-light text-text-secondary">{launch.format}</td>
+                  <td>
+                    <span className="inline-flex">
+                      <StatusBadge label={status.label} tone={status.tone} />
                     </span>
-                  )}
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
+                  </td>
+                  <td className="pr-6 text-right text-[15px] text-text-primary tabular-nums">
+                    {formatExactNumber(launch.videoPlays)}
+                  </td>
+                  {showSpend ? (
+                    <td className="pr-6 text-right text-[15px] whitespace-nowrap text-text-primary tabular-nums">
+                      {formatExactCurrency(launch.spend)}
+                    </td>
+                  ) : null}
+                  <td>
+                    {launch.code ? (
+                      <Link
+                        href={`${REPORT_ROUTE_PREFIX}/${launch.code}`}
+                        className="inline-flex items-center gap-1.5 rounded-pill border border-white/20 bg-surface px-3.5 py-[7px] text-[13px] text-text-primary transition-colors duration-150 hover:border-white/40 focus-visible:ring-2 focus-visible:ring-lilac focus-visible:outline-none"
+                      >
+                        <ArrowUpRight size={14} strokeWidth={1.5} aria-hidden />
+                        {REPORT_COPY.view}
+                      </Link>
+                    ) : (
+                      <span className="text-[13px] font-light text-text-muted">{REPORT_COPY.noLaunchLink}</span>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </section>
   );
 }

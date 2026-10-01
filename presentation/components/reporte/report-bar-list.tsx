@@ -1,35 +1,28 @@
 import type { ReportBarListProps } from "@/types/report.types";
 
-/** Desglose porcentual en barras: la forma en que el reporte compara partes. */
-export function ReportBarList({
-  title,
-  shares,
-  color = "var(--color-brand-violet)",
-}: ReportBarListProps) {
+/**
+ * Desglose porcentual en filas: etiqueta, barra y cifra. La barra se mide
+ * contra la porción mayor, no contra el 100 %: con siete regiones ninguna pasa
+ * del tercio, y medidas sobre el total todas parecerían igual de cortas.
+ */
+export function ReportBarList({ title, shares, color = "var(--color-lilac)" }: ReportBarListProps) {
+  const max = Math.max(...shares.map((item) => item.percent), 0);
+
   return (
     <div className="flex flex-col gap-3">
-      <h3 className="text-[11px] font-bold tracking-[0.5px] text-text-muted">
-        {title}
-      </h3>
+      <h4 className="text-[11px] font-medium tracking-[1.4px] text-text-muted uppercase">{title}</h4>
 
-      <ul className="flex flex-col gap-2.5">
+      <ul className="flex flex-col gap-3">
         {shares.map((item) => (
-          <li key={item.label} className="flex flex-col gap-1.5">
-            <div className="flex items-center justify-between gap-3">
-              <span className="truncate text-[13px] text-text-secondary">
-                {item.label}
-              </span>
-              <span className="shrink-0 text-[13px] font-semibold text-text-primary">
-                {item.percent}%
-              </span>
-            </div>
-
-            <div aria-hidden className="h-1.5 rounded-pill bg-surface">
-              <div
-                className="h-full rounded-pill"
-                style={{ width: `${item.percent}%`, backgroundColor: color }}
+          <li key={item.label} className="flex items-center gap-3">
+            <span className="w-[132px] shrink-0 truncate text-[13px] text-text-secondary">{item.label}</span>
+            <span aria-hidden className="h-2.5 min-w-0 flex-1 rounded-pill bg-surface">
+              <span
+                className="block h-full rounded-pill"
+                style={{ width: `${max > 0 ? (item.percent / max) * 100 : 0}%`, backgroundColor: color }}
               />
-            </div>
+            </span>
+            <span className="w-10 shrink-0 text-right text-[13px] text-text-primary tabular-nums">{item.percent}%</span>
           </li>
         ))}
       </ul>

@@ -1,82 +1,60 @@
 import { PLATFORM_META } from "@/constants/platforms.constants";
-import {
-  REPORT_PLATFORM_BAR,
-  REPORT_PLATFORM_SECTION,
-  REPORT_TONE_CLASSES,
-} from "@/constants/report.constants";
+import { REPORT_COPY } from "@/constants/report.constants";
 import type { ArtistPlatformCardsProps } from "@/types/report.types";
 import { formatPercent, share } from "@/utils/format-compact-number";
 import { formatExactCurrency } from "@/utils/format-exact-currency";
 import { formatExactNumber } from "@/utils/format-exact-number";
-import { cn } from "@/utils/cn";
 
 /**
  * Una tarjeta por plataforma con el total de reproducciones del artista. La
- * barra marca su peso sobre el total, que es lo que sí podemos medir sin
- * histórico diario.
+ * barra, al pie, marca su peso sobre el total de todos sus lanzamientos.
  */
-export function ArtistPlatformCards({
-  platforms,
-  showSpend,
-}: ArtistPlatformCardsProps) {
+export function ArtistPlatformCards({ platforms, showSpend }: ArtistPlatformCardsProps) {
   const total = platforms.reduce((sum, metrics) => sum + metrics.videoPlays, 0);
 
   return (
-    <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-5">
-      {platforms.map((metrics) => {
-        const { Icon, label } = PLATFORM_META[metrics.platform];
-        const tone = REPORT_TONE_CLASSES[REPORT_PLATFORM_SECTION[metrics.platform].tone];
-        const percent = share(metrics.videoPlays, total);
+    <section className="flex flex-col gap-4">
+      <h2 className="text-2xl font-light text-text-primary">{REPORT_COPY.artistPlatforms}</h2>
 
-        return (
-          <article
-            key={metrics.platform}
-            className="flex flex-col gap-4 rounded-card border border-border bg-card p-5"
-          >
-            <header className="flex items-center gap-2.5">
-              <span
-                aria-hidden
-                className={cn("grid size-[34px] place-items-center rounded-sm", tone.chip)}
-              >
-                <span className={tone.icon}>
-                  <Icon size={17} />
+      <div className="grid gap-4 md:grid-cols-3">
+        {platforms.map((metrics) => {
+          const { label, mono, chartColor } = PLATFORM_META[metrics.platform];
+          const percent = share(metrics.videoPlays, total);
+
+          return (
+            <article key={metrics.platform} className="glass-thick flex flex-col gap-4 rounded-card p-6">
+              <header className="flex items-center gap-3">
+                <span
+                  aria-hidden
+                  className="grid size-10 shrink-0 place-items-center rounded-[12px] text-[13px] font-medium"
+                  style={{ color: chartColor, backgroundColor: `${chartColor}29` }}
+                >
+                  {mono}
                 </span>
+                <span className="flex min-w-0 flex-col">
+                  <h3 className="text-base text-text-primary">{label}</h3>
+                  <span className="text-xs text-text-muted">{REPORT_COPY.detailCampaigns(metrics.campaigns)}</span>
+                </span>
+              </header>
+
+              <p className="text-[38px] leading-none font-extralight tracking-[-1px] text-text-primary tabular-nums">
+                {formatExactNumber(metrics.videoPlays)}
+              </p>
+
+              <p className="text-xs text-text-secondary">
+                {REPORT_COPY.artistPlatformNote(
+                  formatPercent(percent),
+                  showSpend ? formatExactCurrency(metrics.spend) : null,
+                )}
+              </p>
+
+              <span aria-hidden className="mt-auto h-2 rounded-pill bg-white/8">
+                <span className="block h-full rounded-pill" style={{ width: `${percent}%`, backgroundColor: chartColor }} />
               </span>
-
-              <h3 className="flex-1 font-display text-base font-semibold text-text-primary">
-                {label}
-              </h3>
-
-              <span className="text-xs text-text-muted">
-                {metrics.campaigns}{" "}
-                {metrics.campaigns === 1 ? "campaña" : "campañas"}
-              </span>
-            </header>
-
-            <p className="font-display text-[32px] leading-none font-bold text-text-primary">
-              {formatExactNumber(metrics.videoPlays)}
-            </p>
-
-            <p className="text-xs text-text-muted">
-              <span className={cn("font-semibold", tone.text)}>
-                {formatPercent(percent)}
-              </span>{" "}
-              de las reproducciones
-              {showSpend ? ` · ${formatExactCurrency(metrics.spend)} invertidos` : null}
-            </p>
-
-            <span aria-hidden className="h-2 overflow-hidden rounded-pill bg-surface">
-              <span
-                className="block h-full rounded-pill"
-                style={{
-                  width: `${percent}%`,
-                  backgroundImage: REPORT_PLATFORM_BAR[metrics.platform],
-                }}
-              />
-            </span>
-          </article>
-        );
-      })}
-    </div>
+            </article>
+          );
+        })}
+      </div>
+    </section>
   );
 }

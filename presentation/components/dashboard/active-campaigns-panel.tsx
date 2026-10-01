@@ -15,9 +15,8 @@ import { formatCompactCurrency } from "@/utils/format-compact-currency";
 import { formatJobPeriod } from "@/utils/format-job-period";
 
 /**
- * Los trabajos en curso que más presupuesto concentran, leídos como tabla a
- * ancho completo: con sitio de sobra, el período deja de ser un dato que hay
- * que ir a buscar al detalle de cada trabajo.
+ * Los trabajos con pauta en el período que más presupuesto concentran, en
+ * tabla a todo el ancho: portada y artista, período, pauta, inversión y estado.
  */
 export function ActiveCampaignsPanel({ jobs }: ActiveCampaignsPanelProps) {
   const ranked = [...jobs]
@@ -32,63 +31,61 @@ export function ActiveCampaignsPanel({ jobs }: ActiveCampaignsPanelProps) {
       isEmpty={ranked.length === 0}
       emptyText={DASHBOARD_COPY.noCampaigns}
     >
-      <div className="hidden items-center gap-4 bg-g-100 px-5 py-[9px] text-[10px] font-medium tracking-[0.6px] text-text-muted uppercase lg:flex">
-        <span className="w-9 shrink-0">{JOBS_TABLE_COLUMNS.job}</span>
-        <span className="min-w-0 flex-1" />
-        <span className="w-[136px] shrink-0">{JOBS_TABLE_COLUMNS.period}</span>
-        <span className="w-24 shrink-0">{JOBS_TABLE_COLUMNS.platforms}</span>
-        <span className="w-[100px] shrink-0 text-right">
-          {JOBS_TABLE_COLUMNS.investment}
-        </span>
-        <span className="w-24 shrink-0 text-center">
-          {JOBS_TABLE_COLUMNS.status}
-        </span>
-      </div>
+      <div className="px-6 pb-3">
+        <div className="hidden h-9 items-center gap-4 border-b border-border text-xs font-normal text-text-muted lg:flex">
+          <span className="min-w-0 flex-1">{JOBS_TABLE_COLUMNS.job}</span>
+          <span className="w-[150px] shrink-0">{JOBS_TABLE_COLUMNS.period}</span>
+          <span className="w-[130px] shrink-0">{JOBS_TABLE_COLUMNS.platforms}</span>
+          <span className="w-[106px] shrink-0 text-right">{JOBS_TABLE_COLUMNS.investment}</span>
+          <span className="w-[130px] shrink-0 pl-6">{JOBS_TABLE_COLUMNS.status}</span>
+        </div>
 
-      <ul className="border-t border-border">
-        {ranked.map((job) => {
-          const status = JOB_STATUS_BADGE[job.status];
+        <ul>
+          {ranked.map((job) => {
+            const status = JOB_STATUS_BADGE[job.status];
 
-          return (
-            <li
-              key={job.id}
-              className="flex items-center gap-4 border-b border-border px-5 py-3 transition-colors duration-150 last:border-b-0 hover:bg-g-100"
-            >
-              <JobCover cover={job.cover} imageUrl={job.coverUrl} title={job.title} />
+            return (
+              <li
+                key={job.id}
+                className="flex min-h-[68px] items-center gap-4 border-b border-border py-3 last:border-b-0"
+              >
+                <div className="flex min-w-0 flex-1 items-center gap-3.5">
+                  <JobCover cover={job.cover} imageUrl={job.coverUrl} title={job.title} size={44} />
+                  <div className="flex min-w-0 flex-col gap-0.5">
+                    <Link
+                      href={editJobRoute(job.id)}
+                      className="truncate text-sm font-normal text-text-primary transition-opacity duration-150 hover:opacity-70"
+                    >
+                      {job.title}
+                    </Link>
+                    <span className="truncate text-xs font-normal text-text-muted">
+                      {job.artistName}
+                    </span>
+                  </div>
+                </div>
 
-              <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-                <Link
-                  href={editJobRoute(job.id)}
-                  className="truncate text-[13.5px] font-normal text-text-primary transition-opacity duration-150 hover:opacity-60"
-                >
-                  {job.title}
-                </Link>
-                <span className="truncate text-[11.5px] text-text-muted">
-                  {job.artistName}
+                <span className="hidden w-[150px] shrink-0 text-[13px] text-text-secondary lg:block">
+                  {formatJobPeriod(job.startsOn, job.endsOn)}
                 </span>
-              </div>
 
-              <span className="hidden w-[136px] shrink-0 text-[12px] text-text-secondary lg:block">
-                {formatJobPeriod(job.startsOn, job.endsOn)}
-              </span>
+                <div className="hidden w-[130px] shrink-0 md:block">
+                  {job.platforms.length > 0 ? (
+                    <JobPlatforms platforms={job.platforms} jobTitle={job.title} />
+                  ) : null}
+                </div>
 
-              <div className="hidden w-24 shrink-0 md:block">
-                {job.platforms.length > 0 ? (
-                  <JobPlatforms platforms={job.platforms} jobTitle={job.title} />
-                ) : null}
-              </div>
+                <span className="w-[106px] shrink-0 text-right text-sm font-normal text-text-primary tabular-nums">
+                  {formatCompactCurrency(job.investment)}
+                </span>
 
-              <span className="w-[100px] shrink-0 text-right text-[13.5px] font-normal text-text-primary">
-                {formatCompactCurrency(job.investment)}
-              </span>
-
-              <div className="hidden w-24 shrink-0 justify-center sm:flex">
-                <StatusBadge label={status.label} tone={status.tone} />
-              </div>
-            </li>
-          );
-        })}
-      </ul>
+                <div className="hidden w-[130px] shrink-0 pl-6 sm:block">
+                  <StatusBadge label={status.label} tone={status.tone} />
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
     </PanelCard>
   );
 }

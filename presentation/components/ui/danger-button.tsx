@@ -13,8 +13,8 @@ export function DangerButton({ children, className, ...buttonProps }: ButtonProp
     <button
       disabled={pending}
       className={cn(
-        "flex cursor-pointer items-center gap-2 rounded-pill bg-danger px-5 py-2.5",
-        "text-[13px] font-semibold whitespace-nowrap text-white transition-opacity",
+        "flex cursor-pointer items-center gap-2 rounded-pill bg-danger px-5 py-[11px]",
+        "text-sm font-normal whitespace-nowrap text-canvas transition-opacity",
         "hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60",
         className,
       )}

@@ -66,6 +66,8 @@ export const JOB_STEP_COPY = {
 export const JOB_FORMATS = ["Single", "EP", "Álbum"] as const satisfies readonly JobFormat[];
 
 export const JOB_WIZARD_COPY = {
+  /** Rótulo sobre el nombre de cada paso en el indicador de progreso. */
+  stepEyebrow: (number: number) => `Paso ${number}`,
   back: "Trabajos",
   title: "Nuevo trabajo",
   editTitle: "Editar trabajo",
@@ -128,6 +130,8 @@ export const JOB_REVIEW_LABELS = {
 export const JOB_MENU_COPY = {
   edit: "Editar trabajo",
   delete: "Eliminar",
+  /** Botón del diálogo: nombra la acción, no un «Sí» genérico (NN/g). */
+  confirmDelete: "Eliminar trabajo",
   cancel: "Cancelar",
   deleteTitle: "Eliminar trabajo",
   deleteDescription: (title: string) =>

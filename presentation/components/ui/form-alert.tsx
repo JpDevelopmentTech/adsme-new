@@ -3,8 +3,8 @@ import type { FormAlertProps } from "@/types/ui.types";
 import { cn } from "@/utils/cn";
 
 const TONE_CLASSES = {
-  danger: "border-danger/40 bg-danger/10 text-danger",
-  warning: "border-warning/40 bg-warning/10 text-warning",
+  danger: "border-danger/28 bg-danger/10 text-danger",
+  warning: "border-warning/25 bg-warning/8 text-warning",
 };
 
 /** El círculo dice «algo falló»; el triángulo, «esto todavía te falta». */
@@ -17,7 +17,7 @@ export function FormAlert({ message, tone = "danger" }: FormAlertProps) {
     <p
       role="alert"
       className={cn(
-        "flex items-start gap-2.5 rounded-md border px-3.5 py-3 text-[13px]",
+        "flex items-start gap-2.5 rounded-md border px-3.5 py-3 text-[13px] font-normal leading-[1.45]",
         TONE_CLASSES[tone],
       )}
     >

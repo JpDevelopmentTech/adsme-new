@@ -8,7 +8,7 @@ export function TopbarTitle() {
   const pathname = usePathname();
 
   return (
-    <h1 className="font-display text-[24px] font-light tracking-[-0.6px] text-text-primary">
+    <h1 className="text-[28px] leading-tight font-light tracking-[-0.5px] text-text-primary">
       {resolveRouteTitle(pathname)}
     </h1>
   );

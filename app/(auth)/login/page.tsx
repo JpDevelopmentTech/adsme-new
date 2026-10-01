@@ -10,7 +10,7 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
   const { error } = await searchParams;
 
   return (
-    <div className="flex min-h-dvh flex-1">
+    <div className="flex min-h-dvh flex-1 items-center justify-center gap-16 px-4 py-10 sm:px-10 lg:px-16 lg:py-12">
       <AuthShowcasePanel />
       <LoginPanel initialError={typeof error === "string" ? error : undefined} />
     </div>

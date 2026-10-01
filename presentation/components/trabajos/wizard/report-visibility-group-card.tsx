@@ -15,7 +15,7 @@ export function ReportVisibilityGroupCard({
 }: ReportVisibilityGroupCardProps) {
   return (
     <WizardSection label={group.title}>
-      <div className="overflow-hidden rounded-md border border-border bg-card-elevated">
+      <div className="flex flex-col">
         {group.options.map((option) => {
           const field = `${REPORT_VISIBILITY_FIELD_PREFIX}${option.section}`;
 

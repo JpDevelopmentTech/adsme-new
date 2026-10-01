@@ -1,24 +1,22 @@
-import { Fragment } from "react";
 import { REPORT_COPY } from "@/constants/report.constants";
+import { ReportPanelHeader } from "@/presentation/components/reporte/report-panel-header";
 import { ReportPlatformColumn } from "@/presentation/components/reporte/report-platform-column";
 import { ReportPlatformTabs } from "@/presentation/components/reporte/report-platform-tabs";
 import type { ReportPlatformsPanelProps } from "@/types/report.types";
+import { cn } from "@/utils/cn";
 
 /**
- * Las plataformas, una al lado de otra. Antes era una sección por plataforma,
- * separadas por pantallas de scroll: comparar dónde funcionó mejor el
- * lanzamiento —que es la pregunta del artista— obligaba a hacerlo de memoria.
+ * Las plataformas, una al lado de otra: comparar dónde funcionó mejor el
+ * lanzamiento —que es la pregunta del artista— se hace de un vistazo.
  */
 export function ReportPlatformsPanel({
   platforms,
   activePlatform,
   basePath,
+  params,
   showSpend,
 }: ReportPlatformsPanelProps) {
-  const totalPlays = platforms.reduce(
-    (sum, metrics) => sum + metrics.videoPlays,
-    0,
-  );
+  const totalPlays = platforms.reduce((sum, metrics) => sum + metrics.videoPlays, 0);
   const visible = activePlatform
     ? platforms.filter((metrics) => metrics.platform === activePlatform)
     : platforms;
@@ -26,38 +24,28 @@ export function ReportPlatformsPanel({
   if (totalPlays === 0) return null;
 
   return (
-    <section className="glass-panel flex flex-col overflow-hidden rounded-card">
-      <header className="flex flex-wrap items-center justify-between gap-4 px-[22px] py-[15px]">
-        <div className="flex min-w-0 flex-col gap-[3px]">
-          <h2 className="font-display text-[15px] font-normal tracking-[-0.2px] text-text-primary">
-            {REPORT_COPY.platformsTitle}
-          </h2>
-          <p className="text-[12px] text-text-secondary">
-            {REPORT_COPY.platformsSubtitle}
-          </p>
-        </div>
+    <section className="glass-thick flex flex-col gap-6 rounded-window p-5 sm:p-7">
+      <ReportPanelHeader
+        title={REPORT_COPY.platformsTitle}
+        subtitle={REPORT_COPY.platformsSubtitle}
+        aside={
+          <ReportPlatformTabs
+            platforms={platforms.map((metrics) => metrics.platform)}
+            activePlatform={activePlatform}
+            basePath={basePath}
+            params={params}
+          />
+        }
+      />
 
-        <ReportPlatformTabs
-          platforms={platforms.map((metrics) => metrics.platform)}
-          activePlatform={activePlatform}
-          basePath={basePath}
-        />
-      </header>
-
-      <div className="h-px bg-border/60" />
-
-      <ul className="flex flex-wrap items-stretch gap-y-6 py-[18px]">
-        {visible.map((metrics, index) => (
-          <Fragment key={metrics.platform}>
-            {index > 0 ? (
-              <span aria-hidden className="hidden w-px self-stretch bg-border/60 lg:block" />
-            ) : null}
-            <ReportPlatformColumn
-              metrics={metrics}
-              totalPlays={totalPlays}
-              showSpend={showSpend}
-            />
-          </Fragment>
+      <ul className={cn("grid gap-4", visible.length > 1 && "md:grid-cols-3")}>
+        {visible.map((metrics) => (
+          <ReportPlatformColumn
+            key={metrics.platform}
+            metrics={metrics}
+            totalPlays={totalPlays}
+            showSpend={showSpend}
+          />
         ))}
       </ul>
     </section>

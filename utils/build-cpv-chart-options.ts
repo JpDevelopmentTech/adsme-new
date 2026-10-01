@@ -6,6 +6,7 @@ import {
 } from "@/constants/cpv-comparison.constants";
 import {
   GROWTH_CHART_COLORS,
+  GROWTH_CURVE,
   GROWTH_FILL_OPACITY,
   GROWTH_LABEL_SIZE,
   GROWTH_X_TICKS,
@@ -13,15 +14,19 @@ import {
 import type { ReportCpvDay } from "@/types/report.types";
 import { formatCompactNumber } from "@/utils/format-compact-number";
 import { formatExactNumber } from "@/utils/format-exact-number";
+import { findTodayCategory } from "@/utils/find-today-category";
 import { formatShortDate } from "@/utils/format-job-period";
 
 /**
  * Configuración de la comparación de vistas. Comparte ejes, rejilla y rótulos
  * con la gráfica de crecimiento para que el reporte se lea como una sola pieza;
  * cambia el trazado: la meta es una línea a trazos y lo generado un área, así
- * el hueco entre ambas es lo que se optimizó.
+ * el hueco entre ambas es lo que se optimizó. La meta es recta porque crece a
+ * ritmo constante; lo generado se suaviza sin pasarse de los valores reales.
  */
 export function buildCpvChartOptions(days: ReportCpvDay[]): ApexOptions {
+  const today = findTodayCategory(days.map((day) => ({ x: day.date, y: day.actual })));
+
   return {
     chart: {
       type: "line",
@@ -35,7 +40,7 @@ export function buildCpvChartOptions(days: ReportCpvDay[]): ApexOptions {
     colors: [CPV_CHART_COLORS.planned, CPV_CHART_COLORS.actual],
     dataLabels: { enabled: false },
     stroke: {
-      curve: "straight",
+      curve: ["straight", GROWTH_CURVE],
       width: CPV_CHART_STROKE,
       dashArray: CPV_CHART_DASH,
       lineCap: "round",
@@ -51,9 +56,13 @@ export function buildCpvChartOptions(days: ReportCpvDay[]): ApexOptions {
     },
     grid: {
       borderColor: GROWTH_CHART_COLORS.grid,
-      strokeDashArray: 4,
       xaxis: { lines: { show: false } },
       padding: { left: 4, right: 4, top: 0, bottom: 0 },
+    },
+    annotations: {
+      xaxis: today
+        ? [{ x: today, borderColor: GROWTH_CHART_COLORS.today, strokeDashArray: 0, borderWidth: 1.5 }]
+        : [],
     },
     legend: { show: false },
     markers: { size: 0, hover: { size: 4 } },
@@ -72,12 +81,14 @@ export function buildCpvChartOptions(days: ReportCpvDay[]): ApexOptions {
     },
     yaxis: {
       min: 0,
+      tickAmount: 4,
       labels: {
         style: { colors: GROWTH_CHART_COLORS.label, fontSize: GROWTH_LABEL_SIZE },
         formatter: (value: number) => (isNumber(value) ? formatCompactNumber(value) : ""),
       },
     },
     tooltip: {
+      theme: "dark",
       shared: true,
       intersect: false,
       x: { formatter: (_value, opts) => shortDate(days[opts?.dataPointIndex ?? 0]?.date) },

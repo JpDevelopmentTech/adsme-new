@@ -1,8 +1,8 @@
 "use client";
 
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowRight, Eye } from "lucide-react";
 import { useActionState } from "react";
-import { JOB_STEP_COPY, JOB_WIZARD_COPY } from "@/constants/job-wizard.constants";
+import { JOB_STEP_COPY } from "@/constants/job-wizard.constants";
 import {
   REPORT_SETTINGS_FIELDS,
   STEP_THREE_COPY,
@@ -11,12 +11,12 @@ import { REPORT_VISIBILITY_GROUPS } from "@/constants/report-visibility.constant
 import { REPORT_SECTION_KEYS } from "@/domain/entities/report-section";
 import { saveJobReportSettingsAction } from "@/presentation/actions/save-job-report-settings-action";
 import { CpvOptimizationSection } from "@/presentation/components/trabajos/wizard/cpv-optimization-section";
+import { WizardBackLink } from "@/presentation/components/trabajos/wizard/wizard-back-link";
 import { JobWizardPanel } from "@/presentation/components/trabajos/wizard/job-wizard-panel";
 import { ReportVisibilityGroupCard } from "@/presentation/components/trabajos/wizard/report-visibility-group-card";
 import { FormAlert } from "@/presentation/components/ui/form-alert";
 import { FormScreenLoader } from "@/presentation/components/ui/form-screen-loader";
 import { PrimaryButton } from "@/presentation/components/ui/primary-button";
-import { SecondaryLink } from "@/presentation/components/ui/secondary-link";
 import { useHiddenSections } from "@/presentation/hooks/use-hidden-sections";
 import type {
   ReportSettingsFormProps,
@@ -57,25 +57,26 @@ export function ReportSettingsForm({
         subtitle={JOB_STEP_COPY.three.subtitle}
         footer={
           <>
-            <SecondaryLink href={previousHref}>
-              <ArrowLeft size={15} strokeWidth={1.75} aria-hidden />
-              {JOB_WIZARD_COPY.previous}
-            </SecondaryLink>
+            <WizardBackLink href={previousHref} />
 
             <PrimaryButton type="submit" isLoading={isPending}>
               {STEP_THREE_COPY.next}
-              <ArrowRight size={15} strokeWidth={1.75} aria-hidden />
+              <ArrowRight size={16} strokeWidth={1.75} aria-hidden />
             </PrimaryButton>
           </>
         }
       >
         {state.message ? <FormAlert message={state.message} /> : null}
 
-        <p aria-live="polite" className="text-[12.5px] text-text-secondary">
+        <p
+          aria-live="polite"
+          className="flex items-center gap-2 self-start rounded-pill border border-lilac/25 bg-lilac/12 px-3.5 py-[7px] text-[13px] font-normal text-lilac"
+        >
+          <Eye size={15} strokeWidth={1.5} aria-hidden />
           {STEP_THREE_COPY.visibilityCount(total - hidden.length, total)}
         </p>
 
-        <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
+        <div className="grid gap-x-9 gap-y-6 lg:grid-cols-2 lg:items-start">
           {REPORT_VISIBILITY_GROUPS.map((group) => (
             <ReportVisibilityGroupCard
               key={group.title}

@@ -5,12 +5,13 @@ import type { BrandWordmarkProps } from "@/types/brand.types";
 import { cn } from "@/utils/cn";
 
 /**
- * Logotipo de AdsME. El archivo es blanco sobre transparente: sobre superficies
- * claras se tiñe con `brightness-0` —que respeta el canal alfa y deja el trazo
- * en negro— y sobre las oscuras se deja tal cual. La altura se fija por clase y
- * el ancho lo deduce Next del propio archivo.
+ * Logotipo de AdsME. El archivo es blanco sobre transparente y en el sistema v3
+ * todas las superficies son oscuras, así que por defecto se deja tal cual; con
+ * `tone="ink"` se tiñe con `brightness-0` —que respeta el canal alfa y deja el
+ * trazo en negro— para el caso raro de una superficie clara. La altura se fija
+ * por clase y el ancho lo deduce Next del propio archivo.
  */
-export function BrandWordmark({ className, tone = "ink" }: BrandWordmarkProps) {
+export function BrandWordmark({ className, tone = "light" }: BrandWordmarkProps) {
   return (
     <Image
       priority

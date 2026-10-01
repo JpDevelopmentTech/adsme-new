@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, Plug, Search, X } from "lucide-react";
+import { Check, Link2, Plug, Search, X } from "lucide-react";
 import { useMemo, useState } from "react";
 import { PLATFORM_OF_CONNECTION } from "@/constants/platform-labels.constants";
 import { PLATFORM_META } from "@/constants/platforms.constants";
@@ -31,7 +31,7 @@ export function PlatformCampaignRow({
 }: PlatformCampaignRowProps) {
   const [term, setTerm] = useState("");
   const jobPlatform = PLATFORM_OF_CONNECTION[platform];
-  const { Icon, chartColor } = PLATFORM_META[jobPlatform];
+  const { mono, chartColor } = PLATFORM_META[jobPlatform];
 
   // Coincide por nombre o por identificador real, y nunca ofrece una campaña
   // que ya esté vinculada a este trabajo.
@@ -58,40 +58,22 @@ export function PlatformCampaignRow({
     : STEP_TWO_COPY.notConnected;
 
   return (
-    <section
-      className={cn(
-        "flex flex-col gap-3 rounded-md border p-4",
-        isConnected ? "glass-field" : "border-border",
-      )}
-    >
+    <section className="flex flex-col gap-3.5 border-b border-border py-5 first:pt-0 last:border-b-0 last:pb-0">
       <header className="flex flex-wrap items-center gap-3">
         <span
           aria-hidden
-          className={cn(
-            "grid size-10 shrink-0 place-items-center rounded-md",
-            isConnected ? "bg-g-100" : "border border-border",
-          )}
-          style={isConnected ? { color: chartColor } : undefined}
+          className="grid size-10 shrink-0 place-items-center rounded-[12px] text-[13px] font-medium"
+          style={{ color: chartColor, backgroundColor: `${chartColor}29` }}
         >
-          <Icon />
+          {mono}
         </span>
 
         <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-          <span
-            className={cn(
-              "text-[13.5px] font-normal",
-              isConnected ? "text-text-primary" : "text-text-secondary",
-            )}
-          >
-            {label}
-          </span>
-          <span className="flex items-center gap-[7px] text-[11px] text-text-muted">
+          <span className="text-base font-normal text-text-primary">{label}</span>
+          <span className="flex items-center gap-1.5 text-xs font-normal text-text-muted">
             <span
               aria-hidden
-              className={cn(
-                "size-1.5 shrink-0 rounded-pill",
-                isConnected ? "bg-success" : "bg-g-400",
-              )}
+              className={cn("size-1.5 shrink-0 rounded-pill", isConnected ? "bg-success" : "bg-text-muted")}
             />
             {status}
           </span>
@@ -99,7 +81,7 @@ export function PlatformCampaignRow({
 
         {!isConnected ? (
           <SecondaryLink href={CONNECTIONS_ROUTE}>
-            <Plug size={14} strokeWidth={1.5} aria-hidden />
+            <Plug size={16} strokeWidth={1.5} aria-hidden />
             {STEP_TWO_COPY.connectAccount}
           </SecondaryLink>
         ) : null}
@@ -108,15 +90,15 @@ export function PlatformCampaignRow({
       {linked.map((campaign) => (
         <div
           key={campaign.id}
-          className="flex items-center gap-3 rounded-md border border-success/30 bg-success/[0.06] px-3.5 py-2.5"
+          className="flex items-center gap-3 rounded-[14px] border border-success/20 bg-success/[0.06] py-2.5 pr-2.5 pl-3.5"
         >
-          <Check size={15} strokeWidth={2} className="shrink-0 text-success" aria-hidden />
+          <span aria-hidden className="grid size-6 shrink-0 place-items-center rounded-pill bg-success/16">
+            <Check size={13} strokeWidth={2} className="text-success" />
+          </span>
 
           <span className="flex min-w-0 flex-1 flex-col gap-0.5">
-            <span className="truncate text-[13px] text-text-primary">
-              {campaign.name}
-            </span>
-            <span className="truncate text-[11px] text-text-muted">
+            <span className="truncate text-sm font-normal text-text-primary">{campaign.name}</span>
+            <span className="truncate text-xs font-normal text-text-muted">
               ID {campaign.externalCampaignId} · {STEP_TWO_COPY.linkedHint}
             </span>
           </span>
@@ -127,9 +109,9 @@ export function PlatformCampaignRow({
             <button
               type="submit"
               aria-label={`Desvincular ${campaign.name}`}
-              className="grid size-[30px] cursor-pointer place-items-center rounded-sm text-g-500 transition-colors duration-150 hover:bg-g-100 hover:text-text-primary"
+              className="grid size-8 cursor-pointer place-items-center rounded-pill border border-border bg-surface text-text-primary transition-colors duration-150 hover:bg-g-100"
             >
-              <X size={15} strokeWidth={1.5} aria-hidden />
+              <X size={14} strokeWidth={1.5} aria-hidden />
             </button>
           </form>
         </div>
@@ -137,51 +119,53 @@ export function PlatformCampaignRow({
 
       {isConnected ? (
         <>
-          <label className="glass-field flex items-center gap-2.5 rounded-md px-3.5 py-2.5 transition-colors duration-150 focus-within:border-ink">
-            <Search size={15} strokeWidth={1.5} className="text-text-muted" aria-hidden />
-            <input
-              value={term}
-              onChange={(event) => setTerm(event.target.value)}
-              placeholder={STEP_TWO_COPY.searchPlaceholder}
-              aria-label={`${STEP_TWO_COPY.searchPlaceholder} en ${label}`}
-              className="min-w-0 flex-1 bg-transparent text-[13px] text-text-primary outline-none placeholder:text-text-muted"
-            />
-          </label>
-
-          {matches.length > 0 ? (
-            <ul className="flex flex-col gap-2">
-              {matches.map((campaign) => (
-                <li key={campaign.id}>
-                  <form
-                    action={linkCampaignAction}
-                    className="flex items-center gap-3 px-1"
-                  >
-                    <input type="hidden" name="campaignId" value={campaign.id} />
-                    <input type="hidden" name="jobId" value={jobId} />
-
-                    <span className="flex min-w-0 flex-1 flex-col">
-                      <span className="truncate text-[13px] text-text-primary">
-                        {campaign.name}
-                      </span>
-                      <span className="truncate text-[11px] text-text-muted">
-                        ID {campaign.externalCampaignId}
-                      </span>
-                    </span>
-
-                    <SecondaryButton type="submit" icon={null}>
-                      {STEP_TWO_COPY.link}
-                    </SecondaryButton>
-                  </form>
-                </li>
-              ))}
-            </ul>
+          {linked.length === 0 ? (
+            <p className="text-[13px] font-normal text-text-muted">{STEP_TWO_COPY.empty}</p>
           ) : null}
 
-          {linked.length === 0 && matches.length === 0 ? (
-            <p className="px-1 text-[11.5px] text-text-muted">
-              {STEP_TWO_COPY.empty}
-            </p>
-          ) : null}
+          <div className="flex flex-col gap-1.5">
+            <label className="flex h-11 items-center gap-2.5 rounded-[14px] border border-border bg-card-elevated px-3.5 transition-colors duration-150 focus-within:border-white/40">
+              <Search size={16} strokeWidth={1.5} className="text-text-muted" aria-hidden />
+              <input
+                value={term}
+                onChange={(event) => setTerm(event.target.value)}
+                placeholder={STEP_TWO_COPY.searchPlaceholder}
+                aria-label={`${STEP_TWO_COPY.searchPlaceholder} en ${label}`}
+                className="min-w-0 flex-1 bg-transparent text-sm text-text-primary outline-none placeholder:text-text-muted"
+              />
+            </label>
+
+            {matches.length > 0 ? (
+              <ul className="glass-menu flex flex-col rounded-[14px] p-1.5">
+                {matches.map((campaign) => (
+                  <li key={campaign.id}>
+                    <form
+                      action={linkCampaignAction}
+                      className="flex items-center gap-3 rounded-[10px] px-2.5 py-2 hover:bg-surface"
+                    >
+                      <input type="hidden" name="campaignId" value={campaign.id} />
+                      <input type="hidden" name="jobId" value={jobId} />
+
+                      <span className="flex min-w-0 flex-1 flex-col">
+                        <span className="truncate text-[13px] font-normal text-text-primary">{campaign.name}</span>
+                        <span className="truncate text-[11px] font-normal text-text-muted">
+                          ID {campaign.externalCampaignId}
+                        </span>
+                      </span>
+
+                      <SecondaryButton
+                        type="submit"
+                        className="px-3.5 py-1.5 text-xs"
+                        icon={<Link2 size={13} strokeWidth={1.5} aria-hidden />}
+                      >
+                        {STEP_TWO_COPY.link}
+                      </SecondaryButton>
+                    </form>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+          </div>
         </>
       ) : null}
     </section>

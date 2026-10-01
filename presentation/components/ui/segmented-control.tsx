@@ -17,7 +17,7 @@ export function SegmentedControl<TValue extends string>({
     <div
       role="group"
       aria-label={label}
-      className="flex shrink-0 items-center gap-0.5 rounded-md bg-g-200 p-[3px]"
+      className="flex h-10 shrink-0 items-center gap-0.5 rounded-pill border border-border bg-surface p-1"
     >
       {options.map((option) => {
         const isSelected = option.value === value;
@@ -29,10 +29,10 @@ export function SegmentedControl<TValue extends string>({
             aria-pressed={isSelected}
             onClick={() => onChange(option.value)}
             className={cn(
-              "cursor-pointer rounded-sm px-[13px] py-1.5 text-[12px] transition-[background-color,color,transform] duration-150 ease-out active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-ink/40 focus-visible:outline-none",
+              "h-full cursor-pointer rounded-pill px-3.5 text-[13px] font-normal transition-[background-color,color,transform] duration-150 ease-out active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-lilac focus-visible:outline-none",
               isSelected
-                ? "bg-white/95 font-normal text-text-primary shadow-[0_1px_3px_#1f2a271a]"
-                : "font-light text-text-secondary hover:text-text-primary",
+                ? "bg-ink text-g-50"
+                : "text-text-secondary hover:text-text-primary",
             )}
           >
             {option.label}

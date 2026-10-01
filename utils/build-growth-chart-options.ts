@@ -1,6 +1,7 @@
 import type { ApexOptions } from "apexcharts";
 import {
   GROWTH_CHART_COLORS,
+  GROWTH_CURVE,
   GROWTH_FILL_OPACITY,
   GROWTH_LABEL_SIZE,
   GROWTH_STROKE_WIDTH,
@@ -8,6 +9,7 @@ import {
 } from "@/constants/growth-chart.constants";
 import type { ReportGrowthSeries } from "@/types/report.types";
 import { formatCompactNumber } from "@/utils/format-compact-number";
+import { findTodayCategory } from "@/utils/find-today-category";
 import { formatShortDate } from "@/utils/format-job-period";
 
 /**
@@ -17,11 +19,14 @@ import { formatShortDate } from "@/utils/format-job-period";
  *
  * Se apaga todo el cromo que trae ApexCharts de fábrica —barra de
  * herramientas, zoom, leyenda, etiquetas sobre los puntos— porque el panel ya
- * pone su propia cabecera y su leyenda con los totales.
+ * pone su propia cabecera y su leyenda con los totales. Una línea lila marca
+ * hoy cuando el período sigue abierto; las curvas terminan ahí.
  */
 export function buildGrowthChartOptions(
   series: ReportGrowthSeries[],
 ): ApexOptions {
+  const today = findTodayCategory(series[0]?.data ?? []);
+
   return {
     chart: {
       type: "area",
@@ -34,9 +39,7 @@ export function buildGrowthChartOptions(
     },
     colors: series.map((item) => item.color),
     dataLabels: { enabled: false },
-    // Recta y no suavizada: una curva interpolada inventa días que no existen,
-    // y esto es un reporte que se entrega al cliente.
-    stroke: { curve: "straight", width: GROWTH_STROKE_WIDTH, lineCap: "round" },
+    stroke: { curve: GROWTH_CURVE, width: GROWTH_STROKE_WIDTH, lineCap: "round" },
     fill: {
       type: "gradient",
       gradient: {
@@ -48,9 +51,13 @@ export function buildGrowthChartOptions(
     },
     grid: {
       borderColor: GROWTH_CHART_COLORS.grid,
-      strokeDashArray: 4,
       xaxis: { lines: { show: false } },
       padding: { left: 4, right: 4, top: 0, bottom: 0 },
+    },
+    annotations: {
+      xaxis: today
+        ? [{ x: today, borderColor: GROWTH_CHART_COLORS.today, strokeDashArray: 0, borderWidth: 1.5 }]
+        : [],
     },
     legend: { show: false },
     markers: { size: 0, hover: { size: 4 } },
@@ -68,12 +75,15 @@ export function buildGrowthChartOptions(
       },
     },
     yaxis: {
+      min: 0,
+      tickAmount: 4,
       labels: {
         style: { colors: GROWTH_CHART_COLORS.label, fontSize: GROWTH_LABEL_SIZE },
         formatter: (value: number) => compact(value),
       },
     },
     tooltip: {
+      theme: "dark",
       shared: true,
       intersect: false,
       x: { formatter: (_value, opts) => resolveDate(series, opts) },

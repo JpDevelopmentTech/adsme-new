@@ -21,7 +21,7 @@ export function ClientSpendBar({
       role="img"
       aria-label={mix}
       title={mix}
-      className="flex h-2 min-w-0 flex-1 overflow-hidden rounded-pill bg-g-200"
+      className="flex h-2 min-w-0 flex-1 gap-0.5 overflow-hidden rounded-pill bg-white/[0.05]"
     >
       {segments.map((share) => (
         <span

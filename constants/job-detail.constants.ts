@@ -1,6 +1,8 @@
 import type { ConnectionPlatform } from "@/domain/entities/connection";
 
 export const JOB_DETAIL_COPY = {
+  /** Rótulo sobre el título del trabajo en la cabecera del detalle. */
+  eyebrow: "Lanzamiento",
   back: "Trabajos",
   copyLink: "Copiar enlace",
   configureReport: "Configurar reporte",
@@ -9,11 +11,14 @@ export const JOB_DETAIL_COPY = {
   viewReport: "Ver reporte del cliente",
   noLink: "Sin enlace de reporte",
   evolutionTitle: "Evolución del lanzamiento",
-  evolutionSubtitle: "Vistas diarias · últimos 14 días",
+  evolutionSubtitle: (period: string) => `Reproducciones por día · ${period}`,
   evolutionEmpty:
-    "La evolución diaria necesita insights por día, que todavía no se importan. Hoy solo se guardan los totales acumulados de cada campaña.",
+    "Las campañas de este lanzamiento no tienen reproducciones registradas en estas fechas. Aparecen aquí al sincronizar sus métricas.",
   noCampaigns: "Sin campañas vinculadas",
 } as const;
+
+/** Días que cubre la gráfica de evolución del detalle. */
+export const JOB_EVOLUTION_DAYS = 14;
 
 export const JOB_KPI_LABELS = {
   views: "Vistas totales",

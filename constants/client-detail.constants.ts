@@ -16,7 +16,6 @@ export const CLIENT_DETAIL_COPY = {
   edit: "Editar",
   newJob: "Nuevo trabajo",
   jobsTitle: "Trabajos",
-  addJob: "+ Nuevo trabajo",
   emptyJobs: "Este cliente todavía no tiene trabajos.",
   emptyJobsHint: "Crea el primero para empezar a pautar sus lanzamientos.",
   notFoundTitle: "Cliente no encontrado",
@@ -26,10 +25,10 @@ export const CLIENT_DETAIL_COPY = {
 
 /** Encabezados de la tabla de trabajos, en el orden del diseño. */
 export const JOB_TABLE_HEADERS = {
-  song: "CANCIÓN",
-  platforms: "PLATAFORMAS",
-  status: "ESTADO",
-  reportLink: "ENLACE DEL CLIENTE",
+  song: "Canción",
+  platforms: "Plataformas",
+  status: "Estado",
+  reportLink: "Enlace del cliente",
 } as const;
 
 /** Métricas del cliente, con su etiqueta tal como aparece en `B3`. */

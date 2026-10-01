@@ -25,43 +25,44 @@ export function JobRowMenu({ job }: JobRowMenuProps) {
         align="end"
         label={`Acciones de ${job.title}`}
         trigger={() => (
-          <span className="grid size-[34px] place-items-center rounded-md text-g-500 transition-colors duration-150 hover:bg-g-100 hover:text-text-primary">
-            <Ellipsis size={16} aria-hidden />
+          <span className="grid size-[34px] place-items-center rounded-pill text-text-secondary transition-colors duration-150 hover:bg-surface hover:text-text-primary">
+            <Ellipsis size={18} aria-hidden />
           </span>
         )}
       >
         <Link
           href={jobDetailRoute(job.id)}
           role="menuitem"
-          className="flex items-center gap-2.5 rounded-sm px-3 py-2 text-[13px] whitespace-nowrap text-text-secondary transition-colors hover:bg-card hover:text-text-primary"
+          className="flex items-center gap-2.5 rounded-[10px] px-3 py-2.5 text-[13px] font-normal whitespace-nowrap text-text-primary transition-colors hover:bg-surface"
         >
-          <Eye size={15} aria-hidden />
+          <Eye size={16} strokeWidth={1.5} aria-hidden />
           Ver detalle
         </Link>
         <Link
           href={editJobRoute(job.id)}
           role="menuitem"
-          className="flex items-center gap-2.5 rounded-sm px-3 py-2 text-[13px] whitespace-nowrap text-text-secondary transition-colors hover:bg-card hover:text-text-primary"
+          className="flex items-center gap-2.5 rounded-[10px] px-3 py-2.5 text-[13px] font-normal whitespace-nowrap text-text-primary transition-colors hover:bg-surface"
         >
-          <Pencil size={15} aria-hidden />
+          <Pencil size={16} strokeWidth={1.5} aria-hidden />
           {JOB_MENU_COPY.edit}
         </Link>
         <button
           type="button"
           role="menuitem"
           onClick={() => setIsRegenerateOpen(true)}
-          className="flex w-full cursor-pointer items-center gap-2.5 rounded-sm px-3 py-2 text-[13px] whitespace-nowrap text-text-secondary transition-colors hover:bg-card hover:text-text-primary"
+          className="flex w-full cursor-pointer items-center gap-2.5 rounded-[10px] px-3 py-2.5 text-[13px] font-normal whitespace-nowrap text-text-primary transition-colors hover:bg-surface"
         >
-          <RefreshCw size={15} aria-hidden />
+          <RefreshCw size={16} strokeWidth={1.5} aria-hidden />
           {REPORT_LINK_COPY.regenerate}
         </button>
+        <span aria-hidden className="my-0.5 block h-px bg-border" />
         <button
           type="button"
           role="menuitem"
           onClick={() => setIsConfirmOpen(true)}
-          className="flex w-full cursor-pointer items-center gap-2.5 rounded-sm px-3 py-2 text-[13px] whitespace-nowrap text-danger transition-colors hover:bg-danger/10"
+          className="flex w-full cursor-pointer items-center gap-2.5 rounded-[10px] px-3 py-2.5 text-[13px] font-normal whitespace-nowrap text-danger transition-colors hover:bg-danger/10"
         >
-          <Trash2 size={15} aria-hidden />
+          <Trash2 size={16} strokeWidth={1.5} aria-hidden />
           {JOB_MENU_COPY.delete}
         </button>
       </DropdownMenu>
@@ -69,26 +70,31 @@ export function JobRowMenu({ job }: JobRowMenuProps) {
       <ConfirmDialog
         isOpen={isRegenerateOpen}
         onCancel={() => setIsRegenerateOpen(false)}
+        tone="warning"
+        icon={<RefreshCw size={22} strokeWidth={1.5} aria-hidden />}
         title={REPORT_LINK_COPY.regenerateTitle}
         description={REPORT_LINK_COPY.regenerateDescription(job.title)}
         cancelLabel={REPORT_LINK_COPY.cancel}
       >
         <form action={regenerateReportLinkAction}>
           <input type="hidden" name={JOB_FORM_FIELDS.jobId} value={job.id} />
-          <DangerButton type="submit">{REPORT_LINK_COPY.confirm}</DangerButton>
+          <DangerButton type="submit" className="bg-warning">
+            {REPORT_LINK_COPY.confirm}
+          </DangerButton>
         </form>
       </ConfirmDialog>
 
       <ConfirmDialog
         isOpen={isConfirmOpen}
         onCancel={() => setIsConfirmOpen(false)}
+        icon={<Trash2 size={22} strokeWidth={1.5} aria-hidden />}
         title={JOB_MENU_COPY.deleteTitle}
         description={JOB_MENU_COPY.deleteDescription(job.title)}
         cancelLabel={JOB_MENU_COPY.cancel}
       >
         <form action={deleteJobAction}>
           <input type="hidden" name={JOB_FORM_FIELDS.jobId} value={job.id} />
-          <DangerButton type="submit">{JOB_MENU_COPY.delete}</DangerButton>
+          <DangerButton type="submit">{JOB_MENU_COPY.confirmDelete}</DangerButton>
         </form>
       </ConfirmDialog>
     </>

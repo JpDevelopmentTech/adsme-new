@@ -1,5 +1,6 @@
 "use client";
 
+import { Lock, Mail } from "lucide-react";
 import Link from "next/link";
 import { useActionState, useState } from "react";
 import { LOGIN_COPY } from "@/constants/auth-copy.constants";
@@ -22,13 +23,14 @@ export function LoginForm({ initialError }: LoginFormProps) {
   const [email, setEmail] = useState("");
 
   return (
-    <form action={formAction} className="flex w-full flex-col gap-[22px]">
+    <form action={formAction} className="flex w-full flex-col gap-4">
       {state.message ? <FormAlert message={state.message} /> : null}
 
       <TextField
         id="email"
         name="email"
         type="email"
+        leading={<Mail size={16} strokeWidth={1.75} />}
         label={LOGIN_COPY.emailLabel}
         placeholder={LOGIN_COPY.emailPlaceholder}
         autoComplete="email"
@@ -41,6 +43,7 @@ export function LoginForm({ initialError }: LoginFormProps) {
       <PasswordField
         id="password"
         name="password"
+        leading={<Lock size={16} strokeWidth={1.75} />}
         label={LOGIN_COPY.passwordLabel}
         placeholder={LOGIN_COPY.passwordPlaceholder}
         autoComplete="current-password"
@@ -48,7 +51,7 @@ export function LoginForm({ initialError }: LoginFormProps) {
         error={state.fieldErrors.password}
       />
 
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-4 pt-1.5">
         <CheckboxField
           id="rememberMe"
           name="rememberMe"
@@ -57,7 +60,7 @@ export function LoginForm({ initialError }: LoginFormProps) {
         />
         <Link
           href={FORGOT_PASSWORD_ROUTE}
-          className="text-[13px] font-semibold text-brand-violet transition-opacity hover:opacity-80"
+          className="text-[13px] font-normal whitespace-nowrap text-lilac transition-opacity hover:opacity-80 sm:text-sm"
         >
           {LOGIN_COPY.forgotPassword}
         </Link>
@@ -66,7 +69,7 @@ export function LoginForm({ initialError }: LoginFormProps) {
       <PrimaryButton
         type="submit"
         isLoading={isPending}
-        className="w-full py-[15px] text-[15px]"
+        className="mt-1.5 min-h-[52px] w-full text-[15px]"
       >
         {LOGIN_COPY.submit}
       </PrimaryButton>

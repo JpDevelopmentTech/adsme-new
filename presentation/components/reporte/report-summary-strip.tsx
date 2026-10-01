@@ -1,6 +1,8 @@
-import { Fragment } from "react";
+import { Heart, Play, Wallet } from "lucide-react";
 import { REPORT_SUMMARY_COPY } from "@/constants/report.constants";
+import { ReportSummaryCard } from "@/presentation/components/reporte/report-summary-card";
 import type { ReportSummaryStripProps } from "@/types/report.types";
+import { cn } from "@/utils/cn";
 import { formatPercent, share } from "@/utils/format-compact-number";
 import { formatExactCurrency } from "@/utils/format-exact-currency";
 import { formatExactNumber } from "@/utils/format-exact-number";
@@ -8,57 +10,46 @@ import { isReportSectionVisible } from "@/utils/is-report-section-visible";
 
 /**
  * Las tres cifras que dan contexto al titular: qué se reprodujo, cuánto se
- * interactuó y cuánto costó. Van en una tira y no en tarjetas sueltas para que
- * se lean como un mismo dato en tres partes.
+ * interactuó y cuánto costó. Las que el gestor ocultó se retiran y las que
+ * quedan se reparten el ancho, en lugar de dejar un hueco.
  */
-export function ReportSummaryStrip({
-  totals,
-  investment,
-  hiddenSections,
-}: ReportSummaryStripProps) {
+export function ReportSummaryStrip({ totals, investment, hiddenSections }: ReportSummaryStripProps) {
   const stats = [
     {
       section: "plays" as const,
+      icon: Play,
       label: REPORT_SUMMARY_COPY.plays,
       value: formatExactNumber(totals.videoPlays),
       note: REPORT_SUMMARY_COPY.campaigns(totals.campaigns),
     },
     {
       section: "engagement" as const,
+      icon: Heart,
       label: REPORT_SUMMARY_COPY.engagement,
       value: formatExactNumber(totals.engagement),
       note: REPORT_SUMMARY_COPY.social(totals.comments + totals.shares),
     },
     {
       section: "investment" as const,
+      icon: Wallet,
       label: REPORT_SUMMARY_COPY.spend,
       value: formatExactCurrency(totals.spend),
-      note: REPORT_SUMMARY_COPY.budget(
-        formatPercent(share(totals.spend, investment)),
-      ),
+      note: REPORT_SUMMARY_COPY.budget(formatPercent(share(totals.spend, investment))),
     },
   ].filter((stat) => isReportSectionVisible(hiddenSections, stat.section));
 
   if (stats.length === 0) return null;
 
   return (
-    <section className="glass-panel flex flex-wrap items-center gap-y-5 rounded-card py-5">
-      {stats.map((stat, index) => (
-        <Fragment key={stat.label}>
-          {index > 0 ? (
-            <span aria-hidden className="hidden h-[50px] w-px bg-border/60 sm:block" />
-          ) : null}
-
-          <div className="flex min-w-[200px] flex-1 flex-col gap-[5px] px-6">
-            <span className="text-[10px] font-medium tracking-[0.6px] text-text-muted uppercase">
-              {stat.label}
-            </span>
-            <span className="font-display text-[30px] leading-none font-light tracking-[-1.1px] text-text-primary">
-              {stat.value}
-            </span>
-            <span className="text-[11.5px] text-text-secondary">{stat.note}</span>
-          </div>
-        </Fragment>
+    <section
+      className={cn(
+        "grid gap-4",
+        stats.length === 3 && "md:grid-cols-3",
+        stats.length === 2 && "sm:grid-cols-2",
+      )}
+    >
+      {stats.map(({ section, ...stat }) => (
+        <ReportSummaryCard key={section} {...stat} />
       ))}
     </section>
   );

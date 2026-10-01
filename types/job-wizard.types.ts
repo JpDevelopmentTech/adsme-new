@@ -55,6 +55,8 @@ export interface JobWizardLayoutProps {
 
 export interface WizardSectionProps {
   label: string;
+  /** Con icono, el bloque se titula como pregunta grande; sin él, con un rótulo en versalitas. */
+  icon?: ReactNode;
   children: ReactNode;
 }
 
@@ -193,4 +195,9 @@ export interface CpvOptimizationSectionProps {
   chargedCpv: number | null;
   investment: number;
   error: string | null;
+}
+
+export interface WizardBackLinkProps {
+  /** Paso o pantalla al que vuelve. */
+  href: string;
 }

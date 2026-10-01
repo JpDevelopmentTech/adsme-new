@@ -28,14 +28,14 @@ export function JobCoverUploader({
   };
 
   return (
-    <div className="flex w-[132px] shrink-0 flex-col gap-2">
+    <div className="flex w-[176px] shrink-0 flex-col items-center gap-2.5">
       <button
         type="button"
         onClick={() => inputRef.current?.click()}
         onDragOver={(event) => event.preventDefault()}
         onDrop={handleDrop}
         aria-label={JOB_WIZARD_COPY.coverTitle}
-        className="flex size-[132px] cursor-pointer flex-col items-center justify-center gap-2 overflow-hidden rounded-tile border border-border-strong bg-g-100 p-3 transition-colors duration-150 hover:border-ink"
+        className="flex size-[176px] cursor-pointer flex-col items-center justify-center gap-2 overflow-hidden rounded-tile border-[1.5px] border-white/30 bg-surface p-3 transition-colors duration-150 hover:border-white/60 focus-visible:ring-2 focus-visible:ring-lilac focus-visible:outline-none"
       >
         {previewUrl ? (
           // Blob local del navegador: `next/image` no aplica.
@@ -43,24 +43,24 @@ export function JobCoverUploader({
           <img src={previewUrl} alt="" className="size-full object-cover" />
         ) : (
           <>
-            <ImagePlus size={22} strokeWidth={1.5} className="text-text-muted" aria-hidden />
-            <span className="text-center text-[11.5px] text-text-secondary">
+            <ImagePlus size={24} strokeWidth={1.5} className="text-text-secondary" aria-hidden />
+            <span className="text-center text-[13px] font-normal text-text-secondary">
               {JOB_WIZARD_COPY.coverTitle}
             </span>
-            <span className="text-center text-[10px] font-medium tracking-[0.6px] text-text-muted uppercase">
+            <span className="text-center text-[11px] font-normal text-text-muted">
               {JOB_WIZARD_COPY.coverHint}
             </span>
           </>
         )}
       </button>
 
-      {error ? <p className="text-[11px] text-danger">{error}</p> : null}
+      {error ? <p className="text-xs font-normal text-danger">{error}</p> : null}
 
       {previewUrl ? (
         <button
           type="button"
           onClick={() => onSelect(null)}
-          className="flex cursor-pointer items-center justify-center gap-1.5 rounded-sm text-[11.5px] text-text-secondary transition-colors duration-150 hover:text-text-primary"
+          className="flex cursor-pointer items-center justify-center gap-1.5 rounded-sm text-xs font-normal text-danger transition-opacity duration-150 hover:opacity-80"
         >
           <X size={13} strokeWidth={1.5} aria-hidden />
           {JOB_WIZARD_COPY.coverRemove}

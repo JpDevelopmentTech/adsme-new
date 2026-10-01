@@ -30,7 +30,7 @@ export function JobsToolbar({
   };
 
   return (
-    <div className="flex flex-wrap items-center gap-2.5 px-5 py-3">
+    <div className="flex flex-wrap items-center gap-2.5 pb-4">
       <SearchField
         value={query.search}
         paramName={JOB_QUERY_PARAMS.search}
@@ -76,9 +76,7 @@ export function JobsToolbar({
 
       <div className="flex-1" />
 
-      <span className="text-[10px] font-medium tracking-[0.6px] text-text-muted uppercase">
-        {resultsLabel}
-      </span>
+      <span className="text-[13px] text-text-muted">{resultsLabel}</span>
 
       <JobsViewToggle />
     </div>

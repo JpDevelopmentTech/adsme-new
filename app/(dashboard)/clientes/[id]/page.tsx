@@ -8,6 +8,7 @@ import { ClientBreadcrumb } from "@/presentation/components/cliente-detalle/clie
 import { ClientHero } from "@/presentation/components/cliente-detalle/client-hero";
 import { ClientJobsPanel } from "@/presentation/components/cliente-detalle/client-jobs-panel";
 import { ClientMetrics } from "@/presentation/components/cliente-detalle/client-metrics";
+import { AmbientGlow } from "@/presentation/components/ui/ambient-glow";
 
 /** Compone el caso de uso con los repositorios reales de clientes y trabajos. */
 async function getClientOverview(clientId: string) {
@@ -41,6 +42,7 @@ export default async function ClienteDetallePage({
 
   return (
     <>
+      <AmbientGlow imageUrl={overview.client.avatarUrl} />
       <ClientBreadcrumb clientName={overview.client.name} />
       <ClientHero client={overview.client} />
       <ClientMetrics metrics={overview.client.metrics} />

@@ -7,13 +7,13 @@ import { jobSortDirection } from "@/domain/entities/job-query";
 import { JobRow } from "@/presentation/components/trabajos/job-row";
 import { JobsEmpty } from "@/presentation/components/trabajos/jobs-empty";
 import { JobsToolbar } from "@/presentation/components/trabajos/jobs-toolbar";
+import { JobsTimelineHeader } from "@/presentation/components/trabajos/jobs-timeline-header";
 import { SortHeader } from "@/presentation/components/trabajos/sort-header";
 import type { JobsTableProps } from "@/types/jobs-list.types";
 import { buildJobTimeline } from "@/utils/build-job-timeline";
 import { buildTimelineMonths } from "@/utils/build-timeline-months";
 
-const HEADER_CLASSES =
-  "py-[9px] text-left text-[10px] font-medium tracking-[0.6px] text-text-muted uppercase";
+const HEADER_CLASSES = "pb-3 text-left align-bottom text-xs font-normal text-text-muted";
 
 /** Sentido que espera `aria-sort` en la columna que ordena la tabla. */
 const ARIA_SORT = { asc: "ascending", desc: "descending" } as const;
@@ -41,14 +41,12 @@ export function JobsTable({
     : JOBS_COPY.count(totalJobs);
 
   return (
-    <section className="glass-panel flex flex-col overflow-hidden rounded-card">
+    <section className="glass-thick flex flex-col rounded-card px-6 pt-5 pb-2.5">
       <JobsToolbar
         query={query}
         clientOptions={clientOptions}
         resultsLabel={resultsLabel}
       />
-
-      <div className="h-px bg-border/60" />
 
       {jobs.length === 0 ? (
         <JobsEmpty isFiltered={isFiltered} />
@@ -62,63 +60,24 @@ export function JobsTable({
                 ))}
               </colgroup>
 
-              <thead className="bg-g-100">
-                <tr>
-                  <th className={`${HEADER_CLASSES} pr-3.5 pl-5`}>
-                    {JOB_TABLE_COLUMNS.job}
+              <thead>
+                <tr className="h-[58px] border-b border-border">
+                  <th className={`${HEADER_CLASSES} pr-3.5`}>{JOB_TABLE_COLUMNS.job}</th>
+                  <th className={`${HEADER_CLASSES} pr-3.5`}>{JOB_TABLE_COLUMNS.platforms}</th>
+                  <th className="p-0 align-bottom" aria-sort={periodSort ? ARIA_SORT[periodSort] : "none"}>
+                    <JobsTimelineHeader months={months} todayPercent={timeline.todayPercent} sort={query.sort} />
                   </th>
-                  <th className={`${HEADER_CLASSES} pr-3.5`}>
-                    {JOB_TABLE_COLUMNS.platforms}
-                  </th>
-
                   <th
-                    className={HEADER_CLASSES}
-                    aria-sort={periodSort ? ARIA_SORT[periodSort] : "none"}
-                  >
-                    <div className="relative h-4">
-                      {months.map((month) => (
-                        <span
-                          key={month.label}
-                          className="absolute top-0"
-                          style={{ left: `${month.percent}%` }}
-                        >
-                          {month.label}
-                        </span>
-                      ))}
-
-                      <span className="absolute top-0 right-0">
-                        <SortHeader
-                          hideLabel
-                          column="period"
-                          sort={query.sort}
-                          label={JOB_TABLE_COLUMNS.period}
-                        />
-                      </span>
-                    </div>
-                  </th>
-
-                  <th
-                    className={`${HEADER_CLASSES} px-3.5`}
-                    aria-sort={
-                      investmentSort ? ARIA_SORT[investmentSort] : "none"
-                    }
+                    className={`${HEADER_CLASSES} pr-5 pl-3.5`}
+                    aria-sort={investmentSort ? ARIA_SORT[investmentSort] : "none"}
                   >
                     <div className="flex justify-end">
-                      <SortHeader
-                        column="investment"
-                        sort={query.sort}
-                        label={JOB_TABLE_COLUMNS.investment}
-                      />
+                      <SortHeader column="investment" sort={query.sort} label={JOB_TABLE_COLUMNS.investment} />
                     </div>
                   </th>
-
-                  <th className={`${HEADER_CLASSES} pr-3.5 text-center`}>
-                    {JOB_TABLE_COLUMNS.status}
-                  </th>
-                  <th className={`${HEADER_CLASSES} pr-3.5`}>
-                    <span className="sr-only">{JOB_TABLE_COLUMNS.report}</span>
-                  </th>
-                  <th className={`${HEADER_CLASSES} pr-5`}>
+                  <th className={`${HEADER_CLASSES} pr-3.5`}>{JOB_TABLE_COLUMNS.status}</th>
+                  <th className={`${HEADER_CLASSES} pr-3.5`}>{JOB_TABLE_COLUMNS.report}</th>
+                  <th className={HEADER_CLASSES}>
                     <span className="sr-only">Acciones</span>
                   </th>
                 </tr>

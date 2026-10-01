@@ -28,8 +28,8 @@ export function FilterSelect<TValue extends string>({
   return (
     <div
       className={cn(
-        "glass-field flex shrink-0 items-center rounded-md transition-colors duration-150",
-        isDefault ? "hover:border-border-strong" : "border-ink bg-ink/10",
+        "flex h-10 shrink-0 items-center rounded-pill border transition-colors duration-150",
+        isDefault ? "border-border bg-surface hover:border-border-strong" : "border-lilac/35 bg-lilac/12",
       )}
     >
       <DropdownMenu
@@ -39,17 +39,13 @@ export function FilterSelect<TValue extends string>({
         trigger={() => (
           <span
             className={cn(
-              "flex items-center gap-[7px] py-2 pl-3",
-              canClear ? "pr-1.5" : "pr-3",
+              "flex items-center gap-1.5 py-2 pl-3.5",
+              canClear ? "pr-1.5" : "pr-3.5",
             )}
           >
-            <span
-              className={cn(
-                "text-[12px]",
-                isDefault ? "font-light text-text-secondary" : "font-normal text-text-primary",
-              )}
-            >
-              {label}
+            <span className="text-[13px] font-normal whitespace-nowrap">
+              {prefix ? <span className="font-light text-text-muted">{prefix}: </span> : null}
+              <span className="text-text-primary">{selected.label}</span>
             </span>
             {icon ?? (
               <ChevronDown
@@ -68,16 +64,16 @@ export function FilterSelect<TValue extends string>({
             role="menuitem"
             onClick={() => onChange(option.value)}
             className={cn(
-              "flex w-full cursor-pointer items-center gap-2 rounded-sm px-3 py-2 text-[13px] whitespace-nowrap transition-colors",
+              "flex w-full cursor-pointer items-center gap-2 rounded-[10px] px-3 py-2 text-[13px] font-normal whitespace-nowrap transition-colors",
               option.value === value
-                ? "text-text-primary"
-                : "text-text-secondary hover:bg-card hover:text-text-primary",
+                ? "bg-surface text-text-primary"
+                : "text-text-secondary hover:bg-surface hover:text-text-primary",
             )}
           >
             <Check
               size={14}
               aria-hidden
-              className={option.value === value ? "text-brand-violet" : "opacity-0"}
+              className={option.value === value ? "text-lilac" : "opacity-0"}
             />
             {option.label}
           </button>
@@ -89,9 +85,9 @@ export function FilterSelect<TValue extends string>({
           type="button"
           onClick={onClear}
           aria-label={`Quitar filtro ${prefix ?? selected.label}`}
-          className="cursor-pointer rounded-pill py-[9px] pr-3 pl-1 text-brand-violet transition-opacity hover:opacity-70 focus-visible:ring-2 focus-visible:ring-brand-violet/60 focus-visible:outline-none"
+          className="mr-1.5 grid size-6 cursor-pointer place-items-center rounded-pill bg-surface text-text-primary transition-opacity hover:opacity-70 focus-visible:ring-2 focus-visible:ring-lilac focus-visible:outline-none"
         >
-          <X size={14} aria-hidden />
+          <X size={12} aria-hidden />
         </button>
       ) : null}
     </div>

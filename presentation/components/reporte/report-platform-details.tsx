@@ -1,4 +1,6 @@
+import { Fragment } from "react";
 import { REPORT_COPY } from "@/constants/report.constants";
+import { ReportPanelHeader } from "@/presentation/components/reporte/report-panel-header";
 import { ReportPlatformDetail } from "@/presentation/components/reporte/report-platform-detail";
 import type { ReportPlatformDetailsProps } from "@/types/report.types";
 
@@ -7,41 +9,25 @@ import type { ReportPlatformDetailsProps } from "@/types/report.types";
  * comparación porque responde a la pregunta siguiente: primero dónde funcionó
  * mejor, y solo entonces cuánto exactamente hizo cada una.
  *
- * Las plataformas sin campañas vinculadas no aparecen: en la comparación tienen
- * sentido —dicen que esa pauta no se contrató—, pero aquí serían un bloque
- * vacío. Y respeta las pestañas del panel de arriba, que filtran el reporte
- * entero y no solo aquel panel.
+ * Las plataformas sin campañas vinculadas no aparecen: aquí serían un bloque
+ * vacío. Y respeta las pestañas del panel de arriba.
  */
-export function ReportPlatformDetails({
-  platforms,
-  activePlatform,
-  showSpend,
-}: ReportPlatformDetailsProps) {
+export function ReportPlatformDetails({ platforms, activePlatform, showSpend }: ReportPlatformDetailsProps) {
   const visible = platforms.filter(
-    (metrics) =>
-      metrics.campaigns > 0 &&
-      (!activePlatform || metrics.platform === activePlatform),
+    (metrics) => metrics.campaigns > 0 && (!activePlatform || metrics.platform === activePlatform),
   );
 
   if (visible.length === 0) return null;
 
   return (
-    <section className="glass-panel flex flex-col gap-6 rounded-card px-[22px] py-5">
-      <div className="flex flex-col gap-[3px]">
-        <h2 className="font-display text-[15px] font-normal tracking-[-0.2px] text-text-primary">
-          {REPORT_COPY.detailTitle}
-        </h2>
-        <p className="text-[12px] text-text-secondary">
-          {REPORT_COPY.detailSubtitle}
-        </p>
-      </div>
+    <section className="glass-thick flex flex-col gap-6 rounded-window p-5 sm:p-7">
+      <ReportPanelHeader title={REPORT_COPY.detailTitle} subtitle={REPORT_COPY.detailSubtitle} />
 
-      {visible.map((metrics) => (
-        <ReportPlatformDetail
-          key={metrics.platform}
-          metrics={metrics}
-          showSpend={showSpend}
-        />
+      {visible.map((metrics, index) => (
+        <Fragment key={metrics.platform}>
+          {index > 0 ? <span aria-hidden className="h-px bg-border" /> : null}
+          <ReportPlatformDetail metrics={metrics} showSpend={showSpend} />
+        </Fragment>
       ))}
     </section>
   );

@@ -7,22 +7,22 @@ const ICON_SIZE = 15;
 /** Fila de datos de contacto: correo, teléfono, ubicación y usuario público. */
 export function ClientContactList({ client }: ClientContactListProps) {
   const items = [
-    { key: "email", icon: <Mail size={ICON_SIZE} aria-hidden />, value: client.email },
-    { key: "phone", icon: <Phone size={ICON_SIZE} aria-hidden />, value: client.phone },
+    { key: "email", icon: <Mail size={ICON_SIZE} strokeWidth={1.5} aria-hidden />, value: client.email },
+    { key: "phone", icon: <Phone size={ICON_SIZE} strokeWidth={1.5} aria-hidden />, value: client.phone },
     {
       key: "location",
-      icon: <MapPin size={ICON_SIZE} aria-hidden />,
+      icon: <MapPin size={ICON_SIZE} strokeWidth={1.5} aria-hidden />,
       value: `${client.city}, ${client.country}`,
     },
     {
       key: "handle",
-      icon: <AtSign size={ICON_SIZE} aria-hidden />,
+      icon: <AtSign size={ICON_SIZE} strokeWidth={1.5} aria-hidden />,
       value: client.handle,
     },
   ];
 
   return (
-    <ul className="flex flex-wrap items-center gap-x-[22px] gap-y-2">
+    <ul className="flex flex-wrap items-center gap-x-[22px] gap-y-2 pt-1">
       {items.map((item) => (
         <ClientContactItem key={item.key} icon={item.icon} value={item.value} />
       ))}

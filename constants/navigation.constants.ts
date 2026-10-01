@@ -5,11 +5,14 @@ import {
   Plug,
   Settings,
   Users,
-  Wallet,
 } from "lucide-react";
 import type { NavSection } from "@/types/navigation.types";
 
-/** Navegación lateral del panel, tal como está agrupada en el diseño del `.pen`. */
+/**
+ * Navegación lateral del panel, tal como está agrupada en el diseño del `.pen`.
+ * Finanzas (fase 2) se quitó del menú por decisión del usuario; su ruta sigue
+ * existiendo pero sin acceso desde la navegación.
+ */
 export const NAV_SECTIONS: NavSection[] = [
   {
     title: "GENERAL",
@@ -24,7 +27,6 @@ export const NAV_SECTIONS: NavSection[] = [
     title: "INTEGRACIONES",
     items: [
       { label: "Conexiones", href: "/conexiones", icon: Plug },
-      { label: "Finanzas", href: "/finanzas", icon: Wallet, badge: "FASE 2" },
     ],
   },
   {

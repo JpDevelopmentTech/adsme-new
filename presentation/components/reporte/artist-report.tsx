@@ -1,88 +1,72 @@
-import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { REPORT_COPY } from "@/constants/report.constants";
+import Link from "next/link";
+import { REPORT_COPY, REPORT_METRIC_ICONS } from "@/constants/report.constants";
 import { ArtistHero } from "@/presentation/components/reporte/artist-hero";
 import { ArtistLaunchesTable } from "@/presentation/components/reporte/artist-launches-table";
 import { ArtistPlatformCards } from "@/presentation/components/reporte/artist-platform-cards";
 import { ReportFooter } from "@/presentation/components/reporte/report-footer";
-import { ReportMetricGrid } from "@/presentation/components/reporte/report-metric-grid";
-import { ShareReportButton } from "@/presentation/components/reporte/share-report-button";
-import { BrandWordmark } from "@/presentation/components/brand/brand-wordmark";
+import { ReportSummaryCard } from "@/presentation/components/reporte/report-summary-card";
+import { ReportTopbar } from "@/presentation/components/reporte/report-topbar";
+import { AmbientGlow } from "@/presentation/components/ui/ambient-glow";
 import type { ArtistReportProps } from "@/types/report.types";
 import { buildArtistHeadline } from "@/utils/build-report-headline";
 import { buildArtistMetrics } from "@/utils/build-report-metrics";
+import { cn } from "@/utils/cn";
 
-/** Reporte consolidado del artista (`C7` del diseño): todos sus lanzamientos. */
-export function ArtistReport({
-  artist,
-  originTitle,
-  originHref,
-  reportUrl,
-  showSpend,
-}: ArtistReportProps) {
-  const activeCampaigns = artist.launches.reduce(
-    (total, launch) => total + launch.activeCampaigns,
-    0,
-  );
-  const reach = artist.launches.reduce(
-    (total, launch) => total + launch.reach,
-    0,
-  );
+/** Reporte consolidado del artista: todos sus lanzamientos y dónde los vieron. */
+export function ArtistReport({ artist, originTitle, originHref, reportUrl, showSpend }: ArtistReportProps) {
+  const activeCampaigns = artist.launches.reduce((total, launch) => total + launch.activeCampaigns, 0);
+  const reach = artist.launches.reduce((total, launch) => total + launch.reach, 0);
+  const metrics = buildArtistMetrics(artist, showSpend);
 
   return (
-    <div className="flex min-h-dvh flex-col">
-      <header className="sticky top-0 z-10 flex flex-wrap items-center justify-between gap-4 border-b border-border bg-canvas/85 px-6 py-4 backdrop-blur-md lg:px-10">
-        <div className="flex items-center gap-4">
-          <BrandWordmark />
-          <span aria-hidden className="h-6 w-px bg-border" />
-          <p className="text-[13px] text-text-secondary">
-            {REPORT_COPY.artistSubtitle}
-          </p>
-        </div>
+    <div className="relative isolate min-h-dvh overflow-x-hidden">
+      <AmbientGlow imageUrl={artist.avatarUrl} />
 
-        <ShareReportButton url={reportUrl} label={REPORT_COPY.share} />
-      </header>
-
-      <main className="mx-auto flex w-full max-w-[1180px] flex-1 flex-col gap-7 px-6 py-8 lg:px-10">
-        <Link
-          href={originHref}
-          className="flex w-fit items-center gap-2 text-[13px] font-semibold text-text-secondary transition-colors hover:text-text-primary"
-        >
-          <ArrowLeft size={15} aria-hidden />
-          {REPORT_COPY.backToLaunch(originTitle)}
-        </Link>
-
-        <ArtistHero
-          artist={artist}
-          headline={buildArtistHeadline(reach)}
-          activeCampaigns={activeCampaigns}
+      <div className="mx-auto flex w-full max-w-[1120px] flex-col gap-10 px-4 pt-7 pb-16 sm:px-8">
+        <ReportTopbar
+          subtitle={REPORT_COPY.artistSubtitle}
+          syncedAt={null}
+          now=""
+          reportUrl={reportUrl}
+          showStatus={false}
         />
 
-        <div className="flex flex-col gap-5">
-          <h2 className="font-display text-[17px] font-semibold text-text-primary">
-            {REPORT_COPY.artistSummary}
-          </h2>
-          <ReportMetricGrid metrics={buildArtistMetrics(artist, showSpend)} />
-        </div>
+        <main className="flex flex-col gap-10">
+          <Link
+            href={originHref}
+            className="flex w-fit items-center gap-2 rounded-sm text-sm text-text-secondary transition-colors duration-150 hover:text-text-primary focus-visible:ring-2 focus-visible:ring-lilac focus-visible:outline-none"
+          >
+            <ArrowLeft size={16} strokeWidth={1.5} aria-hidden />
+            {REPORT_COPY.backToLaunch(originTitle)}
+          </Link>
 
-        <div className="flex flex-col gap-5">
-          <h2 className="font-display text-[17px] font-semibold text-text-primary">
-            {REPORT_COPY.artistLaunches}
-          </h2>
+          <ArtistHero artist={artist} headline={buildArtistHeadline(reach)} activeCampaigns={activeCampaigns} />
+
+          <section className="flex flex-col gap-4">
+            <h2 className="text-2xl font-light text-text-primary">{REPORT_COPY.artistSummary}</h2>
+            <div className={cn("grid gap-4", metrics.length === 3 ? "md:grid-cols-3" : "sm:grid-cols-2")}>
+              {metrics.map((metric) => (
+                <ReportSummaryCard
+                  key={metric.label}
+                  icon={REPORT_METRIC_ICONS[metric.icon]}
+                  label={metric.label}
+                  value={metric.value}
+                  note={`${metric.note.value} ${metric.note.label}`}
+                />
+              ))}
+            </div>
+          </section>
+
           <ArtistLaunchesTable launches={artist.launches} showSpend={showSpend} />
-        </div>
 
-        {artist.platforms.length > 0 ? (
-          <div className="flex flex-col gap-5">
-            <h2 className="font-display text-[17px] font-semibold text-text-primary">
-              {REPORT_COPY.artistPlatforms}
-            </h2>
+          {artist.platforms.length > 0 ? (
             <ArtistPlatformCards platforms={artist.platforms} showSpend={showSpend} />
-          </div>
-        ) : null}
+          ) : null}
+        </main>
 
         <ReportFooter label={REPORT_COPY.artistFooter} />
-      </main>
+      </div>
     </div>
   );
 }

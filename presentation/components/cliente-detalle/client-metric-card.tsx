@@ -1,22 +1,18 @@
 import type { ClientMetricCardProps } from "@/types/client-detail.types";
 
-/** Tarjeta de métrica del cliente: icono, valor destacado y etiqueta. */
-export function ClientMetricCard({
-  icon,
-  value,
-  label,
-}: ClientMetricCardProps) {
+/** Tarjeta de cifra del cliente: icono en cuadro de vidrio, valor en peso fino y etiqueta. */
+export function ClientMetricCard({ icon, value, label }: ClientMetricCardProps) {
   return (
-    <div className="flex flex-1 items-center gap-[13px] rounded-md border border-border bg-card p-4">
-      <span className="grid size-10 shrink-0 place-items-center rounded-sm bg-card-elevated">
+    <div className="glass-panel flex items-center gap-3.5 rounded-card px-5 py-[18px]">
+      <span className="grid size-[42px] shrink-0 place-items-center rounded-[14px] border border-border bg-surface">
         {icon}
       </span>
 
-      <div className="flex min-w-0 flex-col gap-0.5">
-        <span className="font-display text-xl font-bold text-text-primary">
+      <div className="flex min-w-0 flex-col">
+        <span className="text-[26px] leading-tight font-extralight text-text-primary tabular-nums">
           {value}
         </span>
-        <span className="truncate text-xs text-text-secondary">{label}</span>
+        <span className="truncate text-xs font-normal text-text-muted">{label}</span>
       </div>
     </div>
   );

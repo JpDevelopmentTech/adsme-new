@@ -21,7 +21,7 @@ export function JobReportLink({ reportUrl, jobTitle }: JobReportLinkProps) {
     return (
       <span
         title={JOBS_COPY.noLink}
-        className="grid size-7 place-items-center rounded-sm text-g-400"
+        className="grid size-[34px] place-items-center rounded-pill border border-warning/35 text-warning"
       >
         <Link2Off size={15} strokeWidth={1.5} aria-hidden />
         <span className="sr-only">{JOBS_COPY.noLink}</span>
@@ -41,7 +41,7 @@ export function JobReportLink({ reportUrl, jobTitle }: JobReportLinkProps) {
       onClick={copy}
       title={REPORT_LINK_COPY.copy}
       aria-label={`${REPORT_LINK_COPY.copy}: ${jobTitle}`}
-      className="grid size-7 cursor-pointer place-items-center rounded-sm text-text-secondary transition-colors duration-150 hover:bg-g-100 hover:text-text-primary focus-visible:ring-2 focus-visible:ring-ink/40 focus-visible:outline-none"
+      className="grid size-[34px] cursor-pointer place-items-center rounded-pill border border-border bg-surface text-text-primary transition-colors duration-150 hover:bg-g-100 focus-visible:ring-2 focus-visible:ring-lilac focus-visible:outline-none"
     >
       {isCopied ? (
         <Check size={15} strokeWidth={1.75} className="text-success" aria-hidden />

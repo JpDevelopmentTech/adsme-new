@@ -1,3 +1,5 @@
+import type { LucideIcon } from "lucide-react";
+import type { ReactNode } from "react";
 import type { JobPlatform } from "@/domain/entities/job";
 import type { ReportArtist, ReportArtistLaunch } from "@/domain/entities/report-artist";
 import type { ReportJob } from "@/domain/entities/report-job";
@@ -6,6 +8,12 @@ import type {
   ReportPlatformMetrics,
   ReportTotals,
 } from "@/domain/entities/report-metrics";
+import type {
+  DateRange,
+  PeriodLimits,
+  PeriodPresetOption,
+} from "@/types/period-filter.types";
+import type { RawSearchParams } from "@/utils/parse-client-list-query";
 
 /** Acento de una tarjeta; cada uno tiñe el chip del icono, la cifra y su halo. */
 export type ReportTone =
@@ -55,12 +63,23 @@ export interface ReportMetric {
   note: ReportMetricNote;
 }
 
+/** El período del reporte con todo lo que necesita su filtro. */
+export interface ReportPeriodView {
+  range: DateRange;
+  /** Si el cliente eligió un tramo; `false` es el lanzamiento entero. */
+  isCustom: boolean;
+  presets: PeriodPresetOption[];
+  limits: PeriodLimits;
+  error: string | null;
+}
+
 export interface ReportPreviewProps {
   job: ReportJob;
+  /** Cifra que abre el reporte; `null` si no hay dato o el gestor la ocultó. */
+  headline: ReportHeadline | null;
   totals: ReportTotals;
   platforms: ReportPlatformMetrics[];
-  /** Curva de cada plataforma; falta la que todavía no tiene serie importada. */
-  /** Serie diaria del lanzamiento; `null` si todavía no hay ningún día con entrega. */
+  /** Serie diaria del período; `null` si todavía no hay ningún día con entrega. */
   growth: ReportGrowth | null;
   /** Vistas de YouTube presupuestadas frente a generadas; `null` sin optimización de CPV. */
   cpvComparison: ReportCpvComparison | null;
@@ -70,14 +89,23 @@ export interface ReportPreviewProps {
   territories: ReportTerritory[];
   /** Plataforma seleccionada en las pestañas; `null` las muestra todas. */
   activePlatform: JobPlatform | null;
+  period: ReportPeriodView;
   /** URL pública del propio reporte, para el botón de compartir. */
   reportUrl: string;
-  /** Ruta del reporte, base de los enlaces de las pestañas. */
+  /** Ruta del reporte, base de los enlaces de las pestañas y los atajos. */
   basePath: string;
+  /** Parámetros vigentes de la URL, que conservan las pestañas. */
+  params: RawSearchParams;
   /** Ruta del reporte consolidado del artista. */
   artistHref: string;
   /** Instante de render en ISO, para calcular «hace X» sin desajustes. */
   now: string;
+}
+
+export interface ReportAudienceSectionProps {
+  audience: ReportAudience | null;
+  territories: ReportTerritory[];
+  isCustomPeriod: boolean;
 }
 
 export interface ReportTopbarProps {
@@ -87,12 +115,16 @@ export interface ReportTopbarProps {
   /** Momento de render en ISO, para que «hace X» no varíe en hidratación. */
   now: string;
   reportUrl: string;
+  /** El consolidado del artista no fecha sus datos: oculta «Actualizado». */
+  showStatus?: boolean;
 }
 
 export interface ReportPlatformTabsProps {
   platforms: JobPlatform[];
   activePlatform: JobPlatform | null;
   basePath: string;
+  /** Parámetros vigentes de la URL, para que cambiar de pestaña conserve el período. */
+  params: RawSearchParams;
 }
 
 /**
@@ -107,6 +139,8 @@ export interface ReportHeadline {
 export interface ReportHeroProps {
   job: ReportJob;
   headline: ReportHeadline | null;
+  /** Período que muestra el reporte, ya formateado: el lanzamiento o el tramo elegido. */
+  periodLabel: string;
 }
 
 export interface ReportMetricCardProps {
@@ -244,6 +278,11 @@ export interface ReportGrowthChartProps {
   label: string;
 }
 
+/** Leyenda de la gráfica de crecimiento: color y total de cada plataforma. */
+export interface GrowthLegendProps {
+  totals: Record<JobPlatform, number>;
+}
+
 export interface ReportGrowthPanelProps {
   growth: ReportGrowth;
   /** Período de la pauta, ya formateado, para el subtítulo. */
@@ -262,6 +301,7 @@ export interface ReportPlatformsPanelProps {
   platforms: ReportPlatformMetrics[];
   activePlatform: JobPlatform | null;
   basePath: string;
+  params: RawSearchParams;
   showSpend: boolean;
 }
 
@@ -345,4 +385,54 @@ export interface ReportCpvStat {
   label: string;
   value: string;
   note: string;
+}
+
+export interface ReportPanelHeaderProps {
+  title: string;
+  subtitle?: string;
+  /** Leyenda o pestañas alineadas a la derecha de los títulos. */
+  aside?: ReactNode;
+}
+
+export interface ReportSummaryCardProps {
+  icon: LucideIcon;
+  label: string;
+  value: string;
+  note: string;
+}
+
+export interface ReportPeriodBarProps {
+  period: DateRange;
+  presets: PeriodPresetOption[];
+  limits: PeriodLimits;
+  /** Motivo por el que se ignoraron las fechas de la URL; `null` si valían. */
+  error: string | null;
+}
+
+export interface ReportShareBarsProps {
+  shares: ReportShare[];
+  /** Color de las barras; su ancho va relativo a la porción mayor. */
+  color: string;
+}
+
+export interface ReportGenderSplitProps {
+  shares: ReportShare[];
+}
+
+export interface ReportCardHeaderProps {
+  icon: LucideIcon;
+  title: string;
+}
+
+export interface ReportArtistLinkProps {
+  href: string;
+  artistName: string;
+}
+
+export interface ReportLinkStateProps {
+  icon: LucideIcon;
+  title: string;
+  body: string;
+  /** Código del error bajo el texto; el enlace no válido no lo lleva. */
+  code?: string;
 }

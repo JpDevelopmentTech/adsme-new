@@ -1,24 +1,29 @@
 import { JOB_DETAIL_COPY } from "@/constants/job-detail.constants";
+import { GrowthLegend } from "@/presentation/components/reporte/growth-legend";
+import { ReportGrowthChart } from "@/presentation/components/reporte/report-growth-chart";
+import { JobEvolutionEmpty } from "@/presentation/components/trabajo-detalle/job-evolution-empty";
+import type { JobEvolutionCardProps } from "@/types/job-detail.types";
 
 /**
- * Gráfico de evolución del lanzamiento. De momento sin serie: solo guardamos
- * los totales acumulados por campaña, no insights día a día.
+ * Evolución reciente del lanzamiento: reproducciones por día de cada
+ * plataforma, con la misma gráfica que ve el cliente en su reporte para que
+ * ambos lean el lanzamiento igual.
  */
-export function JobEvolutionCard() {
+export function JobEvolutionCard({ growth, period }: JobEvolutionCardProps) {
+  const subtitle = JOB_DETAIL_COPY.evolutionSubtitle(period);
+
   return (
-    <section className="flex flex-col gap-4 rounded-card border border-border bg-card p-5">
-      <header className="flex flex-col gap-[3px]">
-        <h2 className="font-display text-[15px] font-semibold text-text-primary">
-          {JOB_DETAIL_COPY.evolutionTitle}
-        </h2>
-        <p className="text-xs text-text-secondary">
-          {JOB_DETAIL_COPY.evolutionSubtitle}
-        </p>
+    <section className="glass-thick flex flex-col gap-[18px] rounded-card p-6">
+      <header className="flex flex-wrap items-start justify-between gap-4">
+        <div className="flex min-w-0 flex-col gap-1">
+          <h2 className="text-[17px] font-light text-text-primary">{JOB_DETAIL_COPY.evolutionTitle}</h2>
+          <p className="text-xs font-normal text-text-muted">{subtitle}</p>
+        </div>
+
+        {growth ? <GrowthLegend totals={growth.totals} /> : null}
       </header>
 
-      <p className="rounded-md border border-dashed border-border bg-surface px-5 py-10 text-center text-[13px] leading-[1.5] text-text-muted">
-        {JOB_DETAIL_COPY.evolutionEmpty}
-      </p>
+      {growth ? <ReportGrowthChart growth={growth} label={subtitle} /> : <JobEvolutionEmpty />}
     </section>
   );
 }

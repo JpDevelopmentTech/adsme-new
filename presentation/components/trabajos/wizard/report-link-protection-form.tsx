@@ -8,7 +8,6 @@ import {
   STEP_FOUR_COPY,
 } from "@/constants/report-config.constants";
 import { saveReportLinkProtectionAction } from "@/presentation/actions/save-report-link-protection-action";
-import { PrimaryButton } from "@/presentation/components/ui/primary-button";
 import { SecondaryButton } from "@/presentation/components/ui/secondary-button";
 import { ToggleSwitch } from "@/presentation/components/ui/toggle-switch";
 import type { ReportLinkProtectionFormProps } from "@/types/job-wizard.types";
@@ -37,7 +36,7 @@ export function ReportLinkProtectionForm({
     >
       <input type="hidden" name={LINK_FORM_FIELDS.jobId} value={jobId} />
 
-      <div className="overflow-hidden rounded-md border border-border bg-card-elevated">
+      <div className="flex flex-col">
         <div className="flex flex-col border-b border-border">
           <ToggleSwitch
             id={LINK_FORM_FIELDS.passwordEnabled}
@@ -49,8 +48,8 @@ export function ReportLinkProtectionForm({
           />
 
           {withPassword ? (
-            <div className="flex flex-wrap items-center gap-2.5 px-[18px] pb-3.5">
-              <label className="flex min-w-[220px] flex-1 items-center gap-2.5 rounded-md border border-border bg-card px-3.5 py-2.5 focus-within:border-brand-violet/70">
+            <div className="flex flex-wrap items-center gap-2.5 pb-3.5">
+              <label className="flex h-[46px] min-w-[220px] flex-1 items-center gap-2.5 rounded-md border border-border bg-card-elevated px-3.5 focus-within:border-white/40">
                 <Lock size={16} className="shrink-0 text-text-muted" aria-hidden />
                 <input
                   name={LINK_FORM_FIELDS.password}
@@ -64,7 +63,7 @@ export function ReportLinkProtectionForm({
                       : STEP_FOUR_COPY.passwordPlaceholder
                   }
                   aria-label={STEP_FOUR_COPY.passwordPlaceholder}
-                  className="min-w-0 flex-1 bg-transparent text-[13px] text-text-primary outline-none placeholder:text-text-muted"
+                  className="min-w-0 flex-1 bg-transparent text-sm text-text-primary outline-none placeholder:text-text-muted"
                 />
                 <button
                   type="button"
@@ -82,8 +81,7 @@ export function ReportLinkProtectionForm({
                   setPassword(buildPassphrase());
                   setIsVisible(true);
                 }}
-                className="px-4 py-2.5 text-[13px]"
-                icon={<Dices size={16} strokeWidth={2} aria-hidden />}
+                icon={<Dices size={16} strokeWidth={1.5} aria-hidden />}
               >
                 {STEP_FOUR_COPY.generate}
               </SecondaryButton>
@@ -102,8 +100,8 @@ export function ReportLinkProtectionForm({
           />
 
           {withExpiry ? (
-            <div className="flex flex-wrap items-center gap-3 px-[18px] pb-3.5">
-              <label className="flex items-center gap-2.5 rounded-md border border-border bg-card px-3.5 py-2.5 focus-within:border-brand-violet/70">
+            <div className="flex flex-wrap items-center gap-3.5 pb-3.5">
+              <label className="flex h-[46px] items-center gap-2.5 rounded-md border border-border bg-card-elevated px-3.5 focus-within:border-white/40">
                 <CalendarDays
                   size={16}
                   className="shrink-0 text-text-muted"
@@ -114,11 +112,11 @@ export function ReportLinkProtectionForm({
                   type="date"
                   defaultValue={expiresOn ?? ""}
                   aria-label={expiryOption.label}
-                  className="bg-transparent text-[13px] text-text-primary outline-none [color-scheme:dark]"
+                  className="bg-transparent text-sm text-text-primary outline-none [color-scheme:dark]"
                 />
               </label>
 
-              <p className="text-xs text-text-muted">
+              <p className="text-xs font-normal text-text-muted">
                 {STEP_FOUR_COPY.expiryHint}
               </p>
             </div>
@@ -126,10 +124,13 @@ export function ReportLinkProtectionForm({
         </div>
       </div>
 
-      <PrimaryButton type="submit" className="self-start">
-        <Save size={18} strokeWidth={2} aria-hidden />
+      <SecondaryButton
+        type="submit"
+        className="self-start"
+        icon={<Save size={16} strokeWidth={1.5} aria-hidden />}
+      >
         {STEP_FOUR_COPY.save}
-      </PrimaryButton>
+      </SecondaryButton>
     </form>
   );
 }

@@ -34,3 +34,21 @@ export function buildArtistHeadline(reach: number): ReportHeadline | null {
     caption: "personas han conocido tu música con las campañas de adsme",
   };
 }
+
+/**
+ * Titular de un tramo elegido por el cliente. El alcance no se puede acotar a
+ * unos días —son personas únicas de cada día, que no se suman—, así que el
+ * titular pasa a las reproducciones de ese tramo, que sí son del período.
+ */
+export function buildPeriodHeadline(
+  plays: number,
+  job: ReportJob,
+  periodLabel: string,
+): ReportHeadline | null {
+  if (plays <= 0) return null;
+
+  return {
+    value: formatExactNumber(plays),
+    caption: `reproducciones de ${job.title} · ${periodLabel}`,
+  };
+}

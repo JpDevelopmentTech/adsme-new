@@ -19,13 +19,13 @@ export function CheckboxField({
       <label
         htmlFor={id}
         aria-hidden
-        className="grid size-[19px] shrink-0 cursor-pointer place-items-center rounded-md border border-border-strong bg-card transition-colors [&_svg]:opacity-0 peer-checked:border-transparent peer-checked:bg-brand-gradient peer-checked:[&_svg]:opacity-100 peer-focus-visible:ring-2 peer-focus-visible:ring-brand-violet/60"
+        className="grid size-5 shrink-0 cursor-pointer place-items-center rounded-[6px] border-[1.5px] border-white/40 bg-transparent transition-colors [&_svg]:opacity-0 peer-checked:border-transparent peer-checked:bg-ink peer-checked:[&_svg]:opacity-100 peer-focus-visible:ring-2 peer-focus-visible:ring-lilac"
       >
-        <Check size={13} strokeWidth={3} className="text-white" />
+        <Check size={13} strokeWidth={2.5} className="text-g-50" />
       </label>
       <label
         htmlFor={id}
-        className="cursor-pointer text-[13px] text-text-secondary"
+        className="cursor-pointer text-sm font-normal text-text-primary"
       >
         {label}
       </label>

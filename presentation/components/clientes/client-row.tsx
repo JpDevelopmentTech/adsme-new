@@ -16,58 +16,59 @@ export function ClientRow({ client, maxInvestment, nowIso }: ClientRowProps) {
   const hasInvestment = client.monthInvestment > 0;
 
   return (
-    <li className="relative flex items-center gap-3.5 border-b border-border/60 px-5 py-3 transition-colors duration-150 last:border-b-0 hover:bg-g-100">
-      <Avatar
-        initials={client.initials}
-        size={40}
-        fontSize={12}
-        gradient={client.gradient}
-        imageUrl={client.avatarUrl}
-      />
+    <li className="relative flex min-h-[72px] items-center gap-4 border-b border-border py-3 transition-colors duration-150 last:border-b-0 hover:bg-white/[0.03]">
+      <div className="flex min-w-0 flex-1 items-center gap-3.5">
+        <Avatar
+          initials={client.initials}
+          size={44}
+          fontSize={14}
+          gradient={client.gradient}
+          imageUrl={client.avatarUrl}
+        />
 
-      <div className="flex min-w-0 flex-1 flex-col gap-0.5 lg:w-[210px] lg:flex-none">
-        <h2 className="truncate text-[13.5px] font-normal text-text-primary">
-          {/* Enlace expandido a toda la fila; el menú `⋯` se superpone con z-10. */}
-          <Link
-            href={clientDetailRoute(client.id)}
-            className="rounded-sm after:absolute after:inset-0 focus-visible:ring-2 focus-visible:ring-ink/40 focus-visible:outline-none"
-          >
-            {client.name}
-          </Link>
-        </h2>
-        <p className="truncate text-[11.5px] text-text-muted">
-          {client.handle} · {client.kind}
-        </p>
+        <div className="flex min-w-0 flex-col gap-0.5">
+          <h2 className="truncate text-sm font-normal text-text-primary">
+            {/* Enlace expandido a toda la fila; el menú `⋯` se superpone con z-10. */}
+            <Link
+              href={clientDetailRoute(client.id)}
+              className="rounded-sm after:absolute after:inset-0 focus-visible:ring-2 focus-visible:ring-lilac focus-visible:outline-none"
+            >
+              {client.name}
+            </Link>
+          </h2>
+          <p className="truncate text-xs font-normal text-text-muted">
+            {client.handle} · {client.kind}
+          </p>
+        </div>
       </div>
 
-      <div className="hidden min-w-0 flex-1 lg:flex">
+      <div className="hidden w-[300px] shrink-0 items-center gap-4 lg:flex">
         <ClientSpendBar
           shares={client.platformShares}
           monthInvestment={client.monthInvestment}
           maxInvestment={maxInvestment}
         />
+        <span
+          className={cn(
+            "w-[84px] shrink-0 text-sm font-normal tabular-nums",
+            hasInvestment ? "text-text-primary" : "text-text-muted",
+          )}
+        >
+          {hasInvestment
+            ? formatCompactCurrency(client.monthInvestment)
+            : CLIENT_ROW_COPY.noInvestment}
+        </span>
       </div>
 
-      <span
-        className={cn(
-          "w-[100px] shrink-0 text-right text-[13.5px] font-normal",
-          hasInvestment ? "text-text-primary" : "text-text-muted",
-        )}
-      >
-        {hasInvestment
-          ? formatCompactCurrency(client.monthInvestment)
-          : CLIENT_ROW_COPY.noInvestment}
-      </span>
-
-      <div className="hidden w-[140px] shrink-0 flex-col gap-0.5 md:flex">
-        <span className="truncate text-[12px] text-text-secondary">
+      <div className="hidden w-[190px] shrink-0 flex-col gap-0.5 md:flex">
+        <span className="truncate text-[13px] text-text-primary">
           {client.jobsCount === 0
             ? CLIENT_ROW_COPY.noJobs
             : CLIENT_ROW_COPY.jobs(client.activeJobsCount, client.jobsCount)}
         </span>
         <span
           className={cn(
-            "truncate text-[11px]",
+            "truncate text-xs font-normal",
             client.status === "paused" ? "text-warning" : "text-text-muted",
           )}
         >
@@ -75,11 +76,11 @@ export function ClientRow({ client, maxInvestment, nowIso }: ClientRowProps) {
         </span>
       </div>
 
-      <div className="hidden w-24 shrink-0 justify-center sm:flex">
+      <div className="hidden w-[130px] shrink-0 sm:block">
         <StatusBadge label={status.label} tone={status.tone} />
       </div>
 
-      <div className="relative z-10">
+      <div className="relative z-10 flex w-10 shrink-0 justify-end">
         <ClientCardMenu client={client} />
       </div>
     </li>

@@ -31,7 +31,7 @@ export function SortHeader({ label, column, sort, hideLabel = false }: SortHeade
       onClick={applySort}
       aria-label={JOBS_COPY.sortBy(label)}
       className={cn(
-        "flex cursor-pointer items-center gap-1.5 rounded-sm transition-colors duration-150 hover:text-text-primary focus-visible:ring-2 focus-visible:ring-ink/40 focus-visible:outline-none",
+        "flex cursor-pointer items-center gap-1.5 rounded-sm transition-colors duration-150 hover:text-text-primary focus-visible:ring-2 focus-visible:ring-lilac focus-visible:outline-none",
         direction ? "text-text-primary" : "text-text-muted",
       )}
     >

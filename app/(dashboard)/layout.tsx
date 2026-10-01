@@ -9,9 +9,9 @@ import { AppTopbar } from "@/presentation/components/dashboard/app-topbar";
 import { toCurrentUserSummary } from "@/utils/to-current-user-summary";
 
 /**
- * Shell del panel: el menú y la cabecera se apoyan directamente sobre el fondo
- * y solo el contenido va en paneles, centrado a un ancho de lectura cómodo.
- * Verifica la sesión en el servidor además del chequeo optimista del proxy.
+ * Shell del panel: una ventana de vidrio que flota sobre el fondo violeta, con
+ * el menú lateral a la izquierda y el contenido desplazable dentro. Verifica la
+ * sesión en el servidor además del chequeo optimista del proxy.
  */
 export default async function DashboardLayout({
   children,
@@ -28,14 +28,16 @@ export default async function DashboardLayout({
   const summary = toCurrentUserSummary(user);
 
   return (
-    <div className="bg-ambient flex h-dvh overflow-hidden">
-      <AppSidebar user={summary} />
+    <div className="flex h-dvh overflow-hidden lg:p-5">
+      <div className="glass-window flex min-w-0 flex-1 overflow-hidden lg:rounded-window">
+        <AppSidebar user={summary} />
 
-      <div className="flex min-w-0 flex-1 flex-col overflow-y-auto">
-        <div className="mx-auto flex w-full max-w-[1200px] flex-1 flex-col px-4 pb-10 sm:px-8">
-          <AppTopbar />
+        <div className="flex min-w-0 flex-1 flex-col overflow-x-hidden overflow-y-auto">
+          <div className="mx-auto flex w-full max-w-[1200px] flex-1 flex-col gap-7 px-4 pt-6 pb-8 sm:px-8 sm:pt-7">
+            <AppTopbar />
 
-          <main className="flex flex-1 flex-col gap-6">{children}</main>
+            <main className="relative isolate flex flex-1 flex-col gap-7">{children}</main>
+          </div>
         </div>
       </div>
     </div>

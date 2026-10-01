@@ -14,6 +14,8 @@ export const CLIENT_STATUS_BADGE: Record<
 export const CLIENT_MENU_COPY = {
   edit: "Editar cliente",
   delete: "Eliminar",
+  /** Botón del diálogo: nombra la acción, no un «Sí» genérico (NN/g). */
+  confirmDelete: "Eliminar cliente",
   cancel: "Cancelar",
   deleteTitle: "Eliminar cliente",
   deleteDescription: (name: string) =>
@@ -71,6 +73,11 @@ export const PORTFOLIO_COPY = {
     count === 1 ? "1 campaña en vivo" : `${count} campañas en vivo`,
   more: (count: number) => `+${count}`,
   stackLabel: "Clientes de la cartera",
+  /** Etiquetas sueltas de las cifras de composición, que van grandes y aparte. */
+  workingLabel: "trabajando",
+  pausedLabel: "en pausa",
+  emptyLabel: "sin trabajos",
+  liveCampaignsLabel: (count: number) => (count === 1 ? "campaña en vivo" : "campañas en vivo"),
 } as const;
 
 /** Caras que se apilan antes de resumir el resto en un «+N». */

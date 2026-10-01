@@ -18,9 +18,9 @@ export function PasswordField(props: PasswordFieldProps) {
           type="button"
           onClick={() => setIsVisible((visible) => !visible)}
           aria-label={isVisible ? "Ocultar contraseña" : "Mostrar contraseña"}
-          className="text-text-muted transition-colors hover:text-text-secondary"
+          className="cursor-pointer text-text-muted transition-colors hover:text-text-primary"
         >
-          <ToggleIcon size={18} strokeWidth={1.75} aria-hidden />
+          <ToggleIcon size={16} strokeWidth={1.75} aria-hidden />
         </button>
       }
     />

@@ -1,6 +1,6 @@
 "use client";
 
-import { QrCode } from "lucide-react";
+import { Download } from "lucide-react";
 import { STEP_FOUR_COPY } from "@/constants/report-config.constants";
 import { SecondaryButton } from "@/presentation/components/ui/secondary-button";
 import type { DownloadQrButtonProps } from "@/types/job-wizard.types";
@@ -15,7 +15,7 @@ export function DownloadQrButton({ fileName }: DownloadQrButtonProps) {
     <SecondaryButton
       type="button"
       onClick={() => downloadSvgAsPng(fileName)}
-      icon={<QrCode size={18} className="text-brand-magenta" aria-hidden />}
+      icon={<Download size={16} strokeWidth={1.5} aria-hidden />}
     >
       {STEP_FOUR_COPY.downloadQr}
     </SecondaryButton>

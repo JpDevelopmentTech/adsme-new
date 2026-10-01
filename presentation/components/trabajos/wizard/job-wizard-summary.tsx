@@ -1,13 +1,12 @@
-import { Music } from "lucide-react";
-import { Fragment } from "react";
+import { Music, Save } from "lucide-react";
 import { JOB_WIZARD_SUMMARY } from "@/constants/job-wizard.constants";
 import type { JobWizardSummaryProps } from "@/types/job-wizard.types";
 import { cn } from "@/utils/cn";
 
 /**
- * Ficha del trabajo que acompaña a los cuatro pasos. Es lo que convierte el
- * asistente en algo que se entiende: sin ella, en los pasos 2 y 4 no se ve
- * siquiera el nombre de lo que se está creando.
+ * Ficha del trabajo que acompaña a los cuatro pasos: la portada grande, el
+ * nombre y lo que ya está decidido. Sin ella, en los pasos 2 y 4 no se vería
+ * siquiera qué se está creando.
  */
 export function JobWizardSummary({ summary }: JobWizardSummaryProps) {
   const rows = [
@@ -22,69 +21,41 @@ export function JobWizardSummary({ summary }: JobWizardSummaryProps) {
     .join(" · ");
 
   return (
-    <aside className="glass-panel flex flex-col overflow-hidden rounded-card xl:w-[340px] xl:shrink-0">
-      <div className="flex flex-col gap-3.5 px-5 py-[18px]">
-        <span className="text-[10px] font-medium tracking-[0.6px] text-text-muted uppercase">
-          {JOB_WIZARD_SUMMARY.eyebrow}
+    <aside className="glass-panel flex flex-col gap-[18px] rounded-card p-[22px] xl:w-[320px] xl:shrink-0">
+      <span className="text-[11px] font-medium tracking-[1.4px] text-text-muted uppercase">
+        {JOB_WIZARD_SUMMARY.eyebrow}
+      </span>
+
+      {summary.coverUrl ? (
+        // Portada local del uploader o servida desde Storage.
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={summary.coverUrl} alt="" className="aspect-square w-full rounded-[18px] object-cover" />
+      ) : (
+        <span aria-hidden className="grid aspect-square w-full place-items-center rounded-[18px] border border-border bg-surface">
+          <Music size={40} strokeWidth={1.25} className="text-text-muted" />
         </span>
+      )}
 
-        <div className="flex items-center gap-3">
-          {summary.coverUrl ? (
-            // Portada local del uploader o servida desde Storage.
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={summary.coverUrl}
-              alt=""
-              className="size-14 shrink-0 rounded-md object-cover"
-            />
-          ) : (
-            <span
-              aria-hidden
-              className="grid size-14 shrink-0 place-items-center rounded-md border border-border bg-g-200"
-            >
-              <Music size={18} strokeWidth={1.5} className="text-text-muted" />
-            </span>
-          )}
-
-          <div className="flex min-w-0 flex-col gap-0.5">
-            <span
-              className={cn(
-                "truncate text-[15px]",
-                summary.title ? "font-normal text-text-primary" : "font-light text-text-muted",
-              )}
-            >
-              {summary.title ?? JOB_WIZARD_SUMMARY.untitled}
-            </span>
-            <span className="truncate text-[12px] text-text-secondary">
-              {subtitle}
-            </span>
-          </div>
-        </div>
+      <div className="flex min-w-0 flex-col gap-0.5">
+        <span className={cn("truncate text-[22px] font-light", summary.title ? "text-text-primary" : "text-text-muted")}>
+          {summary.title ?? JOB_WIZARD_SUMMARY.untitled}
+        </span>
+        <span className="truncate text-[13px] font-normal text-text-muted">{subtitle}</span>
       </div>
 
-      {rows.map((row) => (
-        <Fragment key={row.label}>
-          <div className="h-px bg-border/60" />
-
-          <div className="flex items-center justify-between gap-3 px-5 py-3">
-            <span className="text-[10px] font-medium tracking-[0.6px] text-text-muted uppercase">
-              {row.label}
-            </span>
-            <span
-              className={cn(
-                "truncate text-right text-[12.5px]",
-                row.value ? "font-normal text-text-primary" : "font-light text-g-500",
-              )}
-            >
+      <dl className="flex flex-col">
+        {rows.map((row) => (
+          <div key={row.label} className="flex items-center justify-between gap-3 border-t border-border py-[11px]">
+            <dt className="text-xs font-normal text-text-muted">{row.label}</dt>
+            <dd className={cn("truncate text-right text-[13px] font-normal", row.value ? "text-text-primary" : "text-text-muted")}>
               {row.value ?? JOB_WIZARD_SUMMARY.pending}
-            </span>
+            </dd>
           </div>
-        </Fragment>
-      ))}
+        ))}
+      </dl>
 
-      <div className="h-px bg-border/60" />
-
-      <p className="px-5 py-3.5 text-[11.5px] leading-[1.45] text-text-muted">
+      <p className="flex items-start gap-2 rounded-[14px] bg-surface px-3.5 py-3 text-xs leading-[1.45] font-normal text-text-secondary">
+        <Save size={15} strokeWidth={1.5} className="mt-px shrink-0" aria-hidden />
         {JOB_WIZARD_SUMMARY.note}
       </p>
     </aside>

@@ -22,6 +22,14 @@ export interface ClientsPortfolioBandProps {
   monthName: string;
 }
 
+/** Una cifra de la composición de la cartera: punto de color, número y etiqueta. */
+export interface PortfolioFigureProps {
+  value: number;
+  label: string;
+  /** Clase de fondo del punto (`bg-success`, `bg-warning`…). */
+  dot: string;
+}
+
 export interface ClientAvatarStackProps {
   clients: ClientListing[];
 }

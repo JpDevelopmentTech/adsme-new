@@ -11,12 +11,7 @@ import {
   Wallet,
   type LucideIcon,
 } from "lucide-react";
-import type { JobPlatform } from "@/domain/entities/job";
-import type {
-  ReportMetricIcon,
-  ReportMetricKey,
-  ReportTone,
-} from "@/types/report.types";
+import type { ReportMetricIcon, ReportMetricKey } from "@/types/report.types";
 import { formatExactNumber } from "@/utils/format-exact-number";
 
 export const REPORT_COPY = {
@@ -31,7 +26,10 @@ export const REPORT_COPY = {
   trendPlays: "Reproducciones acumuladas",
   trendImpressions: "Impresiones acumuladas",
   crossSummaryTitle: "Resumen del lanzamiento · las tres plataformas juntas",
-  audienceSectionTitle: "Tu público · quién vio tus anuncios",
+  audienceSectionTitle: "Tu público",
+  audienceSectionSubtitle: "quién vio tus anuncios",
+  otherLaunches: "Otros lanzamientos",
+  platformTabs: "Plataformas del reporte",
   liveReport: "Reporte en vivo",
   live: "En vivo",
   allPlatforms: "Todas",
@@ -83,9 +81,20 @@ export const REPORT_COPY = {
     `${total} ${total === 1 ? "lanzamiento" : "lanzamientos"} · ${active} ${
       active === 1 ? "activo" : "activos"
     }`,
+  artistPlatformNote: (percent: string, spend: string | null) =>
+    spend ? `${percent} de las reproducciones · ${spend} invertidos` : `${percent} de las reproducciones`,
   view: "Ver",
   noLaunchLink: "Sin enlace",
 } as const;
+
+/**
+ * Colores de la barra partida por sexo, en el orden en que llegan las porciones
+ * (mujeres, hombres, sin determinar): lila, blanco y blanco tenue.
+ */
+export const REPORT_GENDER_COLORS = ["var(--color-lilac)", "#ffffffcc", "#ffffff40"] as const;
+
+/** Barras de las franjas de edad: blancas, para no competir con el lila de las regiones. */
+export const REPORT_AGE_BAR_COLOR = "#ffffffcc";
 
 /** Las tres cifras de contexto que acompañan al titular del reporte. */
 export const REPORT_SUMMARY_COPY = {
@@ -132,7 +141,6 @@ export const ARTIST_TABLE_HEADERS: readonly string[] = [
   "Enlace",
 ];
 
-/** Nombre comercial y redes de cada plataforma, tal como los escribe el diseño. */
 /**
  * Provisional: el reporte enseña las tres plataformas aunque el trabajo no
  * tenga campañas en alguna, para poder revisar con el cliente cómo queda el
@@ -140,19 +148,6 @@ export const ARTIST_TABLE_HEADERS: readonly string[] = [
  * Cambiar a `false` para que solo aparezcan las plataformas contratadas.
  */
 export const SHOW_ALL_REPORT_PLATFORMS = true;
-
-export const REPORT_PLATFORM_SECTION: Record<
-  JobPlatform,
-  { title: string; networks: string; tone: ReportTone }
-> = {
-  youtube: { title: "YouTube Ads", networks: "Google Ads", tone: "youtube" },
-  meta: {
-    title: "Meta Ads",
-    networks: "Facebook · Instagram · Reels",
-    tone: "meta",
-  },
-  tiktok: { title: "TikTok Ads", networks: "Spark Ads · In-feed", tone: "tiktok" },
-};
 
 export const REPORT_METRIC_ICONS: Record<ReportMetricIcon, LucideIcon> = {
   views: Play,
@@ -166,82 +161,4 @@ export const REPORT_METRIC_ICONS: Record<ReportMetricIcon, LucideIcon> = {
   cost: Activity,
   campaigns: Megaphone,
   ratio: Activity,
-};
-
-/**
- * Cada acento aporta tres piezas: el fondo tenue del chip, el color del icono y
- * el halo de la cifra. Se escriben completas porque Tailwind necesita ver la
- * clase literal para generarla.
- */
-export const REPORT_TONE_CLASSES: Record<
-  ReportTone,
-  { chip: string; icon: string; text: string; border: string }
-> = {
-  violet: {
-    chip: "bg-brand-violet/12",
-    icon: "text-brand-violet",
-    text: "text-brand-violet",
-    border: "border-brand-violet/40",
-  },
-  cyan: {
-    chip: "bg-data-cyan/12",
-    icon: "text-data-cyan",
-    text: "text-data-cyan",
-    border: "border-data-cyan/40",
-  },
-  lime: {
-    chip: "bg-data-lime/12",
-    icon: "text-data-lime",
-    text: "text-data-lime",
-    border: "border-data-lime/40",
-  },
-  magenta: {
-    chip: "bg-brand-magenta/12",
-    icon: "text-brand-magenta",
-    text: "text-brand-magenta",
-    border: "border-brand-magenta/40",
-  },
-  warning: {
-    chip: "bg-warning/12",
-    icon: "text-warning",
-    text: "text-warning",
-    border: "border-warning/40",
-  },
-  youtube: {
-    chip: "bg-[#C4553F]/12",
-    icon: "text-[#C4553F]",
-    text: "text-[#C4553F]",
-    border: "border-[#C4553F]/40",
-  },
-  meta: {
-    chip: "bg-[#4A6FA5]/12",
-    icon: "text-[#4A6FA5]",
-    text: "text-[#4A6FA5]",
-    border: "border-[#4A6FA5]/40",
-  },
-  tiktok: {
-    chip: "bg-[#2E8C87]/12",
-    icon: "text-[#2E8C87]",
-    text: "text-[#2E8C87]",
-    border: "border-[#2E8C87]/40",
-  },
-};
-
-/** Color del halo de la cifra principal, en el orden de `REPORT_TONE_CLASSES`. */
-export const REPORT_TONE_GLOW: Record<ReportTone, string> = {
-  violet: "#1F2A2733",
-  cyan: "#5B7C8D44",
-  lime: "#7D8F5E44",
-  magenta: "#6E8F8044",
-  warning: "#8F5E1444",
-  youtube: "#C4553F55",
-  meta: "#4A6FA566",
-  tiktok: "#2E8C8755",
-};
-
-/** Barras del reparto por plataforma, con el color de cada marca. */
-export const REPORT_PLATFORM_BAR: Record<JobPlatform, string> = {
-  youtube: "linear-gradient(90deg, #C4553F 0%, #C4553F99 100%)",
-  meta: "linear-gradient(90deg, #4A6FA5 0%, #4A6FA599 100%)",
-  tiktok: "linear-gradient(90deg, #2E8C87 0%, #5FB3AE 100%)",
 };

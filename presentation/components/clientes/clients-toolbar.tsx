@@ -30,7 +30,7 @@ export function ClientsToolbar({ query, resultsLabel }: ClientsToolbarProps) {
   };
 
   return (
-    <div className="flex flex-wrap items-center gap-2.5 px-5 py-3">
+    <div className="flex flex-wrap items-center gap-2.5 pb-3.5">
       <SearchField
         value={query.search}
         paramName={CLIENT_QUERY_PARAMS.search}
@@ -66,16 +66,14 @@ export function ClientsToolbar({ query, resultsLabel }: ClientsToolbarProps) {
 
       <div className="flex-1" />
 
-      <span className="text-[10px] font-medium tracking-[0.6px] text-text-muted uppercase">
-        {resultsLabel}
-      </span>
+      <span className="text-[13px] text-text-muted">{resultsLabel}</span>
 
       <FilterSelect
         align="end"
         value={query.sort}
         options={CLIENT_SORT_OPTIONS}
         defaultValue={DEFAULT_CLIENT_LIST_QUERY.sort}
-        icon={<ArrowUpDown size={14} className="text-text-muted" aria-hidden />}
+        icon={<ArrowUpDown size={14} className="text-text-secondary" aria-hidden />}
         onChange={(value) =>
           applyFilter(
             CLIENT_QUERY_PARAMS.sort,

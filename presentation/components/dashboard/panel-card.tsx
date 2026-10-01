@@ -3,7 +3,10 @@ import Link from "next/link";
 import { DASHBOARD_COPY } from "@/constants/dashboard.constants";
 import type { PanelCardProps } from "@/types/dashboard-home.types";
 
-/** Panel con cabecera y filas separadas por filete, base de `B1`. */
+/**
+ * Panel de vidrio grueso con cabecera y filas separadas por filete: el material
+ * casi opaco es para lo que se lee en filas, como las tablas.
+ */
 export function PanelCard({
   title,
   subtitle,
@@ -15,20 +18,18 @@ export function PanelCard({
   children,
 }: PanelCardProps) {
   return (
-    <section className="glass-panel flex h-full flex-col overflow-hidden rounded-card">
-      <header className="flex items-center justify-between gap-3 px-5 py-4">
-        <div className="flex min-w-0 flex-col gap-[3px]">
-          <h2 className="flex items-center gap-2.5 font-display text-[15px] font-normal tracking-[-0.2px] text-text-primary">
+    <section className="glass-thick flex h-full flex-col overflow-hidden rounded-card">
+      <header className="flex items-start justify-between gap-3 px-6 pt-6 pb-4">
+        <div className="flex min-w-0 flex-col gap-1">
+          <h2 className="flex items-center gap-2.5 text-[17px] font-light text-text-primary">
             {icon}
             {title}
           </h2>
-          {subtitle ? (
-            <p className="text-[12px] text-text-secondary">{subtitle}</p>
-          ) : null}
+          {subtitle ? <p className="text-xs font-normal text-text-muted">{subtitle}</p> : null}
         </div>
 
         {count !== undefined && count > 0 ? (
-          <span className="grid size-[24px] shrink-0 place-items-center rounded-pill bg-g-200 text-[11.5px] font-normal text-text-primary">
+          <span className="rounded-pill bg-surface px-2.5 py-0.5 text-xs font-medium text-text-secondary">
             {count}
           </span>
         ) : null}
@@ -36,20 +37,16 @@ export function PanelCard({
         {seeAllHref ? (
           <Link
             href={seeAllHref}
-            className="flex shrink-0 items-center gap-1 rounded-sm text-[12px] font-normal text-text-primary transition-opacity duration-150 hover:opacity-60 focus-visible:ring-2 focus-visible:ring-ink/40 focus-visible:outline-none"
+            className="flex shrink-0 items-center gap-1 rounded-sm pt-1 text-[13px] font-normal text-text-secondary transition-colors duration-150 hover:text-text-primary focus-visible:ring-2 focus-visible:ring-lilac focus-visible:outline-none"
           >
             {DASHBOARD_COPY.seeAll}
-            <ChevronRight size={13} strokeWidth={1.5} aria-hidden />
+            <ChevronRight size={14} strokeWidth={1.5} aria-hidden />
           </Link>
         ) : null}
       </header>
 
-      <div className="h-px bg-border" />
-
       {isEmpty ? (
-        <p className="px-5 py-8 text-center text-[12px] text-text-muted">
-          {emptyText}
-        </p>
+        <p className="px-6 pb-8 text-center text-[13px] text-text-muted">{emptyText}</p>
       ) : (
         children
       )}

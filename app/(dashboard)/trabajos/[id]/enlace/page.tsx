@@ -1,7 +1,7 @@
-import { ArrowLeft, Link2, Mail, MessageCircle } from "lucide-react";
+import { Link2, Mail, MessageCircle, Share2, ShieldCheck } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { JOB_STEP_COPY, JOB_WIZARD_COPY } from "@/constants/job-wizard.constants";
+import { JOB_STEP_COPY } from "@/constants/job-wizard.constants";
 import { STEP_FOUR_COPY } from "@/constants/report-config.constants";
 import { JOBS_ROUTE, jobReportRoute } from "@/constants/routes.constants";
 import { DEFAULT_CAMPAIGN_LIST_QUERY } from "@/domain/entities/campaign";
@@ -15,6 +15,7 @@ import { findReportProtection } from "@/infrastructure/repositories/find-report-
 import { createServerSupabaseClient } from "@/infrastructure/supabase/server-supabase-client";
 import { DownloadQrButton } from "@/presentation/components/trabajos/wizard/download-qr-button";
 import { JobWizardLayout } from "@/presentation/components/trabajos/wizard/job-wizard-layout";
+import { WizardBackLink } from "@/presentation/components/trabajos/wizard/wizard-back-link";
 import { JobWizardPanel } from "@/presentation/components/trabajos/wizard/job-wizard-panel";
 import { ReportLinkProtectionForm } from "@/presentation/components/trabajos/wizard/report-link-protection-form";
 import { ReportQr } from "@/presentation/components/trabajos/wizard/report-qr";
@@ -62,19 +63,16 @@ export default async function TrabajoEnlacePage({
         subtitle={JOB_STEP_COPY.four.subtitle}
         footer={
           <>
-            <SecondaryLink href={jobReportRoute(job.id)}>
-              <ArrowLeft size={15} strokeWidth={1.75} aria-hidden />
-              {JOB_WIZARD_COPY.previous}
-            </SecondaryLink>
+            <WizardBackLink href={jobReportRoute(job.id)} />
 
             <PrimaryLink href={JOBS_ROUTE}>
-              <Link2 size={15} strokeWidth={1.75} aria-hidden />
               {STEP_FOUR_COPY.finish}
+              <Link2 size={16} strokeWidth={1.75} aria-hidden />
             </PrimaryLink>
           </>
         }
       >
-        <WizardSection label={STEP_FOUR_COPY.shareSection}>
+        <WizardSection label={STEP_FOUR_COPY.shareSection} icon={<Share2 size={15} strokeWidth={1.5} aria-hidden />}>
           {job.reportUrl ? (
             <>
               <CopyLinkField
@@ -82,11 +80,17 @@ export default async function TrabajoEnlacePage({
                 label={`Copiar el enlace del reporte de ${job.title}`}
               />
 
-              <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+              <div className="flex flex-col items-start gap-6 rounded-[20px] border border-border bg-surface p-[18px] sm:flex-row sm:items-center">
                 <ReportQr url={job.reportUrl} />
 
                 <div className="flex min-w-0 flex-1 flex-col gap-3">
-                  <p className="text-[12.5px] leading-[1.5] text-text-secondary">
+                  <div className="flex flex-col gap-1">
+                    <p className="text-[17px] font-light text-text-primary">{STEP_FOUR_COPY.scan}</p>
+                    <p className="text-[13px] font-normal break-all text-lilac">
+                      {job.reportUrl.replace(/^https?:\/\//, "")}
+                    </p>
+                  </div>
+                  <p className="text-[13px] leading-[1.45] font-normal text-text-secondary">
                     {STEP_FOUR_COPY.shareHint}
                   </p>
 
@@ -96,12 +100,12 @@ export default async function TrabajoEnlacePage({
                         STEP_FOUR_COPY.whatsappMessage(job.title, job.reportUrl),
                       )}
                     >
-                      <MessageCircle size={15} strokeWidth={1.5} aria-hidden />
+                      <MessageCircle size={16} strokeWidth={1.5} aria-hidden />
                       {STEP_FOUR_COPY.whatsapp}
                     </SecondaryLink>
 
                     <SecondaryLink href={mailtoShareUrl(job.title, job.reportUrl)}>
-                      <Mail size={15} strokeWidth={1.5} aria-hidden />
+                      <Mail size={16} strokeWidth={1.5} aria-hidden />
                       {STEP_FOUR_COPY.email}
                     </SecondaryLink>
 
@@ -117,7 +121,7 @@ export default async function TrabajoEnlacePage({
 
         {/* Sin enlace emitido no hay nada que proteger todavía. */}
         {job.reportUrl ? (
-          <WizardSection label={STEP_FOUR_COPY.protectSection}>
+          <WizardSection label={STEP_FOUR_COPY.protectSection} icon={<ShieldCheck size={15} strokeWidth={1.5} aria-hidden />}>
             <ReportLinkProtectionForm
               jobId={job.id}
               hasPassword={protection.hasPassword}

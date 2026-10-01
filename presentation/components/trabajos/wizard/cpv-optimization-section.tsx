@@ -6,7 +6,6 @@ import {
   STEP_THREE_COPY,
 } from "@/constants/report-config.constants";
 import { CpvChargeField } from "@/presentation/components/trabajos/wizard/cpv-charge-field";
-import { WizardSection } from "@/presentation/components/trabajos/wizard/wizard-section";
 import { ToggleSwitch } from "@/presentation/components/ui/toggle-switch";
 import type { CpvOptimizationSectionProps } from "@/types/job-wizard.types";
 import { formatCpvInput } from "@/utils/format-cpv-input";
@@ -21,8 +20,11 @@ export function CpvOptimizationSection({
   const [isOn, setIsOn] = useState(cpvOptimization);
 
   return (
-    <WizardSection label={STEP_THREE_COPY.cpvSection}>
-      <div className="overflow-hidden rounded-md border border-border bg-card-elevated">
+    <section className="flex flex-col gap-1.5 rounded-[18px] border border-border bg-surface px-[22px] py-5">
+      <h3 className="text-[11px] font-medium tracking-[1.4px] text-text-muted uppercase">
+        {STEP_THREE_COPY.cpvSection}
+      </h3>
+      <div className="flex flex-col">
         <ToggleSwitch
           id={REPORT_SETTINGS_FIELDS.cpvOptimization}
           name={REPORT_SETTINGS_FIELDS.cpvOptimization}
@@ -33,7 +35,7 @@ export function CpvOptimizationSection({
         />
 
         {isOn ? (
-          <div className="px-[18px] pt-3 pb-4">
+          <div className="pt-2">
             <CpvChargeField
               defaultValue={formatCpvInput(chargedCpv)}
               investment={investment}
@@ -42,6 +44,6 @@ export function CpvOptimizationSection({
           </div>
         ) : null}
       </div>
-    </WizardSection>
+    </section>
   );
 }

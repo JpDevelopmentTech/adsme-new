@@ -1,113 +1,165 @@
 @import "tailwindcss";
 
 /*
- * Sistema de diseño de adsme — calma y pocos colores (29 sep 2026).
+ * Sistema de diseño de adsme v3 — vidrio ahumado sobre violeta (1 oct 2026).
  *
- * La estructura es una rampa neutra con un tinte salvia muy leve: lo bastante
- * para que la pantalla no se lea en escala de grises, lo bastante poco para no
- * competir con los datos. El color fuerte lo llevan las plataformas y los
- * estados; la acción principal va en tinta, no en rojo.
+ * La app es una ventana de vidrio tintado de negro (el círculo del logo) que
+ * flota sobre un fondo morado con orbes. El blanco es la acción principal
+ * (píldora blanca con texto en tinta, como el logotipo), el lila marca el
+ * «ahora» y el foco, y el color fuerte queda para las plataformas y los
+ * estados. Los nombres semánticos se conservan para que todas las pantallas
+ * cambien a la vez; la fuente de verdad visual es `adsme.pen`.
  */
 @theme {
-  /* Rampa neutra, tintada de salvia. */
-  --color-g-50: #ffffff;
-  --color-g-100: #f7f9f7;
-  --color-g-200: #ecefec;
-  --color-g-300: #dfe4e0;
-  --color-g-400: #c3ccc7;
-  --color-g-500: #8e9994;
-  --color-g-600: #5e6a65;
-  --color-g-700: #4e5b56;
-  --color-g-800: #1f2a27;
+  /*
+   * Rampa neutra invertida: g-50 es la tinta que va sobre lo blanco y g-800 el
+   * blanco pleno. Los escalones intermedios son blancos translúcidos para que
+   * dejen ver el vidrio que tienen debajo.
+   */
+  --color-g-50: #1a1a1a;
+  --color-g-100: #ffffff14;
+  --color-g-200: #ffffff14;
+  --color-g-300: #ffffff26;
+  --color-g-400: #ffffff66;
+  --color-g-500: #ffffff8f;
+  --color-g-600: #ffffffb8;
+  --color-g-700: #ede6ff;
+  --color-g-800: #ffffff;
 
-  /* La acción y el ahora: tinta para lo que se pulsa, salvia para lo vivo. */
-  --color-accent: #1f2a27;
-  --color-accent-bright: #5c8a74;
+  /* La acción va en blanco; el ahora y el foco, en lila. */
+  --color-accent: #ffffff;
+  --color-accent-bright: #c9b6ff;
+  --color-lilac: #c9b6ff;
 
-  /* Una plataforma, un color: sus tonos de marca, apagados. */
-  --color-yt: #c4553f;
-  --color-meta: #4a6fa5;
-  --color-tiktok: #2e8c87;
-  --color-unassigned: #c3ccc7;
+  /* Una plataforma, un color: legibles sobre el violeta y distintos entre sí. */
+  --color-yt: #ff5a5f;
+  --color-meta: #4f8bff;
+  --color-tiktok: #2de2e6;
+  --color-unassigned: #ffffff33;
 
-  --color-canvas: #f1f3f0;
-  --color-surface: #ecefec;
-  --color-card: #ffffff;
-  --color-card-elevated: #f7f9f7;
+  /* La interfaz del anuncio in-stream de YouTube, tal como la ve el público. */
+  --color-ad-yellow: #ffcc00;
+  --color-ad-ink: #111111;
 
-  --color-border: #dfe4e0;
-  --color-border-strong: #c3ccc7;
-  --color-ink: #1f2a27;
+  /* Fondo y los tres grosores del vidrio. */
+  --color-canvas: #1a0a3d;
+  --color-surface: #ffffff0f;
+  --color-card: #120a2366;
+  --color-card-thick: #100920b8;
+  --color-card-elevated: #2b30368c;
 
-  /* Alias heredados, reasignados a tonos tranquilos que no se confunden con
-     ninguna plataforma. */
-  --color-brand-violet: #1f2a27;
-  --color-brand-magenta: #6e8f80;
-  --color-data-cyan: #5b7c8d;
-  --color-data-lime: #7d8f5e;
+  --color-border: #ffffff1f;
+  --color-border-strong: #ffffff33;
+  /* Lo que se pulsa: blanco, con su texto en g-50. */
+  --color-ink: #ffffff;
+
+  /* Alias heredados, reasignados al lila y a los tonos de datos. */
+  --color-brand-violet: #c9b6ff;
+  --color-brand-magenta: #8a4fff;
+  --color-data-cyan: #2de2e6;
+  --color-data-lime: #5ee6a8;
 
   /* Estado: siempre con icono o texto, nunca solo el color. */
-  --color-success: #3d7a5a;
-  --color-warning: #8f5e14;
-  --color-danger: #b03a3a;
+  --color-success: #5ee6a8;
+  --color-warning: #ffc764;
+  --color-danger: #ff6b81;
 
-  --color-text-primary: #1f2a27;
-  --color-text-secondary: #4e5b56;
-  --color-text-muted: #5e6a65;
+  /* Texto blanco al 100, 72 y 56 %: los tres pasan 4,5:1 sobre el vidrio. */
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #ffffffb8;
+  --color-text-muted: #ffffff8f;
 
-  /* Poppins en todos los roles, separados por peso (300 y 400). */
+  /* Poppins en todos los roles, separados por peso (200, 300 y 400). */
   --font-display: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
   --font-body: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
 
-  --radius-sm: 8px;
-  --radius-md: 10px;
-  --radius-tile: 12px;
-  --radius-card: 16px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-tile: 18px;
+  --radius-card: 22px;
+  --radius-window: 28px;
   --radius-pill: 999px;
 }
 
-/* Fondo del panel: liso. La calma empieza por no tener nada detrás. */
+/* Fondo violeta con orbes: lo que se ve a través de todo el vidrio. */
 @utility bg-ambient {
   background-color: var(--color-canvas);
+  background-image:
+    radial-gradient(60% 45% at 12% 8%, #7b3ff2cc 0%, #7b3ff200 100%),
+    radial-gradient(55% 50% at 95% 92%, #a066ff99 0%, #a066ff00 100%),
+    radial-gradient(40% 35% at 55% 45%, #5a23c499 0%, #5a23c400 100%),
+    radial-gradient(50% 30% at 25% 100%, #3e1a9eb3 0%, #3e1a9e00 100%);
+  background-attachment: fixed;
 }
 
-/*
- * Panel: blanco sólido con filete de 1px. Conserva el nombre heredado para que
- * todas las pantallas cambien a la vez; ya no es vidrio.
- */
+/* Panel de vidrio de grosor medio: tarjetas, KPIs y paneles de estructura. */
 @utility glass-panel {
   background-color: var(--color-card);
   border: 1px solid var(--color-border);
+  backdrop-filter: blur(24px);
 }
 
-/* Controles embebidos en un panel (campos, chips, botones icono). */
+/* Vidrio grueso, casi opaco: tablas y formularios largos, donde se lee mucho. */
+@utility glass-thick {
+  background-color: var(--color-card-thick);
+  border: 1px solid var(--color-border);
+}
+
+/* Vidrio de lo que flota sobre todo lo demás: la tarjeta del login, modales. */
+@utility glass-float {
+  background-color: #0e091a80;
+  border: 1px solid var(--color-border-strong);
+  backdrop-filter: blur(40px);
+  box-shadow: 0 40px 100px #05010fb3;
+}
+
+/* La ventana del panel: vidrio tintado que deja ver el violeta del fondo. */
+@utility glass-window {
+  background-color: #0e091a40;
+  border: 1px solid #ffffff24;
+  backdrop-filter: blur(40px);
+  box-shadow: 0 30px 80px #05010f80;
+}
+
+/* El menú lateral: un grosor más de tinta que la ventana que lo contiene. */
+@utility glass-sidebar {
+  background-color: #0b061873;
+  border-right: 1px solid var(--color-border);
+}
+
+/* Menús y popovers: vidrio casi opaco con desenfoque y sombra de flotar. */
+@utility glass-menu {
+  background-color: #140c26e6;
+  border: 1px solid var(--color-border-strong);
+  backdrop-filter: blur(30px);
+  box-shadow: 0 16px 40px #05010f99;
+}
+
+/* Controles embebidos en un panel: el carbón del logotipo, translúcido. */
 @utility glass-field {
   background-color: var(--color-card-elevated);
   border: 1px solid var(--color-border);
 }
 
-/* Elevación mínima, solo para lo que flota (menús, diálogos). */
 @utility shadow-float {
-  box-shadow: 0 1px 2px #1f2a2714;
+  box-shadow: 0 16px 40px #05010f99;
 }
 
 @utility shadow-lift {
-  box-shadow:
-    0 12px 32px #1f2a271f,
-    0 2px 6px #1f2a2714;
+  box-shadow: 0 30px 80px #05010fcc;
 }
 
 /* Gradiente heredado por las pantallas sin migrar. */
 @utility bg-brand-gradient {
-  background-image: linear-gradient(135deg, #4e5b56 0%, #1f2a27 100%);
+  background-image: linear-gradient(135deg, #8a4fff 0%, #c9b6ff 100%);
 }
 
 @utility bg-auth-aurora {
-  background-color: var(--color-canvas);
+  background-color: transparent;
 }
 
 @utility bg-magenta-glow {
-  background-image: radial-gradient(closest-side, #6e8f8033 0%, #6e8f8000 100%);
+  background-image: radial-gradient(closest-side, #8a4fff33 0%, #8a4fff00 100%);
 }
 
 @keyframes equalizer-pulse {
@@ -152,8 +204,45 @@
   }
 }
 
+/*
+ * Sin soporte de desenfoque, o con la transparencia reducida por el sistema,
+ * el vidrio pasa a superficies casi opacas para no perder legibilidad.
+ */
+@supports not (backdrop-filter: blur(1px)) {
+  .glass-panel,
+  .glass-float {
+    background-color: #140c26f2;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .glass-panel,
+  .glass-float,
+  .glass-thick {
+    background-color: #140c26;
+    backdrop-filter: none;
+  }
+}
+
+/* Tooltip de ApexCharts con el vidrio de los menús en vez de su caja gris. */
+.apexcharts-tooltip.apexcharts-theme-dark {
+  background: #140c26d9 !important;
+  border: 1px solid #ffffff33 !important;
+  border-radius: 14px !important;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 12px 32px #05010f99 !important;
+  font-family: var(--font-body) !important;
+}
+
+.apexcharts-tooltip.apexcharts-theme-dark .apexcharts-tooltip-title {
+  background: transparent !important;
+  border-bottom: 1px solid #ffffff1f !important;
+  color: var(--color-text-secondary);
+  font-weight: 400;
+}
+
 html {
-  color-scheme: light;
+  color-scheme: dark;
 }
 
 body {

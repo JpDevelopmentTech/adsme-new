@@ -18,9 +18,9 @@ export function CopyLinkButton({ url }: CopyLinkButtonProps) {
       onClick={() => url && copy(url)}
       icon={
         hasCopied ? (
-          <Check size={18} strokeWidth={2} className="text-success" aria-hidden />
+          <Check size={16} strokeWidth={2} className="text-success" aria-hidden />
         ) : (
-          <Copy size={18} strokeWidth={2} aria-hidden />
+          <Copy size={16} strokeWidth={1.5} aria-hidden />
         )
       }
     >

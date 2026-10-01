@@ -5,6 +5,8 @@ import { PLATFORM_TABS } from "@/constants/link-campaign.constants";
 import { JOBS_ROUTE } from "@/constants/routes.constants";
 import { createGetClient } from "@/domain/use-cases/get-client";
 import { createGetJob } from "@/domain/use-cases/get-job";
+import { createListJobDailyPoints } from "@/domain/use-cases/list-job-daily-points";
+import { createSupabaseCampaignDailyRepository } from "@/infrastructure/repositories/supabase-campaign-daily-repository";
 import { createSupabaseCampaignRepository } from "@/infrastructure/repositories/supabase-campaign-repository";
 import { createSupabaseClientRepository } from "@/infrastructure/repositories/supabase-client-repository";
 import { createSupabaseJobRepository } from "@/infrastructure/repositories/supabase-job-repository";
@@ -13,8 +15,13 @@ import { JobEvolutionCard } from "@/presentation/components/trabajo-detalle/job-
 import { JobHero } from "@/presentation/components/trabajo-detalle/job-hero";
 import { JobKpis } from "@/presentation/components/trabajo-detalle/job-kpis";
 import { JobPlatformCard } from "@/presentation/components/trabajo-detalle/job-platform-card";
-import { BackLink } from "@/presentation/components/ui/back-link";
+import { AmbientGlow } from "@/presentation/components/ui/ambient-glow";
+import { Breadcrumb } from "@/presentation/components/ui/breadcrumb";
 import { buildJobMetrics } from "@/utils/build-job-metrics";
+import { buildReportGrowth } from "@/utils/build-report-growth";
+import { formatJobPeriod } from "@/utils/format-job-period";
+import { getJobEvolutionPeriod } from "@/utils/get-job-evolution-period";
+import { toIsoDate } from "@/utils/month-range";
 
 export async function generateMetadata({
   params,
@@ -36,21 +43,28 @@ export default async function TrabajoDetallePage({
 
   if (!job) notFound();
 
-  const [client, campaigns] = await Promise.all([
+  const today = toIsoDate(new Date());
+  const evolution = getJobEvolutionPeriod(job, today);
+  const [client, campaigns, daily] = await Promise.all([
     createGetClient(createSupabaseClientRepository(supabase))(job.clientId),
     createSupabaseCampaignRepository(supabase).listJobCampaigns(job.id),
+    createListJobDailyPoints(createSupabaseCampaignDailyRepository(supabase))(
+      job.id,
+      { from: evolution.startsOn, to: evolution.endsOn },
+    ),
   ]);
   const now = new Date().toISOString();
 
   return (
     <>
-      <BackLink href={JOBS_ROUTE} label={`${JOB_DETAIL_COPY.back} / ${job.title}`} />
+      <AmbientGlow imageUrl={job.coverUrl} />
+      <Breadcrumb backHref={JOBS_ROUTE} backLabel={JOB_DETAIL_COPY.back} current={job.title} />
 
       <JobHero job={job} clientName={client?.name ?? ""} now={now} />
 
       <JobKpis metrics={buildJobMetrics(campaigns)} />
 
-      <div className="flex flex-col gap-[18px] xl:flex-row">
+      <div className="flex flex-col gap-4 xl:flex-row">
         {PLATFORM_TABS.map((tab) => (
           <JobPlatformCard
             key={tab.platform}
@@ -63,7 +77,10 @@ export default async function TrabajoDetallePage({
         ))}
       </div>
 
-      <JobEvolutionCard />
+      <JobEvolutionCard
+        growth={buildReportGrowth(daily, evolution, today)}
+        period={formatJobPeriod(evolution.startsOn, evolution.endsOn)}
+      />
     </>
   );
 }

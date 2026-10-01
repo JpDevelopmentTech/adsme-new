@@ -1,8 +1,8 @@
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowRight, Info } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PLATFORM_TABS } from "@/constants/link-campaign.constants";
-import { JOB_STEP_COPY, JOB_WIZARD_COPY, STEP_TWO_COPY } from "@/constants/job-wizard.constants";
+import { JOB_STEP_COPY, STEP_TWO_COPY } from "@/constants/job-wizard.constants";
 import { editJobRoute, jobReportRoute } from "@/constants/routes.constants";
 import { DEFAULT_CAMPAIGN_LIST_QUERY } from "@/domain/entities/campaign";
 import { createGetClient } from "@/domain/use-cases/get-client";
@@ -16,8 +16,8 @@ import { createServerSupabaseClient } from "@/infrastructure/supabase/server-sup
 import { JobWizardLayout } from "@/presentation/components/trabajos/wizard/job-wizard-layout";
 import { JobWizardPanel } from "@/presentation/components/trabajos/wizard/job-wizard-panel";
 import { PlatformCampaignRow } from "@/presentation/components/trabajos/wizard/platform-campaign-row";
+import { WizardBackLink } from "@/presentation/components/trabajos/wizard/wizard-back-link";
 import { PrimaryLink } from "@/presentation/components/ui/primary-link";
-import { SecondaryLink } from "@/presentation/components/ui/secondary-link";
 import { buildWizardSummary } from "@/utils/build-wizard-summary";
 
 export const metadata: Metadata = { title: "Campañas del trabajo · adsme" };
@@ -59,19 +59,16 @@ export default async function TrabajoCampanasPage({
         subtitle={JOB_STEP_COPY.two.subtitle}
         footer={
           <>
-            <SecondaryLink href={editJobRoute(job.id)}>
-              <ArrowLeft size={15} strokeWidth={1.75} aria-hidden />
-              {JOB_WIZARD_COPY.previous}
-            </SecondaryLink>
+            <WizardBackLink href={editJobRoute(job.id)} />
 
             <PrimaryLink href={jobReportRoute(job.id)}>
               {STEP_TWO_COPY.next}
-              <ArrowRight size={15} strokeWidth={1.75} aria-hidden />
+              <ArrowRight size={16} strokeWidth={1.75} aria-hidden />
             </PrimaryLink>
           </>
         }
       >
-        <div className="flex flex-col gap-3.5">
+        <div className="flex flex-col">
           {PLATFORM_TABS.map((tab) => {
             // Una plataforma puede tener varias cuentas conectadas: se busca
             // entre las campañas de todas ellas, no solo entre las de la primera.
@@ -100,7 +97,10 @@ export default async function TrabajoCampanasPage({
           })}
         </div>
 
-        <p className="text-[11.5px] text-text-muted">{STEP_TWO_COPY.note}</p>
+        <p className="flex items-center gap-2 rounded-[14px] bg-surface px-3.5 py-3 text-xs font-normal text-text-secondary">
+          <Info size={15} strokeWidth={1.5} className="shrink-0" aria-hidden />
+          {STEP_TWO_COPY.note}
+        </p>
       </JobWizardPanel>
     </JobWizardLayout>
   );

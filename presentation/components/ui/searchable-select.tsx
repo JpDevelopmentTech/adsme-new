@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, ChevronDown } from "lucide-react";
+import { AlertCircle, Check, ChevronDown } from "lucide-react";
 import { useId, useState } from "react";
 import Select from "react-select";
 import type { SearchableSelectProps } from "@/types/ui.types";
@@ -38,7 +38,7 @@ export function SearchableSelect({
 
   return (
     <div className="flex w-full flex-col gap-2">
-      <label htmlFor={id} className="text-[13px] font-medium text-text-secondary">
+      <label htmlFor={id} className="text-xs font-normal text-text-secondary">
         {label}
       </label>
 
@@ -64,23 +64,23 @@ export function SearchableSelect({
         classNames={{
           control: ({ isFocused }) =>
             cn(
-              "cursor-pointer rounded-md border text-sm text-text-primary transition-colors",
+              "min-h-[50px] cursor-pointer rounded-md border text-sm text-text-primary transition-colors",
               FIELD_SURFACE_CLASSES[surface],
-              isFocused ? "border-brand-violet/70" : "border-border",
-              error && "border-danger",
+              isFocused ? "border-white/40" : "border-border",
+              error && "border-danger bg-danger/8",
             ),
           valueContainer: () => "px-3.5 py-3 gap-1",
           placeholder: () => "text-text-muted",
           input: () => "text-text-primary",
           singleValue: () => "text-text-primary",
           menu: () =>
-            "mt-2 overflow-hidden rounded-md border border-border bg-card-elevated shadow-xl shadow-black/10",
+            "glass-menu mt-2 overflow-hidden rounded-[14px]",
           menuList: () => "p-1.5 max-h-64",
           option: ({ isFocused, isSelected }) =>
             cn(
-              "flex cursor-pointer items-center gap-2 rounded-sm px-3 py-2 text-[13px] transition-colors",
+              "flex cursor-pointer items-center gap-2 rounded-[10px] px-3 py-2.5 text-[13px] font-normal transition-colors",
               isSelected ? "text-text-primary" : "text-text-secondary",
-              isFocused && "bg-card text-text-primary",
+              isFocused && "bg-surface text-text-primary",
             ),
           noOptionsMessage: () => "px-3 py-3 text-[13px] text-text-muted",
           clearIndicator: () => "mr-1 cursor-pointer text-text-muted hover:text-text-primary",
@@ -92,7 +92,7 @@ export function SearchableSelect({
                 size={14}
                 aria-hidden
                 className={cn(
-                  "shrink-0 text-brand-violet",
+                  "shrink-0 text-lilac",
                   meta.selectValue?.[0]?.value === option.value
                     ? "opacity-100"
                     : "opacity-0",
@@ -105,7 +105,8 @@ export function SearchableSelect({
       />
 
       {error ? (
-        <p id={`${id}-error`} className="text-xs text-danger">
+        <p id={`${id}-error`} className="flex items-center gap-1.5 text-xs font-normal text-danger">
+          <AlertCircle size={14} strokeWidth={1.75} className="shrink-0" aria-hidden />
           {error}
         </p>
       ) : null}

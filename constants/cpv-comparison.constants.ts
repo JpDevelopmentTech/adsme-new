@@ -26,19 +26,19 @@ export const CPV_COMPARISON_COPY = {
 } as const;
 
 /** Alto del área de dibujo, igual que la gráfica de crecimiento. */
-export const CPV_CHART_HEIGHT = 240;
+export const CPV_CHART_HEIGHT = 280;
 
 /**
  * Colores literales: ApexCharts no entiende `var(--token)`. Lo presupuestado va
- * en tinta y a trazos, como una meta; lo generado, en el rojo de YouTube.
+ * en blanco translúcido y a trazos, como una meta; lo generado, en el rojo de YouTube.
  */
 export const CPV_CHART_COLORS = {
-  planned: "#1f2a27",
-  actual: "#c4553f",
+  planned: "#ffffff8c",
+  actual: "#ff5a5f",
 } as const;
 
 /** Trazo discontinuo de la línea presupuestada; la real va continua. */
-export const CPV_CHART_DASH = [6, 0];
+export const CPV_CHART_DASH = [5, 0];
 
 /** Grosor de cada serie, en el mismo orden. */
-export const CPV_CHART_STROKE = [1.75, 2.25];
+export const CPV_CHART_STROKE = [1.5, 2.8];

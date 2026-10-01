@@ -15,6 +15,8 @@ export const JOB_QUERY_PARAMS = {
 } as const;
 
 export const JOBS_COPY = {
+  /** Celda de pauta de un trabajo sin ninguna plataforma vinculada. */
+  noPlatforms: "Sin campañas",
   title: "Trabajos",
   count: (total: number) => (total === 1 ? "1 trabajo" : `${total} trabajos`),
   results: (shown: number, total: number) => `${shown} de ${total}`,
@@ -31,6 +33,13 @@ export const JOBS_COPY = {
 
 /** Textos de la banda que encabeza el listado. */
 export const JOBS_BAND_COPY = {
+  /** Etiquetas sueltas de las cifras de composición, que van grandes y aparte. */
+  runningLabel: "en curso",
+  endingSoonLabel: "acaban esta semana",
+  overdueLabel: "vencidos sin cerrar",
+  upcomingLabel: "sin empezar",
+  finishedLabel: "finalizados",
+  today: "hoy",
   eyebrow: "En pauta ahora mismo",
   committed: (total: number) =>
     total === 1
@@ -52,13 +61,13 @@ export const JOBS_BAND_COPY = {
  * a cualquier ancho: si se estrechara sola, los tramos dejarían de ser legibles.
  */
 export const JOB_TABLE_WIDTHS = [
-  "27.26%",
-  "9.55%",
-  "34.2%",
-  "11.11%",
-  "9.55%",
-  "3.65%",
-  "4.69%",
+  "25%",
+  "9.2%",
+  "32.7%",
+  "11.5%",
+  "12.4%",
+  "5.8%",
+  "3.4%",
 ] as const;
 
 export const JOB_FILTER_PREFIXES = {
@@ -91,27 +100,28 @@ export const JOB_SORT_VALUES: JobSort[] = [
 
 /** Color del tramo de cada trabajo en la línea de tiempo de la columna PERÍODO. */
 export const JOB_SPAN_TONES: Record<JobSpanTone, string> = {
-  running: "bg-ink",
-  syncing: "bg-meta",
-  upcoming: "bg-g-400",
-  overdue: "bg-accent",
-  muted: "bg-g-500",
+  running: "bg-white/85",
+  syncing: "bg-white/55",
+  upcoming: "border border-white/45 bg-transparent",
+  overdue: "bg-danger",
+  muted: "bg-white/20",
+  ending: "bg-warning",
 };
 
 export const JOB_COUNTDOWN_TONES: Record<CountdownTone, string> = {
   muted: "text-text-muted",
-  warning: "text-warning",
-  danger: "text-accent",
+  warning: "font-medium text-warning",
+  danger: "font-medium text-danger",
 };
 
 /** Encabezados de la tabla, en el orden del diseño. */
 export const JOB_TABLE_COLUMNS = {
-  job: "TRABAJO",
-  platforms: "PAUTA",
-  period: "PERÍODO",
-  investment: "INVERSIÓN",
-  status: "ESTADO",
-  report: "REPORTE",
+  job: "Trabajo",
+  platforms: "Pauta",
+  period: "Período",
+  investment: "Inversión",
+  status: "Estado",
+  report: "Reporte",
 } as const;
 
 export const JOBS_EMPTY_COPY = {

@@ -17,6 +17,8 @@ export interface TextFieldProps
   label: string;
   error?: string;
   surface?: FieldSurface;
+  /** Icono opcional alineado a la izquierda dentro del campo. */
+  leading?: ReactNode;
   /** Elemento opcional alineado a la derecha dentro del campo (iconos, acciones). */
   trailing?: ReactNode;
 }
@@ -186,6 +188,10 @@ export interface ConfirmDialogProps {
   description: string;
   cancelLabel: string;
   onCancel: () => void;
+  /** Icono que encabeza el diálogo dentro de un cuadro tintado (opcional). */
+  icon?: ReactNode;
+  /** Tono del cuadro del icono: rojo para borrar, ámbar para lo reversible. */
+  tone?: "danger" | "warning";
   /** Control que confirma la acción; normalmente el submit de un formulario. */
   children: ReactNode;
 }
@@ -253,3 +259,58 @@ export interface ScreenLoaderProps {
 
 /** La lámina saca el estado del formulario que la contiene, no de una prop. */
 export type FormScreenLoaderProps = Omit<ScreenLoaderProps, "isActive">;
+
+export interface EmptyStatePanelProps {
+  icon: ReactNode;
+  title: string;
+  description: string;
+  /** Acción que da la salida: crear lo primero o quitar los filtros. */
+  action?: ReactNode;
+  /** `true` lo pinta como panel propio; `false`, dentro de otro panel. */
+  isStandalone?: boolean;
+}
+
+export interface RouteModalProps {
+  /** Nombre accesible del diálogo; el contenido pone su propio título visible. */
+  label: string;
+  children: ReactNode;
+}
+
+export interface AmbientGlowProps {
+  /** Imagen que se desenfoca para teñir el fondo: la foto o la portada. */
+  imageUrl: string | null | undefined;
+}
+
+export interface BreadcrumbProps {
+  backHref: string;
+  backLabel: string;
+  /** Nombre de la pantalla actual, tras la barra. */
+  current: string;
+}
+
+export interface InlineDateFieldProps
+  extends Omit<InputHTMLAttributes<HTMLInputElement>, "className" | "type"> {
+  id: string;
+  /** Rótulo visible delante de la fecha, dentro de la píldora. */
+  label: string;
+  /** Marca el campo en rojo; el mensaje lo pinta quien agrupa los campos. */
+  isInvalid?: boolean;
+}
+
+/** Una opción de un grupo de enlaces excluyentes. */
+export interface SegmentedLinkItem {
+  key: string;
+  label: string;
+  href: string;
+  isActive: boolean;
+}
+
+export interface SegmentedLinksProps {
+  /** Nombre accesible del grupo; el control no muestra etiqueta propia. */
+  label: string;
+  items: SegmentedLinkItem[];
+}
+
+export interface LinkPendingLabelProps {
+  children: ReactNode;
+}

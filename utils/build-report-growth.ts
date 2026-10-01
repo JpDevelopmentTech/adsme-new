@@ -1,7 +1,7 @@
 import { PLATFORM_ORDER } from "@/constants/platform-labels.constants";
 import type { JobPlatform } from "@/domain/entities/job";
-import type { ReportJob } from "@/domain/entities/report-job";
 import type { ReportDailyPoint } from "@/domain/entities/report-metrics";
+import type { JobPeriod } from "@/types/job-detail.types";
 import type { ReportGrowth, ReportGrowthDay } from "@/types/report.types";
 import { daysBetween } from "@/utils/month-range";
 import { shiftIsoDate } from "@/utils/shift-iso-date";
@@ -18,10 +18,13 @@ function emptyDay(): Record<JobPlatform, number> {
  * el período entero y no solo hasta hoy: los días que aún no han llegado se
  * marcan como pendientes y quedan fuera del trazado, que es lo que dice cuánta
  * pauta queda. Sin ningún día con entrega no hay serie que dibujar.
+ *
+ * El período es el de la pauta en el reporte y la ventana reciente en el
+ * detalle del trabajo; a la serie solo le importan sus dos extremos.
  */
 export function buildReportGrowth(
   points: ReportDailyPoint[],
-  job: ReportJob,
+  job: JobPeriod,
   today: string,
 ): ReportGrowth | null {
   const byDate = new Map<string, Record<JobPlatform, number>>();

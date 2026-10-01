@@ -35,7 +35,8 @@ export type JobSpanTone =
   | "syncing"
   | "upcoming"
   | "overdue"
-  | "muted";
+  | "muted"
+  | "ending";
 
 /** Rótulo de mes sobre el eje común, situado por su porcentaje. */
 export interface TimelineMonth {
@@ -108,4 +109,10 @@ export interface JobsToolbarProps {
 export interface JobsEmptyProps {
   /** Con filtros activos el mensaje invita a limpiarlos en vez de a crear. */
   isFiltered: boolean;
+}
+
+export interface JobsTimelineHeaderProps {
+  months: TimelineMonth[];
+  todayPercent: number;
+  sort: JobSort;
 }

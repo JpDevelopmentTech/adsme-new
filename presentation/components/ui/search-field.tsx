@@ -24,11 +24,11 @@ export function SearchField({ value, paramName, placeholder }: SearchFieldProps)
   }, [term, value, paramName, setParam]);
 
   return (
-    <label className="glass-field flex w-[250px] max-w-full items-center gap-[9px] rounded-md px-[11px] py-2 transition-colors duration-150 focus-within:border-ink">
+    <label className="flex h-10 w-[300px] max-w-full items-center gap-2.5 rounded-pill border border-border bg-surface px-4 transition-colors duration-150 focus-within:border-white/40">
       {isPending ? (
-        <Loader2 size={15} className="animate-spin text-text-muted" aria-hidden />
+        <Loader2 size={16} className="animate-spin text-text-muted" aria-hidden />
       ) : (
-        <Search size={15} strokeWidth={1.5} className="text-text-muted" aria-hidden />
+        <Search size={16} strokeWidth={1.5} className="text-text-muted" aria-hidden />
       )}
       <input
         type="search"
@@ -36,7 +36,7 @@ export function SearchField({ value, paramName, placeholder }: SearchFieldProps)
         onChange={(event) => setTerm(event.target.value)}
         placeholder={placeholder}
         aria-label={placeholder}
-        className="min-w-0 flex-1 bg-transparent text-[12.5px] text-text-primary outline-none placeholder:text-text-muted"
+        className="min-w-0 flex-1 bg-transparent text-[13px] text-text-primary outline-none placeholder:text-text-muted [&::-webkit-search-cancel-button]:hidden"
       />
     </label>
   );

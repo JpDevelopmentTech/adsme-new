@@ -1,3 +1,4 @@
+import { AtSign, Mail, MapPin, Phone } from "lucide-react";
 import {
   CLIENT_COUNTRIES,
   CLIENT_GENRES,
@@ -32,6 +33,7 @@ export function ClientFormFields({
           id="handle"
           name="handle"
           surface="elevated"
+          leading={<AtSign size={16} strokeWidth={1.5} />}
           label={CLIENT_FORM_COPY.handleLabel}
           placeholder={CLIENT_FORM_COPY.handlePlaceholder}
           value={values.handle}
@@ -63,11 +65,9 @@ export function ClientFormFields({
         />
       </div>
 
-      <div className="h-px bg-border" />
-
-      <h2 className="font-display text-[15px] font-semibold text-text-primary">
+      <p className="pt-1 text-[11px] font-medium tracking-[1.4px] text-text-muted uppercase">
         {CLIENT_FORM_COPY.sectionContact}
-      </h2>
+      </p>
 
       <div className="flex flex-col gap-4 sm:flex-row">
         <TextField
@@ -75,6 +75,7 @@ export function ClientFormFields({
           name="email"
           type="email"
           surface="elevated"
+          leading={<Mail size={16} strokeWidth={1.5} />}
           label={CLIENT_FORM_COPY.emailLabel}
           placeholder={CLIENT_FORM_COPY.emailPlaceholder}
           value={values.email}
@@ -86,6 +87,7 @@ export function ClientFormFields({
           name="phone"
           type="tel"
           surface="elevated"
+          leading={<Phone size={16} strokeWidth={1.5} />}
           label={CLIENT_FORM_COPY.phoneLabel}
           placeholder={CLIENT_FORM_COPY.phonePlaceholder}
           value={values.phone}
@@ -99,6 +101,7 @@ export function ClientFormFields({
           id="city"
           name="city"
           surface="elevated"
+          leading={<MapPin size={16} strokeWidth={1.5} />}
           label={CLIENT_FORM_COPY.cityLabel}
           placeholder={CLIENT_FORM_COPY.cityPlaceholder}
           value={values.city}

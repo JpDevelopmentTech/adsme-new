@@ -1,4 +1,4 @@
-/** Sobre vidrio claro el logotipo va en tinta; sobre el panel indigo, en claro. */
+/** Sobre el vidrio oscuro el logotipo va en claro; sobre una superficie clara, en tinta. */
 export type BrandWordmarkTone = "ink" | "light";
 
 export interface BrandWordmarkProps {
