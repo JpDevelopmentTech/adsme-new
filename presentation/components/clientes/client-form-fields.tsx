@@ -34,11 +34,15 @@ export function ClientFormFields({
           name="handle"
           surface="elevated"
           leading={<AtSign size={16} strokeWidth={1.5} />}
+          autoCapitalize="none"
+          autoCorrect="off"
+          spellCheck={false}
           label={CLIENT_FORM_COPY.handleLabel}
           placeholder={CLIENT_FORM_COPY.handlePlaceholder}
           value={values.handle}
           error={errors.handle}
-          onChange={(event) => onChange("handle", event.target.value)}
+          // La arroba ya va pintada delante: si la escriben o la pegan, se quita.
+          onChange={(event) => onChange("handle", event.target.value.replace(/^\s*@+/, ""))}
         />
       </div>
 

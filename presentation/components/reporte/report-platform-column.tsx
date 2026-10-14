@@ -1,5 +1,6 @@
 import { PLATFORM_META } from "@/constants/platforms.constants";
 import { REPORT_COPY } from "@/constants/report.constants";
+import { PlatformLogo } from "@/presentation/components/brand/platform-logo";
 import type { ReportPlatformColumnProps } from "@/types/report.types";
 import { cn } from "@/utils/cn";
 import { formatPercent, share } from "@/utils/format-compact-number";
@@ -24,7 +25,7 @@ export function ReportPlatformColumn({ metrics, totalPlays, showSpend }: ReportP
     >
       <div className="flex items-center justify-between gap-3">
         <span className="flex min-w-0 items-center gap-2">
-          <span aria-hidden className="size-[9px] shrink-0 rounded-pill" style={{ backgroundColor: chartColor }} />
+          <PlatformLogo platform={metrics.platform} size={18} variant="mark" />
           <span className="truncate text-[15px] text-text-primary">{label}</span>
         </span>
         <span className="text-[15px] text-text-secondary tabular-nums">{formatPercent(percent)}</span>

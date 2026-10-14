@@ -1,7 +1,10 @@
 import { BRAND_NAME } from "@/constants/brand.constants";
 import { NAV_SECTIONS } from "@/constants/navigation.constants";
 
-const NAV_ITEMS = NAV_SECTIONS.flatMap((section) => section.items);
+// Las rutas más largas primero: `/nomina/artistas` no debe rotularse como `/nomina`.
+const NAV_ITEMS = NAV_SECTIONS.flatMap((section) => section.items).sort(
+  (a, b) => b.href.length - a.href.length,
+);
 
 /**
  * Título de sección que muestra la topbar. Se resuelve por prefijo para que el

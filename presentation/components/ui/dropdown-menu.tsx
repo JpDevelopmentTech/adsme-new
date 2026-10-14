@@ -56,7 +56,9 @@ export function DropdownMenu({
           // cancela sin avisar — «Desconectar» o «Cerrar sesión» no hacían nada.
           onClick={() => window.setTimeout(() => setIsOpen(false))}
           className={cn(
-            "glass-menu absolute z-20 min-w-full rounded-[16px] p-1.5",
+            // Con listas largas, como los tipos de cliente, el panel se desplaza
+            // por dentro en vez de salirse de la pantalla.
+            "glass-menu absolute z-20 max-h-80 min-w-full overflow-y-auto overscroll-contain rounded-[16px] p-1.5",
             side === "top" ? "bottom-full mb-2" : "top-full mt-2",
             align === "end" ? "right-0" : "left-0",
           )}

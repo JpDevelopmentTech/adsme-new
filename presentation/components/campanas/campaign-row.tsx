@@ -5,7 +5,7 @@ import {
   CAMPAIGNS_COPY,
   CAMPAIGN_COLUMN_WIDTHS,
 } from "@/constants/campaigns.constants";
-import { PLATFORM_META } from "@/constants/platforms.constants";
+import { PlatformLogo } from "@/presentation/components/brand/platform-logo";
 import { CampaignStateChip } from "@/presentation/components/campanas/campaign-state-chip";
 import type { CampaignRowProps } from "@/types/campaigns-list.types";
 import { cn } from "@/utils/cn";
@@ -61,13 +61,7 @@ export function CampaignRow({
           "flex shrink-0 items-center gap-2 text-[12px] font-light text-text-secondary",
         )}
       >
-        <span
-          aria-hidden
-          className="size-[7px] shrink-0 rounded-pill"
-          style={{
-            backgroundColor: PLATFORM_META[campaign.platform].chartColor,
-          }}
-        />
+        <PlatformLogo platform={campaign.platform} size={14} variant="mark" />
         <span className="truncate">{campaign.accountLabel}</span>
       </span>
 

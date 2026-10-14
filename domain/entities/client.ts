@@ -4,8 +4,32 @@
  */
 export type ClientStatus = "active" | "paused" | "empty";
 
-/** Tipo de cliente dentro del negocio. */
-export type ClientKind = "Artista" | "Banda" | "Manager";
+/**
+ * Tipo de cliente dentro del negocio. adsme gestiona el marketing de marcas en
+ * general, no solo de música: caben artistas, negocios, creadores y medios.
+ */
+export type ClientKind =
+  | "Artista"
+  | "Banda"
+  | "DJ"
+  | "Productor musical"
+  | "Compositor"
+  | "Sello discográfico"
+  | "Manager"
+  | "Marca"
+  | "Empresa"
+  | "Emprendimiento"
+  | "Tienda online"
+  | "Restaurante o bar"
+  | "Creador de contenido"
+  | "Influencer"
+  | "Podcast"
+  | "Medio de comunicación"
+  | "Figura pública"
+  | "Evento o festival"
+  | "Agencia"
+  | "Fundación u ONG"
+  | "Otro";
 
 /** Par de colores del avatar; el diseño asigna un gradiente distinto a cada cliente. */
 export interface ClientAvatarGradient {

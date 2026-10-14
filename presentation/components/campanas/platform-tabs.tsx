@@ -2,7 +2,7 @@
 
 import { PLATFORM_TABS } from "@/constants/link-campaign.constants";
 import { PLATFORM_OF_CONNECTION } from "@/constants/platform-labels.constants";
-import { PLATFORM_META } from "@/constants/platforms.constants";
+import { PlatformLogo } from "@/presentation/components/brand/platform-logo";
 import type { PlatformTabsProps } from "@/types/link-campaign.types";
 import { cn } from "@/utils/cn";
 
@@ -11,7 +11,6 @@ export function PlatformTabs({ active, connected, onChange }: PlatformTabsProps)
   return (
     <div className="flex flex-wrap gap-2.5">
       {PLATFORM_TABS.map((tab) => {
-        const { Icon, color } = PLATFORM_META[PLATFORM_OF_CONNECTION[tab.platform]];
         const isConnected = connected.includes(tab.platform);
         const isActive = tab.platform === active;
 
@@ -30,9 +29,7 @@ export function PlatformTabs({ active, connected, onChange }: PlatformTabsProps)
               !isConnected && "cursor-not-allowed opacity-45",
             )}
           >
-            <span style={{ color: isActive || isConnected ? color : undefined }}>
-              <Icon />
-            </span>
+            <PlatformLogo platform={PLATFORM_OF_CONNECTION[tab.platform]} size={18} variant="mark" />
             {tab.label}
           </button>
         );

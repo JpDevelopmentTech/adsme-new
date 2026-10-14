@@ -1,5 +1,4 @@
 import type { ConnectionPlatform } from "@/domain/entities/connection";
-import type { JobPlatform } from "@/domain/entities/job";
 import type { PlatformConnection } from "@/domain/entities/platform-connection";
 
 export const CONNECTIONS_COPY = {
@@ -92,17 +91,6 @@ export const IMPORTED_CAMPAIGNS_COPY = {
  * cuenta, así que el formulario manda tantos valores como cuentas elegidas.
  */
 export const ACCOUNT_IDS_FIELD = "accountIds";
-
-/**
- * Monograma del chip de cada fila. Aquí la plataforma se nombra por la consola
- * donde se concede el acceso —Google Ads, no YouTube—, así que no puede salir
- * del rótulo que usa el resto del producto.
- */
-export const CONNECTION_MONOGRAMS: Record<JobPlatform, string> = {
-  youtube: "GA",
-  meta: "M",
-  tiktok: "TT",
-};
 
 /** Días de antelación con los que se avisa de que un token va a caducar. */
 export const TOKEN_WARNING_DAYS = 7;

@@ -18,7 +18,7 @@ export const CLIENT_FORM_COPY = {
   nameLabel: "Nombre artístico",
   namePlaceholder: "Sofía Vega",
   handleLabel: "Usuario",
-  handlePlaceholder: "@sofiavega",
+  handlePlaceholder: "sofiavega",
   kindLabel: "Tipo",
   genreLabel: "Género musical",
   emailLabel: "Correo electrónico",

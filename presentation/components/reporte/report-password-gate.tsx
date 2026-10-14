@@ -4,6 +4,7 @@ import { PLATFORM_META } from "@/constants/platforms.constants";
 import { REPORT_GATE_COPY, REPORT_PASSWORD_FIELD } from "@/constants/report-link.constants";
 import { unlockReportAction } from "@/presentation/actions/unlock-report-action";
 import { BrandWordmark } from "@/presentation/components/brand/brand-wordmark";
+import { PlatformLogo } from "@/presentation/components/brand/platform-logo";
 import { PasswordField } from "@/presentation/components/ui/password-field";
 import { PrimaryButton } from "@/presentation/components/ui/primary-button";
 import type { ReportPasswordGateProps } from "@/types/report.types";
@@ -33,7 +34,7 @@ export function ReportPasswordGate({ code, jobTitle, hasError }: ReportPasswordG
           <ul className="flex flex-wrap gap-3.5">
             {PLATFORM_ORDER.map((platform) => (
               <li key={platform} className="flex items-center gap-2 text-[13px] text-text-secondary">
-                <span aria-hidden className="size-2 rounded-pill" style={{ backgroundColor: PLATFORM_META[platform].chartColor }} />
+                <PlatformLogo platform={platform} size={16} variant="mark" />
                 {PLATFORM_META[platform].label}
               </li>
             ))}

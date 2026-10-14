@@ -6,12 +6,13 @@ import { TagPill } from "@/presentation/components/ui/tag-pill";
 import type { ClientFormPreviewProps } from "@/types/client-form.types";
 import { cn } from "@/utils/cn";
 import { getInitials } from "@/utils/get-initials";
+import { stripClientHandle, toClientHandle } from "@/utils/normalize-client-handle";
 
 /** Réplica de cómo se verá el cliente, que se actualiza mientras se llena el formulario. */
 export function ClientFormPreview({ values, meta, avatarUrl }: ClientFormPreviewProps) {
   const hasName = values.name.trim().length > 0;
   const name = hasName ? values.name.trim() : CLIENT_FORM_COPY.nameLabel;
-  const handle = values.handle.trim() || CLIENT_FORM_COPY.handlePlaceholder;
+  const handle = toClientHandle(values.handle.trim() || CLIENT_FORM_COPY.handlePlaceholder);
 
   return (
     <aside className="flex w-full flex-col gap-3.5 lg:w-[260px] lg:shrink-0">
@@ -22,7 +23,7 @@ export function ClientFormPreview({ values, meta, avatarUrl }: ClientFormPreview
       <div className="flex flex-col gap-[18px] rounded-[22px] border border-border bg-[linear-gradient(180deg,#8a4fff33,#ffffff0a)] p-[22px]">
         {hasName || avatarUrl ? (
           <Avatar
-            initials={getInitials(name, handle.replace(/^@/, ""))}
+            initials={getInitials(name, stripClientHandle(handle))}
             size={72}
             fontSize={22}
             gradient={meta.gradient}

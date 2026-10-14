@@ -2,6 +2,7 @@ import { Link2 } from "lucide-react";
 import { JOB_DETAIL_COPY, PLATFORM_PRIMARY_METRIC } from "@/constants/job-detail.constants";
 import { PLATFORM_OF_CONNECTION } from "@/constants/platform-labels.constants";
 import { PLATFORM_META } from "@/constants/platforms.constants";
+import { PlatformLogo } from "@/presentation/components/brand/platform-logo";
 import { StatusBadge } from "@/presentation/components/ui/status-badge";
 import type { JobPlatformCardProps } from "@/types/job-detail.types";
 import { formatCompactCurrency } from "@/utils/format-compact-currency";
@@ -16,7 +17,8 @@ const NUMBER_FORMAT = new Intl.NumberFormat("es-CO");
  * vincular una.
  */
 export function JobPlatformCard({ platform, campaigns, now }: JobPlatformCardProps) {
-  const { mono, chartColor } = PLATFORM_META[PLATFORM_OF_CONNECTION[platform]];
+  const jobPlatform = PLATFORM_OF_CONNECTION[platform];
+  const { chartColor } = PLATFORM_META[jobPlatform];
   const { label, name } = PLATFORM_PRIMARY_METRIC[platform];
   const hasCampaigns = campaigns.length > 0;
 
@@ -29,13 +31,7 @@ export function JobPlatformCard({ platform, campaigns, now }: JobPlatformCardPro
       style={hasCampaigns ? { backgroundImage: `linear-gradient(180deg, ${chartColor}29 0%, transparent 60%)` } : undefined}
     >
       <header className="flex items-center gap-3">
-        <span
-          aria-hidden
-          className="grid size-10 shrink-0 place-items-center rounded-[12px] text-[13px] font-medium"
-          style={{ color: chartColor, backgroundColor: `${chartColor}29` }}
-        >
-          {mono}
-        </span>
+        <PlatformLogo platform={jobPlatform} size={40} />
         <span className="flex min-w-0 flex-1 flex-col">
           <span className="text-[15px] font-normal text-text-primary">{name}</span>
           <span className="truncate text-xs font-normal text-text-muted">

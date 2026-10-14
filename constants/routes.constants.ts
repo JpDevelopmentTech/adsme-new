@@ -49,6 +49,26 @@ export function editJobRoute(jobId: string): string {
   return `${JOBS_ROUTE}/${jobId}/editar`;
 }
 
+/** Resumen de la Nómina Plan: gestión financiera del roster de artistas. */
+export const NOMINA_ROUTE = "/nomina";
+
+export const NOMINA_ARTISTS_ROUTE = `${NOMINA_ROUTE}/artistas`;
+
+export const NOMINA_FINANCE_ROUTE = `${NOMINA_ROUTE}/finanzas`;
+
+/** Perfil de un artista de la nómina. */
+export function nominaArtistRoute(artistId: string): string {
+  return `${NOMINA_ARTISTS_ROUTE}/${artistId}`;
+}
+
+/** Portal de solo lectura que ve el propio artista. */
+export function nominaPortalRoute(artistId: string): string {
+  return `/portal-artista/${artistId}`;
+}
+
+/** Rutas que pintan su propia cabecera en lugar de la topbar del panel. */
+export const ROUTES_WITH_OWN_HEADER = [NOMINA_ROUTE] as const;
+
 export const NEW_CLIENT_ROUTE = `${CLIENTS_ROUTE}/nuevo`;
 
 /** Ruta del detalle de un cliente concreto (pantalla `B3` del diseño). */

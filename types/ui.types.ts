@@ -170,11 +170,6 @@ export interface TagPillProps {
   label: string;
 }
 
-export interface PlatformIconProps {
-  /** Lado del cuadrado en px; el diseño usa 15 dentro de las píldoras de la tabla. */
-  size?: number;
-}
-
 export interface CopyLinkFieldProps {
   /** Enlace mostrado y copiado al portapapeles. */
   url: string;
@@ -247,6 +242,8 @@ export interface ModalSheetProps {
   label: string;
   onClose: () => void;
   children: ReactNode;
+  /** Ancho de la lámina; por defecto el de los diálogos simples (460 px). */
+  widthClassName?: string;
 }
 
 export interface ScreenLoaderProps {

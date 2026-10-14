@@ -2,7 +2,7 @@
 
 import { Check } from "lucide-react";
 import { PLATFORM_OF_CONNECTION } from "@/constants/platform-labels.constants";
-import { PLATFORM_META } from "@/constants/platforms.constants";
+import { PlatformLogo } from "@/presentation/components/brand/platform-logo";
 import type { CampaignPickerItemProps } from "@/types/link-campaign.types";
 import { cn } from "@/utils/cn";
 import { formatCompactCurrency } from "@/utils/format-compact-currency";
@@ -13,7 +13,6 @@ export function CampaignPickerItem({
   isSelected,
   onToggle,
 }: CampaignPickerItemProps) {
-  const { Icon, color } = PLATFORM_META[PLATFORM_OF_CONNECTION[campaign.platform]];
 
   return (
     <li className="border-b border-border last:border-b-0">
@@ -39,12 +38,7 @@ export function CampaignPickerItem({
           />
         </span>
 
-        <span
-          className="grid size-[34px] shrink-0 place-items-center rounded-sm bg-card-elevated"
-          style={{ color }}
-        >
-          <Icon />
-        </span>
+        <PlatformLogo platform={PLATFORM_OF_CONNECTION[campaign.platform]} size={34} />
 
         <span className="flex min-w-0 flex-1 flex-col gap-[3px]">
           <span className="truncate text-[13px] font-semibold text-text-primary">

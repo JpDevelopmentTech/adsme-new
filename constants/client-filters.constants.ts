@@ -1,3 +1,4 @@
+import { CLIENT_KINDS } from "@/constants/client-form.constants";
 import type {
   ClientKindFilter,
   ClientSort,
@@ -23,11 +24,10 @@ export const CLIENT_STATUS_OPTIONS: FilterOption<ClientStatusFilter>[] = [
   { value: "paused", label: "Pausados" },
 ];
 
+/** Sale de la misma lista que el formulario, para que un tipo nuevo se pueda filtrar. */
 export const CLIENT_KIND_OPTIONS: FilterOption<ClientKindFilter>[] = [
   { value: "all", label: "Todos" },
-  { value: "Artista", label: "Artista" },
-  { value: "Banda", label: "Banda" },
-  { value: "Manager", label: "Manager" },
+  ...CLIENT_KINDS.map((kind) => ({ value: kind, label: kind })),
 ];
 
 export const CLIENT_SORT_OPTIONS: FilterOption<ClientSort>[] = [

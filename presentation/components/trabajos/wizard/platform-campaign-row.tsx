@@ -3,10 +3,10 @@
 import { Check, Link2, Plug, Search, X } from "lucide-react";
 import { useMemo, useState } from "react";
 import { PLATFORM_OF_CONNECTION } from "@/constants/platform-labels.constants";
-import { PLATFORM_META } from "@/constants/platforms.constants";
 import { STEP_TWO_COPY } from "@/constants/job-wizard.constants";
 import { CONNECTIONS_ROUTE } from "@/constants/routes.constants";
 import { linkCampaignAction } from "@/presentation/actions/link-campaign-action";
+import { PlatformLogo } from "@/presentation/components/brand/platform-logo";
 import { SecondaryButton } from "@/presentation/components/ui/secondary-button";
 import { SecondaryLink } from "@/presentation/components/ui/secondary-link";
 import type { PlatformCampaignRowProps } from "@/types/job-wizard.types";
@@ -31,7 +31,6 @@ export function PlatformCampaignRow({
 }: PlatformCampaignRowProps) {
   const [term, setTerm] = useState("");
   const jobPlatform = PLATFORM_OF_CONNECTION[platform];
-  const { mono, chartColor } = PLATFORM_META[jobPlatform];
 
   // Coincide por nombre o por identificador real, y nunca ofrece una campaña
   // que ya esté vinculada a este trabajo.
@@ -60,13 +59,7 @@ export function PlatformCampaignRow({
   return (
     <section className="flex flex-col gap-3.5 border-b border-border py-5 first:pt-0 last:border-b-0 last:pb-0">
       <header className="flex flex-wrap items-center gap-3">
-        <span
-          aria-hidden
-          className="grid size-10 shrink-0 place-items-center rounded-[12px] text-[13px] font-medium"
-          style={{ color: chartColor, backgroundColor: `${chartColor}29` }}
-        >
-          {mono}
-        </span>
+        <PlatformLogo platform={jobPlatform} size={40} />
 
         <div className="flex min-w-0 flex-1 flex-col gap-0.5">
           <span className="text-base font-normal text-text-primary">{label}</span>

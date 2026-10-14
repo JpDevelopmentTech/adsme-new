@@ -13,7 +13,8 @@ import { cn } from "@/utils/cn";
  */
 export function SidebarNavItem({ item }: SidebarNavItemProps) {
   const pathname = usePathname();
-  const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
+  const isActive =
+    pathname === item.href || (!item.exact && pathname.startsWith(`${item.href}/`));
   const Icon = item.icon;
 
   return (

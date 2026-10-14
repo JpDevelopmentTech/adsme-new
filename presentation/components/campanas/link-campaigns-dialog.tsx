@@ -6,8 +6,8 @@ import {
   CAMPAIGNS_COPY,
   LINK_DIALOG_COPY,
 } from "@/constants/campaigns.constants";
-import { PLATFORM_META } from "@/constants/platforms.constants";
 import { linkCampaignsAction } from "@/presentation/actions/link-campaigns-action";
+import { PlatformLogo } from "@/presentation/components/brand/platform-logo";
 import { FormAlert } from "@/presentation/components/ui/form-alert";
 import { ModalSheet } from "@/presentation/components/ui/modal-sheet";
 import { PrimaryButton } from "@/presentation/components/ui/primary-button";
@@ -73,13 +73,7 @@ export function LinkCampaignsDialog({
                 key={campaign.id}
                 className="glass-field flex items-center gap-[9px] rounded-md px-3 py-2"
               >
-                <span
-                  aria-hidden
-                  className="size-[7px] shrink-0 rounded-pill"
-                  style={{
-                    backgroundColor: PLATFORM_META[campaign.platform].chartColor,
-                  }}
-                />
+                <PlatformLogo platform={campaign.platform} size={14} variant="mark" />
                 <span className="min-w-0 flex-1 truncate text-[12.5px] font-light text-text-primary">
                   {campaign.name}
                 </span>

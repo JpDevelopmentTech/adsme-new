@@ -1,5 +1,5 @@
 import { IMPORTED_CAMPAIGNS_COPY } from "@/constants/connections.constants";
-import { PLATFORM_META } from "@/constants/platforms.constants";
+import { PlatformLogo } from "@/presentation/components/brand/platform-logo";
 import type { ImportedCampaignRowProps } from "@/types/connections.types";
 import { cn } from "@/utils/cn";
 import { formatCompactCurrency } from "@/utils/format-compact-currency";
@@ -18,13 +18,7 @@ export function ImportedCampaignRow({ campaign }: ImportedCampaignRowProps) {
 
       <td className={`${CELL_CLASSES} pr-4 text-text-secondary`}>
         <span className="flex items-center gap-2 truncate">
-          <span
-            aria-hidden
-            className="size-[7px] shrink-0 rounded-pill"
-            style={{
-              backgroundColor: PLATFORM_META[campaign.platform].chartColor,
-            }}
-          />
+          <PlatformLogo platform={campaign.platform} size={14} variant="mark" />
           {campaign.accountName}
         </span>
       </td>

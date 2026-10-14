@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import type { NominaArtistSummary } from "@/domain/entities/nomina-artist";
 import type { NavItem } from "@/types/navigation.types";
 
 /** Identidad mostrada en el sidebar y la topbar del panel. */
@@ -10,6 +11,8 @@ export interface CurrentUserSummary {
 
 export interface AppSidebarProps {
   user: CurrentUserSummary;
+  /** Artistas de la Nómina Plan, listados bajo su grupo del menú. */
+  nominaArtists: NominaArtistSummary[];
 }
 
 export interface SidebarNavItemProps {

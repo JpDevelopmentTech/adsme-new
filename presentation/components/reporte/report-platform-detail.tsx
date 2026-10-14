@@ -1,5 +1,6 @@
 import { PLATFORM_META } from "@/constants/platforms.constants";
 import { REPORT_COPY } from "@/constants/report.constants";
+import { PlatformLogo } from "@/presentation/components/brand/platform-logo";
 import { ReportStatCard } from "@/presentation/components/reporte/report-stat-card";
 import type { ReportPlatformDetailProps } from "@/types/report.types";
 import { buildPlatformStats } from "@/utils/build-platform-stats";
@@ -10,7 +11,7 @@ import { buildPlatformStats } from "@/utils/build-platform-stats";
  * diferencia de tamaño evita que los bloques se lean como uno repetido.
  */
 export function ReportPlatformDetail({ metrics, showSpend }: ReportPlatformDetailProps) {
-  const { chartColor, label } = PLATFORM_META[metrics.platform];
+  const { label } = PLATFORM_META[metrics.platform];
   const stats = buildPlatformStats(metrics, showSpend);
 
   if (stats.length === 0) return null;
@@ -18,7 +19,7 @@ export function ReportPlatformDetail({ metrics, showSpend }: ReportPlatformDetai
   return (
     <section className="flex flex-col gap-3">
       <header className="flex items-center gap-2.5">
-        <span aria-hidden className="size-[9px] shrink-0 rounded-pill" style={{ backgroundColor: chartColor }} />
+        <PlatformLogo platform={metrics.platform} size={18} variant="mark" />
         <h3 className="text-[17px] text-text-primary">{label}</h3>
         <span className="text-[13px] font-light text-text-muted">{REPORT_COPY.detailCampaigns(metrics.campaigns)}</span>
       </header>

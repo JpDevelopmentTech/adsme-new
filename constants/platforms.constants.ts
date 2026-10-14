@@ -1,16 +1,12 @@
-import type { ComponentType } from "react";
 import type { JobPlatform } from "@/domain/entities/job";
-import { MetaIcon } from "@/presentation/components/ui/platform-icons/meta-icon";
-import { TiktokIcon } from "@/presentation/components/ui/platform-icons/tiktok-icon";
-import { YoutubeIcon } from "@/presentation/components/ui/platform-icons/youtube-icon";
-import type { PlatformIconProps } from "@/types/ui.types";
 
+/**
+ * Nombre y color de datos de cada plataforma. El logo no vive aquí: lo pinta
+ * `PlatformLogo`, en presentación, para que esta constante no dependa de
+ * componentes.
+ */
 interface PlatformMeta {
   label: string;
-  /** Abreviatura de la plataforma para rótulos compactos. */
-  mono: string;
-  /** Color de marca aplicado al icono. */
-  color: string;
   /**
    * Color con el que la plataforma aparece en áreas de datos (barras, rieles,
    * leyendas). Es la única dimensión del producto donde el color ya significa
@@ -21,31 +17,12 @@ interface PlatformMeta {
    * legibles sobre el violeta del fondo.
    */
   chartColor: string;
-  Icon: ComponentType<PlatformIconProps>;
 }
 
 export const PLATFORM_META: Record<JobPlatform, PlatformMeta> = {
-  youtube: {
-    label: "YouTube",
-    mono: "YT",
-    color: "#ff5a5f",
-    chartColor: "#ff5a5f",
-    Icon: YoutubeIcon,
-  },
-  meta: {
-    label: "Meta",
-    mono: "M",
-    color: "#4f8bff",
-    chartColor: "#4f8bff",
-    Icon: MetaIcon,
-  },
-  tiktok: {
-    label: "TikTok",
-    mono: "TT",
-    color: "#2de2e6",
-    chartColor: "#2de2e6",
-    Icon: TiktokIcon,
-  },
+  youtube: { label: "YouTube", chartColor: "#ff5a5f" },
+  meta: { label: "Meta", chartColor: "#4f8bff" },
+  tiktok: { label: "TikTok", chartColor: "#2de2e6" },
 };
 
 /** Tono neutro de la parte que aportan los trabajos sin plataforma vinculada. */

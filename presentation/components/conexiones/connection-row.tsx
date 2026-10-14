@@ -2,9 +2,8 @@ import { Lock } from "lucide-react";
 import {
   CONNECTIONS_COPY,
   CONNECTION_CARD_COPY,
-  CONNECTION_MONOGRAMS,
 } from "@/constants/connections.constants";
-import { PLATFORM_META } from "@/constants/platforms.constants";
+import { PlatformLogo } from "@/presentation/components/brand/platform-logo";
 import { ConnectionAccessRail } from "@/presentation/components/conexiones/connection-access-rail";
 import type { ConnectionRowProps } from "@/types/connections.types";
 import { formatCompactCurrency } from "@/utils/format-compact-currency";
@@ -15,22 +14,12 @@ import { formatCompactCurrency } from "@/utils/format-compact-currency";
  * y comparar plataformas deja de exigir leerlas una a una.
  */
 export function ConnectionRow({ connection, actions }: ConnectionRowProps) {
-  const { chartColor } = PLATFORM_META[connection.platform];
   const isConnected = connection.status === "connected";
   const accounts = connection.accountNames;
 
   return (
     <li className="flex flex-wrap items-center gap-4 border-b border-border/60 px-5 py-4 last:border-b-0">
-      {/* La marca se reduce a su monograma en el color de la plataforma: a
-          42 px un logo real se lee peor que dos letras, y el color ya la
-          identifica igual que en las barras del resto del producto. */}
-      <span
-        aria-hidden
-        className="grid size-[42px] shrink-0 place-items-center rounded-md text-[11px] font-medium tracking-[0.4px]"
-        style={{ backgroundColor: `${chartColor}1F`, color: chartColor }}
-      >
-        {CONNECTION_MONOGRAMS[connection.platform]}
-      </span>
+      <PlatformLogo platform={connection.platform} size={42} />
 
       <div className="flex w-[200px] min-w-[150px] flex-col gap-0.5">
         <span className="truncate text-[14px] font-normal text-text-primary">

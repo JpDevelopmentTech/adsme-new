@@ -1,5 +1,6 @@
 import { PLATFORM_META } from "@/constants/platforms.constants";
 import { REPORT_COPY } from "@/constants/report.constants";
+import { PlatformLogo } from "@/presentation/components/brand/platform-logo";
 import type { ArtistPlatformCardsProps } from "@/types/report.types";
 import { formatPercent, share } from "@/utils/format-compact-number";
 import { formatExactCurrency } from "@/utils/format-exact-currency";
@@ -18,19 +19,13 @@ export function ArtistPlatformCards({ platforms, showSpend }: ArtistPlatformCard
 
       <div className="grid gap-4 md:grid-cols-3">
         {platforms.map((metrics) => {
-          const { label, mono, chartColor } = PLATFORM_META[metrics.platform];
+          const { label, chartColor } = PLATFORM_META[metrics.platform];
           const percent = share(metrics.videoPlays, total);
 
           return (
             <article key={metrics.platform} className="glass-thick flex flex-col gap-4 rounded-card p-6">
               <header className="flex items-center gap-3">
-                <span
-                  aria-hidden
-                  className="grid size-10 shrink-0 place-items-center rounded-[12px] text-[13px] font-medium"
-                  style={{ color: chartColor, backgroundColor: `${chartColor}29` }}
-                >
-                  {mono}
-                </span>
+                <PlatformLogo platform={metrics.platform} size={40} />
                 <span className="flex min-w-0 flex-col">
                   <h3 className="text-base text-text-primary">{label}</h3>
                   <span className="text-xs text-text-muted">{REPORT_COPY.detailCampaigns(metrics.campaigns)}</span>

@@ -1,4 +1,4 @@
-import { PLATFORM_META } from "@/constants/platforms.constants";
+import { PlatformLogo } from "@/presentation/components/brand/platform-logo";
 import { JobCover } from "@/presentation/components/cliente-detalle/job-cover";
 import { Avatar } from "@/presentation/components/ui/avatar";
 import type { SearchItemThumbProps } from "@/types/global-search.types";
@@ -8,7 +8,7 @@ const THUMB_SIZE = 32;
 
 /**
  * Miniatura de un resultado: la foto o las iniciales del cliente, la portada del
- * trabajo, o el monograma de la plataforma de la campaña.
+ * trabajo, o el logo de la plataforma de la campaña.
  */
 export function SearchItemThumb({ visual }: SearchItemThumbProps) {
   if (visual.type === "client") {
@@ -27,20 +27,5 @@ export function SearchItemThumb({ visual }: SearchItemThumbProps) {
     return <JobCover imageUrl={visual.coverUrl} size={THUMB_SIZE} />;
   }
 
-  const { mono, chartColor } = PLATFORM_META[visual.platform];
-
-  return (
-    <span
-      aria-hidden
-      className="grid shrink-0 place-items-center rounded-[10px] text-[10px] font-medium"
-      style={{
-        width: THUMB_SIZE,
-        height: THUMB_SIZE,
-        color: chartColor,
-        backgroundColor: `${chartColor}29`,
-      }}
-    >
-      {mono}
-    </span>
-  );
+  return <PlatformLogo platform={visual.platform} size={THUMB_SIZE} />;
 }
