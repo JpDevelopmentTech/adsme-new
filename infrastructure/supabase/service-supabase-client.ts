@@ -6,10 +6,15 @@ import { SUPABASE_ENV } from "@/infrastructure/supabase/supabase-env";
 /**
  * Cliente con la clave de servicio, que no pasa por RLS.
  *
- * Existe solo para el endpoint de ingesta de Google Ads: allí no hay sesión de
- * usuario porque quien llama es un script externo, ya autenticado por su
- * secreto compartido. No debe usarse en ningún flujo que sí tenga sesión: RLS
- * es lo que aísla a unos usuarios de otros y esta clave se la salta entera.
+ * Solo para lo que no tiene sesión de usuario o no es de ningún usuario:
+ * - el endpoint de ingesta de Google Ads, al que llama un script externo ya
+ *   autenticado por su secreto compartido;
+ * - el cron diario, que lo usa para abrir la sesión de cada propietario
+ *   (`openOwnerSession`), no para leer ni escribir sus datos;
+ * - las tasas de cambio, comunes a todos y sin políticas de escritura.
+ *
+ * No debe usarse para datos de un usuario: RLS es lo que aísla a unos de otros
+ * y esta clave se la salta entera.
  */
 export function createServiceSupabaseClient(): SupabaseClient {
   const secretKey = process.env.SUPABASE_SECRET_KEY;

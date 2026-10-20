@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { currencyCodeSchema } from "@/validators/currency.validators";
 
 /** Métricas acumuladas que el script envía por campaña y por día. */
 const metricsSchema = z.object({
@@ -49,6 +50,11 @@ export const googleAdsIngestSchema = z.object({
   customerId: z.string().regex(/^\d{10}$/, {
     message: "El customer id son 10 dígitos sin guiones.",
   }),
+  /**
+   * Moneda de la cuenta, en la que vienen todos los importes. Es opcional para
+   * no rechazar los lotes del script anterior, que no la enviaba.
+   */
+  currency: currencyCodeSchema.optional(),
   campaigns: z.array(campaignSchema).max(5_000).default([]),
   daily: z.array(daySchema).max(20_000).default([]),
   breakdowns: z.array(breakdownSchema).max(20_000).default([]),

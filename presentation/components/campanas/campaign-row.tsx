@@ -90,10 +90,19 @@ export function CampaignRow({
       <span
         className={cn(
           CAMPAIGN_COLUMN_WIDTHS.spend,
-          "shrink-0 text-right text-[13px] whitespace-nowrap text-text-primary",
+          "flex shrink-0 flex-col items-end gap-0.5 whitespace-nowrap",
         )}
       >
-        {formatCompactCurrency(campaign.spend)}
+        <span className="text-[13px] text-text-primary">
+          {formatCompactCurrency(campaign.spend)}
+        </span>
+        {/* La cuenta reporta en otra moneda: se enseña el original para que
+            se vea de dónde sale la cifra en pesos. */}
+        {campaign.accountSpend ? (
+          <span className="text-[11px] font-light text-text-muted">
+            {campaign.accountSpend}
+          </span>
+        ) : null}
       </span>
 
       {/* Un icono que dice qué hace, en vez del `⋯` del diseño: el menú tendría

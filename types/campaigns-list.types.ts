@@ -17,7 +17,10 @@ export interface CampaignListItem {
   state: CampaignState;
   period: string;
   reach: number;
+  /** Gasto en pesos. */
   spend: number;
+  /** Gasto en la moneda de la cuenta si no es en pesos (`USD 876,00`). */
+  accountSpend: string | null;
 }
 
 /**

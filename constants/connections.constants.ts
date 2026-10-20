@@ -42,10 +42,12 @@ export const CONNECTIONS_SUMMARY_COPY = {
   eyebrow: "Estado de la importación",
   nextLabel: "Próxima",
   minutes: "min",
+  hours: "h",
   now: "ya",
   flowing: "Los datos están entrando",
   attention: "Hay un acceso que revisar",
   stopped: "Todavía no entra nada",
+  stale: "La importación automática está atrasada",
   accounts: (accounts: number, platforms: number) =>
     `${accounts} ${accounts === 1 ? "cuenta" : "cuentas"} en ${platforms} ${platforms === 1 ? "plataforma" : "plataformas"}`,
   campaigns: (count: number) =>
@@ -117,9 +119,6 @@ export const TOKEN_RENEWS_ITSELF: Record<ConnectionPlatform, boolean> = {
   meta: false,
   tiktok: true,
 };
-
-/** Cadencia con la que adsme reimporta las métricas de las cuentas conectadas. */
-export const SYNC_INTERVAL_MINUTES = 60;
 
 /**
  * Reparto de la fila de campañas importadas, en el mismo orden que

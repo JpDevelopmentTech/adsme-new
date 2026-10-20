@@ -13,9 +13,11 @@ import type { ConnectionRepository } from "@/infrastructure/repositories/supabas
 import { importBreakdowns } from "@/infrastructure/sync/import-breakdowns";
 import { resolveTiktokAccess } from "@/infrastructure/tiktok/tiktok-access";
 import { createTiktokBreakdownsProvider } from "@/infrastructure/tiktok/tiktok-breakdowns-provider";
+import { fetchAdvertiserCurrency } from "@/infrastructure/tiktok/tiktok-advertiser-info";
 import { TiktokApiError } from "@/infrastructure/tiktok/tiktok-api-error";
 import { fetchTiktokCampaigns } from "@/infrastructure/tiktok/tiktok-campaigns";
 import { createTiktokDailyInsightsProvider } from "@/infrastructure/tiktok/tiktok-daily-insights-provider";
+import { currencyWarning } from "@/utils/currency-warning";
 import { toTiktokCampaignDrafts } from "@/utils/to-tiktok-campaign-drafts";
 
 /**
@@ -38,11 +40,12 @@ export async function syncTiktokConnection(
   if (access.status === "failed") return syncFailed(TIKTOK_ERRORS.syncFailed);
 
   let campaigns;
+  let currency;
   try {
-    campaigns = await fetchTiktokCampaigns(
-      access.accessToken,
-      connection.externalAccountId,
-    );
+    [campaigns, currency] = await Promise.all([
+      fetchTiktokCampaigns(access.accessToken, connection.externalAccountId),
+      fetchAdvertiserCurrency(connection.externalAccountId, access.accessToken),
+    ]);
   } catch (error) {
     if (error instanceof TiktokApiError && error.needsReauthorization) {
       await connections.setStatus(connection.id, "revocado");
@@ -60,7 +63,7 @@ export async function syncTiktokConnection(
 
   const result = await createImportCampaigns(campaignRepository)(
     connection.id,
-    toTiktokCampaignDrafts(connection.id, campaigns),
+    toTiktokCampaignDrafts(connection.id, campaigns, currency),
   );
 
   if (!result.success) {
@@ -72,6 +75,7 @@ export async function syncTiktokConnection(
   // El día a día y el reparto van después de las campañas porque cuelgan de
   // ellas. Que fallen no invalida lo ya importado: se avisa y se sigue.
   const warnings = [
+    currencyWarning(currency),
     await importDailyMetrics(
       supabase,
       campaignRepository,

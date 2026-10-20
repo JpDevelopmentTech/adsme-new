@@ -1,43 +1,24 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import type { SupabaseClient } from "@supabase/supabase-js";
 import { LOGIN_ROUTE } from "@/constants/routes.constants";
-import type { ConnectionPlatform } from "@/domain/entities/connection";
-import type { SyncOutcome } from "@/domain/entities/sync-outcome";
+import { syncFailed } from "@/domain/entities/sync-outcome";
 import { createGetCurrentUser } from "@/domain/use-cases/get-current-user";
 import { createSupabaseAuthRepository } from "@/infrastructure/repositories/supabase-auth-repository";
-import { createSupabaseConnectionRepository } from "@/infrastructure/repositories/supabase-connection-repository";
-import { isGoogleAdsConfigured } from "@/infrastructure/google/google-ads-env";
 import { createServerSupabaseClient } from "@/infrastructure/supabase/server-supabase-client";
-import { syncGoogle } from "@/infrastructure/sync/sync-google";
-import { syncMeta } from "@/infrastructure/sync/sync-meta";
-import { syncTiktok } from "@/infrastructure/sync/sync-tiktok";
+import { refreshTrm } from "@/infrastructure/sync/refresh-trm";
+import { syncAllConnections } from "@/infrastructure/sync/sync-all-connections";
 import { finishSync } from "@/presentation/actions/finish-sync";
 
 /**
- * Sincronizador de cada plataforma que ya tiene integración real. Todos
- * devuelven una lista porque Meta y TikTok admiten varias cuentas conectadas y
- * cada una trae su propio resultado; Google, con una sola, devuelve uno.
- */
-const SYNCS: Partial<
-  Record<
-    ConnectionPlatform,
-    (supabase: SupabaseClient) => Promise<SyncOutcome[]>
-  >
-> = {
-  google_ads: async (supabase) => [await syncGoogle(supabase)],
-  meta: syncMeta,
-  tiktok: syncTiktok,
-};
-
-/**
- * Reimporta las campañas de todas las cuentas conectadas.
+ * Reimporta a mano las campañas de todas las cuentas conectadas, lo mismo que
+ * hace el cron cada mañana.
  *
- * Las plataformas se sincronizan una tras otra y sus resultados se juntan al
- * final. Antes cada una redirigía por su cuenta y, como en Next `redirect` viaja
- * como excepción, la primera cortaba el bucle: con dos cuentas conectadas solo
- * llegaba a importarse la más antigua.
+ * Refresca también la TRM, para que una sincronización a mano valore el gasto
+ * en dólares a la tasa del día aunque el cron todavía no haya corrido.
+ *
+ * Se redirige una sola vez y al final: en Next `redirect` viaja como excepción
+ * y hacerlo por plataforma cortaría las que quedasen por sincronizar.
  */
 export async function syncConnectionsAction(): Promise<void> {
   const supabase = await createServerSupabaseClient();
@@ -45,28 +26,10 @@ export async function syncConnectionsAction(): Promise<void> {
 
   if (!user) redirect(LOGIN_ROUTE);
 
-  const connections =
-    await createSupabaseConnectionRepository(supabase).listConnections();
+  const [rateWarning, outcomes] = await Promise.all([
+    refreshTrm(),
+    syncAllConnections(supabase),
+  ]);
 
-  // Una vuelta por plataforma aunque haya varias cuentas de la misma: cada
-  // sync recorre por su cuenta todas las conexiones que le pertenecen.
-  const platforms = [...new Set(connections.map((item) => item.platform))];
-
-  // Google no se conecta desde la app: sus datos los empuja un script y la fila
-  // de conexión se crea sola en el primer sync. Sin esto nunca entraría en el
-  // bucle, porque el usuario todavía no tiene ninguna conexión suya de Google.
-  if (isGoogleAdsConfigured() && !platforms.includes("google_ads")) {
-    platforms.push("google_ads");
-  }
-
-  const outcomes: SyncOutcome[] = [];
-
-  for (const platform of platforms) {
-    const sync = SYNCS[platform];
-    if (!sync) continue;
-
-    outcomes.push(...(await sync(supabase)));
-  }
-
-  finishSync(outcomes);
+  finishSync(rateWarning ? [...outcomes, syncFailed(rateWarning)] : outcomes);
 }

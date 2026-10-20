@@ -1,10 +1,9 @@
 import "server-only";
 
-import {
-  TIKTOK_AUTH_URL,
-  TIKTOK_PAGE_SIZE,
-} from "@/constants/tiktok-ads.constants";
+import { TIKTOK_AUTH_URL } from "@/constants/tiktok-ads.constants";
 import type { TiktokAdvertiser, TiktokToken } from "@/domain/entities/tiktok-ads";
+import { logger } from "@/infrastructure/logging/logger";
+import { fetchAdvertiserCurrencies } from "@/infrastructure/tiktok/tiktok-advertiser-info";
 import { tiktokGet, tiktokPost } from "@/infrastructure/tiktok/tiktok-client";
 import { getTiktokCredentials } from "@/infrastructure/tiktok/tiktok-env";
 
@@ -101,12 +100,6 @@ interface AdvertiserRow {
   advertiser_name?: string;
 }
 
-interface AdvertiserInfoRow {
-  advertiser_id: string;
-  advertiser_name?: string;
-  currency?: string;
-}
-
 /**
  * Cuentas de anunciante que cubre el permiso concedido. A diferencia de Google,
  * TikTok devuelve el nombre junto al identificador, así que basta una llamada;
@@ -139,25 +132,22 @@ export async function fetchAdvertisers(
   }));
 }
 
-/** La moneda es informativa: un fallo aquí no debe dejar sin cuentas al selector. */
+/**
+ * La moneda es informativa en el selector: un fallo aquí no debe dejarlo sin
+ * cuentas. Se registra para que no pase desapercibido, como pasó con el nombre
+ * de campo equivocado que dejó todas las cuentas sin moneda.
+ */
 async function fetchCurrencies(
   ids: string[],
   accessToken: string,
 ): Promise<Map<string, string>> {
   try {
-    const payload = await tiktokGet<{ list?: AdvertiserInfoRow[] }>(
-      "/advertiser/info/",
-      {
-        advertiser_ids: JSON.stringify(ids.slice(0, TIKTOK_PAGE_SIZE)),
-        fields: JSON.stringify(["advertiser_id", "advertiser_name", "currency"]),
-      },
-      accessToken,
-    );
+    return await fetchAdvertiserCurrencies(ids, accessToken);
+  } catch (error) {
+    logger.warn("tiktok.advertiser_currency_failed", {
+      reason: error instanceof Error ? error.message : String(error),
+    });
 
-    return new Map(
-      (payload.list ?? []).map((row) => [row.advertiser_id, row.currency ?? ""]),
-    );
-  } catch {
     return new Map();
   }
 }

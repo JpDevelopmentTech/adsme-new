@@ -25,12 +25,14 @@ export async function saveGoogleAdsExport(
   supabase: SupabaseClient,
   payload: GoogleAdsIngestInput,
 ): Promise<GoogleAdsIngestCount> {
-  const { customerId, campaigns, daily, breakdowns } = payload;
+  const { customerId, currency, campaigns, daily, breakdowns } = payload;
 
   if (campaigns.length > 0) {
     const { error } = await supabase.from(CAMPAIGNS_TABLE).upsert(
       campaigns.map((campaign) => ({
         customer_id: customerId,
+        // Solo si el script la envía: omitirla conserva la que ya estuviera.
+        ...(currency ? { currency } : {}),
         external_campaign_id: campaign.externalCampaignId,
         name: campaign.name,
         status: campaign.status,

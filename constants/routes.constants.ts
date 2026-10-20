@@ -1,3 +1,4 @@
+import { CRON_SYNC_PATH } from "@/constants/cron.constants";
 import { GOOGLE_ADS_INGEST_PATH } from "@/constants/google-ads.constants";
 import { REPORT_ROUTE_PREFIX } from "@/constants/report-link.constants";
 
@@ -94,4 +95,6 @@ export const PUBLIC_ROUTE_PREFIXES = [
   // al login, el script recibiría una redirección y los datos no entrarían
   // nunca. El propio endpoint valida el secreto compartido de la cabecera.
   GOOGLE_ADS_INGEST_PATH,
+  // Igual con el cron: lo llama Vercel sin sesión y la ruta valida su secreto.
+  CRON_SYNC_PATH,
 ] as const;

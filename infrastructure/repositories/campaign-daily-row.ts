@@ -28,8 +28,9 @@ export interface CampaignDailyPointRow extends CampaignDailyRow {
     | null;
 }
 
+/** `spend:spend_cop`: el gasto del día llega ya convertido a pesos. */
 export const CAMPAIGN_DAILY_COLUMNS =
-  "metric_date, spend, impressions, clicks, reach, video_plays, engagement, comments, shares, reactions";
+  "metric_date, spend:spend_cop, impressions, clicks, reach, video_plays, engagement, comments, shares, reactions";
 
 export const CAMPAIGN_DAILY_POINT_COLUMNS = `${CAMPAIGN_DAILY_COLUMNS}, campaigns!inner ( job_id, connections!inner ( platform ) )`;
 

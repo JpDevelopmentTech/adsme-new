@@ -15,7 +15,15 @@ export interface Campaign {
   /** Estado tal como lo reporta la plataforma (`ACTIVE`, `PAUSED`…). */
   status: string;
   objective: string | null;
+  /**
+   * Gasto en pesos colombianos, ya convertido con la tasa vigente del día. Es
+   * el que se suma y se muestra en toda la aplicación.
+   */
   spend: number;
+  /** Gasto tal como lo reporta la plataforma, en la moneda de la cuenta. */
+  accountSpend: number;
+  /** Moneda ISO 4217 de la cuenta publicitaria (`COP`, `USD`…). */
+  currency: string;
   impressions: number;
   clicks: number;
   /** Personas únicas alcanzadas; siempre menor o igual que las impresiones. */
@@ -41,7 +49,10 @@ export interface CampaignDraft {
   name: string;
   status: string;
   objective?: string | null;
+  /** Gasto en la moneda de la cuenta; la conversión a pesos se hace al leer. */
   spend?: number;
+  /** Moneda de la cuenta en la que viene `spend`. */
+  currency?: string;
   impressions?: number;
   clicks?: number;
   reach?: number;

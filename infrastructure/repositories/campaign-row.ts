@@ -1,7 +1,11 @@
 import type { Campaign, CampaignDraft } from "@/domain/entities/campaign";
 import type { ConnectionPlatform } from "@/domain/entities/connection";
 
-/** Fila de `public.campaigns`, con la plataforma traída de su conexión. */
+/**
+ * Fila de `public.campaigns`, con la plataforma traída de su conexión. `spend`
+ * no es la columna sino el campo calculado `spend_cop` (gasto en pesos); la
+ * columna original llega como `account_spend`.
+ */
 export interface CampaignRow {
   id: string;
   connection_id: string;
@@ -11,6 +15,8 @@ export interface CampaignRow {
   status: string;
   objective: string | null;
   spend: number | string;
+  account_spend: number | string;
+  currency: string;
   impressions: number;
   clicks: number;
   reach: number;
@@ -26,8 +32,13 @@ export interface CampaignRow {
   connections: { platform: string } | { platform: string }[] | null;
 }
 
+/**
+ * `spend:spend_cop` pide el gasto convertido a pesos con la tasa vigente; la
+ * conversión vive en la base de datos para que la app y el reporte público
+ * sumen exactamente lo mismo.
+ */
 export const CAMPAIGN_COLUMNS =
-  "id, connection_id, external_campaign_id, job_id, name, status, objective, spend, impressions, clicks, reach, video_plays, engagement, comments, shares, reactions, starts_at, ends_at, extra_json, synced_at, connections ( platform )";
+  "id, connection_id, external_campaign_id, job_id, name, status, objective, spend:spend_cop, account_spend:spend, currency, impressions, clicks, reach, video_plays, engagement, comments, shares, reactions, starts_at, ends_at, extra_json, synced_at, connections ( platform )";
 
 export function toCampaign(row: CampaignRow): Campaign {
   const connection = Array.isArray(row.connections)
@@ -45,6 +56,8 @@ export function toCampaign(row: CampaignRow): Campaign {
     objective: row.objective,
     // `numeric` llega como cadena para no perder precisión.
     spend: Number(row.spend),
+    accountSpend: Number(row.account_spend),
+    currency: row.currency,
     impressions: Number(row.impressions),
     clicks: Number(row.clicks),
     reach: Number(row.reach),
@@ -71,6 +84,7 @@ export function toCampaignRow(draft: Partial<CampaignDraft>) {
     ...(draft.status !== undefined && { status: draft.status }),
     ...(draft.objective !== undefined && { objective: draft.objective }),
     ...(draft.spend !== undefined && { spend: draft.spend }),
+    ...(draft.currency !== undefined && { currency: draft.currency }),
     ...(draft.impressions !== undefined && { impressions: draft.impressions }),
     ...(draft.clicks !== undefined && { clicks: draft.clicks }),
     ...(draft.reach !== undefined && { reach: draft.reach }),

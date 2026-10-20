@@ -78,7 +78,15 @@ function exportarCuentaActual() {
   const campanas = leerCampanas(entidades);
 
   // Las campañas van primero y solas: la serie diaria de adsme cuelga de ellas.
-  enviar({customerId: customerId, campaigns: campanas, daily: [], breakdowns: []});
+  // La moneda viaja con las campañas: Google reporta el costo en la de la
+  // cuenta, y adsme la necesita para pasar a pesos las que estén en dólares.
+  enviar({
+    customerId: customerId,
+    currency: AdsApp.currentAccount().getCurrencyCode(),
+    campaigns: campanas,
+    daily: [],
+    breakdowns: [],
+  });
   console.log(`${customerId}: ${campanas.length} campañas.`);
 
   const repartos = leerRepartos();

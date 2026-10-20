@@ -1,6 +1,7 @@
 import { PLATFORM_OF_CONNECTION } from "@/constants/platform-labels.constants";
 import type { Campaign } from "@/domain/entities/campaign";
 import type { CampaignListItem } from "@/types/campaigns-list.types";
+import { formatAccountSpend } from "@/utils/format-account-spend";
 import { formatJobPeriod } from "@/utils/format-job-period";
 import { resolveCampaignState } from "@/utils/resolve-campaign-state";
 
@@ -31,5 +32,6 @@ export function toCampaignListItem(
         : MISSING,
     reach: campaign.reach,
     spend: campaign.spend,
+    accountSpend: formatAccountSpend(campaign.accountSpend, campaign.currency),
   };
 }

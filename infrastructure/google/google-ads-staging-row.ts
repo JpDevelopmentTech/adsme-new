@@ -1,3 +1,4 @@
+import { DEFAULT_ACCOUNT_CURRENCY } from "@/constants/currency.constants";
 import type { CampaignBreakdownInsight } from "@/domain/entities/campaign-breakdown";
 import type { CampaignDraft } from "@/domain/entities/campaign";
 import type { CampaignDayInsight } from "@/domain/entities/campaign-daily";
@@ -10,6 +11,8 @@ import {
 /** Fila de `public.google_ads_campaigns`, el buzón que llena el script. */
 export interface GoogleAdsCampaignRow {
   customer_id: string;
+  /** `null` mientras el script desplegado sea anterior al que la envía. */
+  currency: string | null;
   external_campaign_id: string;
   name: string;
   status: string;
@@ -44,7 +47,7 @@ export interface GoogleAdsDailyRow {
 }
 
 export const GOOGLE_ADS_CAMPAIGN_COLUMNS =
-  "customer_id, external_campaign_id, name, status, objective, spend, impressions, clicks, reach, video_plays, engagement, comments, shares, reactions, starts_at, ends_at";
+  "customer_id, currency, external_campaign_id, name, status, objective, spend, impressions, clicks, reach, video_plays, engagement, comments, shares, reactions, starts_at, ends_at";
 
 export const GOOGLE_ADS_DAILY_COLUMNS =
   "customer_id, external_campaign_id, metric_date, spend, impressions, clicks, reach, video_plays, engagement, comments, shares, reactions";
@@ -66,6 +69,8 @@ export function toGoogleCampaignDraft(
     objective: row.objective,
     // `numeric` llega como cadena para no perder precisión.
     spend: Number(row.spend),
+    // Cada subcuenta de la MCC trae la suya; sin dato, la cuenta es en pesos.
+    currency: row.currency ?? DEFAULT_ACCOUNT_CURRENCY,
     impressions: Number(row.impressions),
     clicks: Number(row.clicks),
     reach: Number(row.reach),

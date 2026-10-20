@@ -19,17 +19,23 @@ export interface MetaConnectedActionsProps {
 }
 
 /** Estado de la importación que encabeza `B10`. */
+/** Tiempo hasta la próxima importación, ya partido en cifra y unidad. */
+export interface Countdown {
+  value: string;
+  unit: string;
+}
+
 export interface ConnectionsStatus {
-  /** Minutos hasta la próxima importación; `null` si nunca se ha sincronizado. */
-  minutesLeft: number | null;
-  /** Parte del ciclo de una hora ya consumida, de 0 a 100. */
+  /** Lo que falta para el próximo cron; `null` si no hay cuentas que importar. */
+  countdown: Countdown | null;
+  /** Parte del ciclo diario ya consumida, de 0 a 100. */
   elapsedPercent: number;
   headline: string;
   detail: string;
 }
 
 export interface SyncClockProps {
-  minutesLeft: number | null;
+  countdown: Countdown | null;
   elapsedPercent: number;
 }
 

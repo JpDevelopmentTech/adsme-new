@@ -5,6 +5,11 @@ import type { JobPlatform } from "@/domain/entities/job";
  * guarda: allí solo hay acumulados de toda la vida de la campaña.
  */
 export interface CampaignDailyMetrics {
+  /**
+   * Gasto del día. Al escribir va en la moneda de la cuenta, como lo entrega la
+   * plataforma; al leer llega ya en pesos (`spend_cop`), convertido con la
+   * tasa vigente.
+   */
   spend: number;
   impressions: number;
   clicks: number;

@@ -1,9 +1,9 @@
-import { timingSafeEqual } from "node:crypto";
 import { NextResponse, type NextRequest } from "next/server";
 import { GOOGLE_ADS_INGEST_HEADER } from "@/constants/google-ads.constants";
 import { getGoogleAdsIngestSecret } from "@/infrastructure/google/google-ads-env";
 import { saveGoogleAdsExport } from "@/infrastructure/google/google-ads-staging-writer";
 import { createServiceSupabaseClient } from "@/infrastructure/supabase/service-supabase-client";
+import { isSameSecret } from "@/utils/is-same-secret";
 import { googleAdsIngestSchema } from "@/validators/google-ads-ingest.validators";
 
 export const runtime = "nodejs";
@@ -61,18 +61,4 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       { status: 500 },
     );
   }
-}
-
-/**
- * Compara el secreto en tiempo constante. Con `===` el tiempo de respuesta
- * variaría según cuántos caracteres coinciden, que es suficiente para adivinarlo
- * a fuerza de intentos.
- */
-function isSameSecret(provided: string, expected: string): boolean {
-  const a = Buffer.from(provided);
-  const b = Buffer.from(expected);
-
-  if (a.length !== b.length) return false;
-
-  return timingSafeEqual(a, b);
 }

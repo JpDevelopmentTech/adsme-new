@@ -7,6 +7,7 @@ import { syncFailed, type SyncOutcome } from "@/domain/entities/sync-outcome";
 import type { CampaignRepository } from "@/domain/interfaces/campaign-repository";
 import { createImportCampaignDailyMetrics } from "@/domain/use-cases/import-campaign-daily-metrics";
 import { createImportCampaigns } from "@/domain/use-cases/import-campaigns";
+import { fetchMetaAccountCurrency } from "@/infrastructure/meta/meta-account-currency";
 import { fetchCampaigns } from "@/infrastructure/meta/meta-api";
 import { MetaApiError } from "@/infrastructure/meta/meta-api-error";
 import { createMetaBreakdownsProvider } from "@/infrastructure/meta/meta-breakdowns-provider";
@@ -15,6 +16,7 @@ import { createSupabaseCampaignDailyRepository } from "@/infrastructure/reposito
 import { createSupabaseCampaignRepository } from "@/infrastructure/repositories/supabase-campaign-repository";
 import type { ConnectionRepository } from "@/infrastructure/repositories/supabase-connection-repository";
 import { importBreakdowns } from "@/infrastructure/sync/import-breakdowns";
+import { currencyWarning } from "@/utils/currency-warning";
 import { toMetaCampaignDrafts } from "@/utils/to-meta-campaign-drafts";
 
 /**
@@ -38,11 +40,15 @@ export async function syncMetaConnection(
   }
 
   let campaigns;
+  let currency;
   try {
-    campaigns = await fetchCampaigns(
-      connection.accessToken,
-      connection.externalAccountId,
-    );
+    [campaigns, currency] = await Promise.all([
+      fetchCampaigns(connection.accessToken, connection.externalAccountId),
+      fetchMetaAccountCurrency(
+        connection.accessToken,
+        connection.externalAccountId,
+      ),
+    ]);
   } catch (error) {
     // El motivo viene de Meta: sin él, un fallo se confunde con «no hay campañas».
     await connections.setStatus(connection.id, "error");
@@ -55,7 +61,7 @@ export async function syncMetaConnection(
 
   const result = await createImportCampaigns(campaignRepository)(
     connection.id,
-    toMetaCampaignDrafts(connection.id, campaigns),
+    toMetaCampaignDrafts(connection.id, campaigns, currency),
   );
 
   if (!result.success) {
@@ -67,6 +73,7 @@ export async function syncMetaConnection(
   // El día a día y el reparto van después de las campañas porque cuelgan de
   // ellas. Que fallen no invalida lo ya importado: se avisa y se sigue.
   const warnings = [
+    currencyWarning(currency),
     await importDailyMetrics(supabase, campaignRepository, connection),
     await importBreakdowns(
       supabase,

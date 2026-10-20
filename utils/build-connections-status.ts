@@ -1,10 +1,13 @@
+import { CONNECTIONS_SUMMARY_COPY } from "@/constants/connections.constants";
 import {
-  CONNECTIONS_SUMMARY_COPY,
-  SYNC_INTERVAL_MINUTES,
-} from "@/constants/connections.constants";
+  SYNC_CYCLE_MINUTES,
+  SYNC_STALE_AFTER_MINUTES,
+} from "@/constants/cron.constants";
 import type { PlatformConnection } from "@/domain/entities/platform-connection";
 import type { ConnectionsStatus } from "@/types/connections.types";
+import { formatCountdown } from "@/utils/format-countdown";
 import { formatRelativeTime } from "@/utils/format-relative-time";
+import { minutesUntilNextSync } from "@/utils/minutes-until-next-sync";
 
 const MINUTE = 60_000;
 
@@ -12,6 +15,9 @@ const MINUTE = 60_000;
  * Estado de la importación para la banda de `B10`. La pregunta que trae al
  * usuario a esta pantalla es «¿está entrando la información?», así que el
  * titular la responde en una frase en vez de dejar cuatro cifras sueltas.
+ *
+ * Si la última importación es más vieja que un ciclo del cron, el titular lo
+ * dice: antes afirmaba que los datos entraban aunque llevaran días sin entrar.
  */
 export function buildConnectionsStatus(
   connections: PlatformConnection[],
@@ -29,21 +35,21 @@ export function buildConnectionsStatus(
   const needsAttention = connected.some(
     (connection) => connection.access?.isExpiring ?? false,
   );
+  const isStale =
+    lastSyncedAt !== null &&
+    Date.parse(nowIso) - Date.parse(lastSyncedAt) >
+      SYNC_STALE_AFTER_MINUTES * MINUTE;
 
-  const dueAt = lastSyncedAt
-    ? Date.parse(lastSyncedAt) + SYNC_INTERVAL_MINUTES * MINUTE
-    : null;
-  const minutesLeft =
-    dueAt === null
-      ? null
-      : Math.max(0, Math.ceil((dueAt - Date.parse(nowIso)) / MINUTE));
+  const minutesLeft = accounts === 0 ? null : minutesUntilNextSync(nowIso);
 
   const headline =
     accounts === 0
       ? CONNECTIONS_SUMMARY_COPY.stopped
-      : needsAttention
-        ? CONNECTIONS_SUMMARY_COPY.attention
-        : CONNECTIONS_SUMMARY_COPY.flowing;
+      : isStale
+        ? CONNECTIONS_SUMMARY_COPY.stale
+        : needsAttention
+          ? CONNECTIONS_SUMMARY_COPY.attention
+          : CONNECTIONS_SUMMARY_COPY.flowing;
 
   const detail =
     accounts === 0
@@ -59,16 +65,13 @@ export function buildConnectionsStatus(
         ].join(" · ");
 
   return {
-    minutesLeft,
+    countdown: minutesLeft === null ? null : formatCountdown(minutesLeft),
     // Lo que se dibuja es el ciclo ya consumido, no lo que falta: el anillo
     // se llena a medida que se acerca la siguiente importación.
     elapsedPercent:
       minutesLeft === null
         ? 0
-        : Math.min(
-            100,
-            ((SYNC_INTERVAL_MINUTES - minutesLeft) / SYNC_INTERVAL_MINUTES) * 100,
-          ),
+        : ((SYNC_CYCLE_MINUTES - minutesLeft) / SYNC_CYCLE_MINUTES) * 100,
     headline,
     detail,
   };

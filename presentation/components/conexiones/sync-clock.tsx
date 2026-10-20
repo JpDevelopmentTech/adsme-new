@@ -5,11 +5,11 @@ import type { SyncClockProps } from "@/types/connections.types";
 const RING = 6;
 
 /**
- * Cuánto falta para la próxima importación. La vida del dato de adsme depende
- * de un ciclo que se repite cada hora, y hasta ahora eso era un número suelto
- * entre otras tres cifras: aquí es el objeto que abre la pantalla.
+ * Cuánto falta para la próxima importación automática. La vida del dato de
+ * adsme depende del cron que corre cada mañana, y hasta ahora eso era un número
+ * suelto entre otras tres cifras: aquí es el objeto que abre la pantalla.
  */
-export function SyncClock({ minutesLeft, elapsedPercent }: SyncClockProps) {
+export function SyncClock({ countdown, elapsedPercent }: SyncClockProps) {
   const mask = `radial-gradient(farthest-side, transparent calc(100% - ${RING}px), #000 calc(100% - ${RING}px))`;
 
   return (
@@ -27,11 +27,9 @@ export function SyncClock({ minutesLeft, elapsedPercent }: SyncClockProps) {
 
         <span className="flex flex-col items-center leading-none">
           <span className="font-display text-[19px] font-light tracking-[-0.5px] text-g-50">
-            {minutesLeft ?? "—"}
+            {countdown?.value ?? "—"}
           </span>
-          <span className="text-[9px] text-g-400">
-            {minutesLeft === null ? "" : CONNECTIONS_SUMMARY_COPY.minutes}
-          </span>
+          <span className="text-[9px] text-g-400">{countdown?.unit ?? ""}</span>
         </span>
       </div>
 

@@ -12,7 +12,7 @@ export function ConnectionsStatusBand({ status }: ConnectionsStatusBandProps) {
   return (
     <section className="flex flex-wrap items-center gap-[22px] rounded-card bg-ink/94 px-6 py-5 shadow-lift backdrop-blur-xl">
       <SyncClock
-        minutesLeft={status.minutesLeft}
+        countdown={status.countdown}
         elapsedPercent={status.elapsedPercent}
       />
 

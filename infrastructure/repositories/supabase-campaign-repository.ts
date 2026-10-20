@@ -17,6 +17,12 @@ import { isUuid } from "@/utils/is-uuid";
 
 const CAMPAIGNS_TABLE = "campaigns";
 
+/**
+ * Campo calculado con el gasto en pesos. Se ordena por él y no por `spend`,
+ * que está en la moneda de cada cuenta: 900 dólares no van detrás de 50.000 pesos.
+ */
+const SPEND_IN_COP = "spend_cop";
+
 /** Implementación del port de campañas sobre Supabase; el aislamiento lo da RLS. */
 export function createSupabaseCampaignRepository(
   supabase: SupabaseClient,
@@ -37,7 +43,7 @@ export function createSupabaseCampaignRepository(
       }
 
       const { data, error } = await request
-        .order("spend", { ascending: false })
+        .order(SPEND_IN_COP, { ascending: false })
         .returns<CampaignRow[]>();
 
       if (error) throw error;
@@ -66,7 +72,7 @@ export function createSupabaseCampaignRepository(
         .from(CAMPAIGNS_TABLE)
         .select(CAMPAIGN_COLUMNS)
         .eq("job_id", jobId)
-        .order("spend", { ascending: false })
+        .order(SPEND_IN_COP, { ascending: false })
         .returns<CampaignRow[]>();
 
       if (error) throw error;
