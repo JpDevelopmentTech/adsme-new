@@ -12,7 +12,7 @@ import { finishSync } from "@/presentation/actions/finish-sync";
 
 /**
  * Reimporta a mano las campañas de todas las cuentas conectadas, lo mismo que
- * hace el cron cada mañana.
+ * hace el cron cada 6 horas.
  *
  * Refresca también la TRM, para que una sincronización a mano valore el gasto
  * en dólares a la tasa del día aunque el cron todavía no haya corrido.

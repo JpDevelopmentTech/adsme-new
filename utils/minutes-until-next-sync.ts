@@ -1,18 +1,25 @@
-import { SYNC_SCHEDULE_UTC_HOUR } from "@/constants/cron.constants";
+import { SYNC_SCHEDULE_UTC_HOURS } from "@/constants/cron.constants";
 
 const MINUTE = 60_000;
 
 /**
- * Minutos que faltan para la próxima ejecución del cron diario, contados desde
- * `nowIso`. Depende solo de la hora programada, no de la última importación:
- * una sincronización a mano no adelanta ni retrasa el cron.
+ * Minutos que faltan para la próxima sincronización programada, contados desde
+ * `nowIso`. Depende solo del horario, no de la última importación: una
+ * sincronización a mano no adelanta ni retrasa el cron.
  */
 export function minutesUntilNextSync(nowIso: string): number {
   const now = new Date(nowIso);
-  const next = new Date(now);
 
-  next.setUTCHours(SYNC_SCHEDULE_UTC_HOUR, 0, 0, 0);
-  if (next.getTime() <= now.getTime()) next.setUTCDate(next.getUTCDate() + 1);
+  const upcoming = [0, 1].flatMap((dayOffset) =>
+    SYNC_SCHEDULE_UTC_HOURS.map((hour) => {
+      const slot = new Date(now);
+      slot.setUTCDate(slot.getUTCDate() + dayOffset);
+      slot.setUTCHours(hour, 0, 0, 0);
+      return slot.getTime();
+    }),
+  );
 
-  return Math.ceil((next.getTime() - now.getTime()) / MINUTE);
+  const next = Math.min(...upcoming.filter((time) => time > now.getTime()));
+
+  return Math.ceil((next - now.getTime()) / MINUTE);
 }

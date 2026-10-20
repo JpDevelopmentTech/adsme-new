@@ -6,7 +6,7 @@ const RING = 6;
 
 /**
  * Cuánto falta para la próxima importación automática. La vida del dato de
- * adsme depende del cron que corre cada mañana, y hasta ahora eso era un número
+ * adsme depende de la sincronización que corre cada 6 horas, y hasta ahora eso era un número
  * suelto entre otras tres cifras: aquí es el objeto que abre la pantalla.
  */
 export function SyncClock({ countdown, elapsedPercent }: SyncClockProps) {

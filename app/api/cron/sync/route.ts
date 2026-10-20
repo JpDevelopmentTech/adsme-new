@@ -10,16 +10,21 @@ export const dynamic = "force-dynamic";
 /**
  * Tope de duración en Vercel. Con la última sincronización real, un
  * propietario con 7 cuentas tardó unos 80 s; los propietarios corren en
- * paralelo, así que 300 s deja margen sin pasarse del máximo del plan Hobby.
+ * paralelo, así que 300 s deja margen sin pasarse del máximo del plan Hobby
+ * (con Fluid Compute).
  */
 export const maxDuration = 300;
 
 /**
- * Cron diario que reimporta las campañas de todos los usuarios (programado en
- * `vercel.json`). Lo llama Vercel, no un usuario: la única credencial es el
- * `CRON_SECRET` que Vercel envía como Bearer.
+ * Sincronización programada de las campañas de todos los usuarios, cada 6
+ * horas, con cuatro crons diarios de `vercel.json`. La llama Vercel, nunca un
+ * usuario: la única credencial es el `CRON_SECRET` que Vercel envía como Bearer.
  *
- * Responde 200 aunque falle alguna cuenta, porque Vercel no reintenta y el
+ * Vercel no garantiza la entrega: puede saltarse una ejecución o lanzarla dos
+ * veces. Es inocuo porque la sincronización es idempotente (todo son upserts)
+ * y la siguiente recupera lo que faltara.
+ *
+ * Responde 200 aunque falle alguna cuenta, porque nadie reintenta y el
  * detalle ya queda en el cuerpo y en el registro; 500 solo si no corrió.
  */
 export async function GET(request: NextRequest): Promise<NextResponse> {
