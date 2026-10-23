@@ -52,7 +52,8 @@ export function ArtistReport({ artist, originTitle, originHref, reportUrl, showS
                   icon={REPORT_METRIC_ICONS[metric.icon]}
                   label={metric.label}
                   value={metric.value}
-                  note={`${metric.note.value} ${metric.note.label}`}
+                  note={[metric.note.value, metric.note.label].filter(Boolean).join(" ")}
+                  detail={metric.detail}
                 />
               ))}
             </div>

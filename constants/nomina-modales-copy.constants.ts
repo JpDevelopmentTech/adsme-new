@@ -4,6 +4,8 @@ export const MODAL_COMMON_COPY = {
   close: "Cerrar",
   save: "Guardar",
   saveChanges: "Guardar cambios",
+  saving: "Guardando…",
+  removing: "Eliminando…",
   money: "$",
   percent: "%",
 } as const;

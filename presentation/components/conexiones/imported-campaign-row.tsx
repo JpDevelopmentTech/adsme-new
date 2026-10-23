@@ -2,7 +2,7 @@ import { IMPORTED_CAMPAIGNS_COPY } from "@/constants/connections.constants";
 import { PlatformLogo } from "@/presentation/components/brand/platform-logo";
 import type { ImportedCampaignRowProps } from "@/types/connections.types";
 import { cn } from "@/utils/cn";
-import { formatCompactCurrency } from "@/utils/format-compact-currency";
+import { formatMoney } from "@/utils/format-money";
 
 const CELL_CLASSES = "py-3 text-[12.5px] font-light";
 
@@ -36,7 +36,7 @@ export function ImportedCampaignRow({ campaign }: ImportedCampaignRowProps) {
       <td
         className={`${CELL_CLASSES} pr-4 text-right text-[13px] font-normal whitespace-nowrap text-text-primary`}
       >
-        {formatCompactCurrency(campaign.spend)}
+        {formatMoney(campaign.spend.amount, campaign.spend.currency, { compact: true })}
       </td>
 
       <td

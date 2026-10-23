@@ -8,7 +8,7 @@ import { toFinanceFigures } from "@/utils/to-finance-figures";
 
 /** Ingresos del mes en curso proyectados al cierre con el ritmo de hoy. */
 function projectMonth(finance: NominaFinance): number | null {
-  if (finance.currentMonthIncome <= 0 || finance.currentDay <= 0) return null;
+  if (finance.currentMonthIncome === null || finance.currentDay <= 0) return null;
   return (finance.currentMonthIncome / finance.currentDay) * finance.daysInCurrentMonth;
 }
 
@@ -38,7 +38,7 @@ export function buildFinanceIndicators(finance: NominaFinance): MiniStatProps[] 
     },
     {
       label: "Disponible para Ads",
-      value: formatExactCurrency(Math.max(figures.investment - finance.consumedAds, 0)),
+      value: formatExactCurrency(finance.availableAds),
       sub: `Consumido: ${formatExactCurrency(finance.consumedAds)}`,
     },
   ];

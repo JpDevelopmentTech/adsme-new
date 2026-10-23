@@ -3,6 +3,8 @@ import type { Connection } from "@/domain/entities/connection";
 import type { JobListing } from "@/domain/entities/job-listing";
 import { CAMPAIGNS_COPY } from "@/constants/campaigns.constants";
 import type { CampaignGroup } from "@/types/campaigns-list.types";
+import { addToSpend } from "@/utils/add-to-spend";
+import { compareSpendDesc } from "@/utils/compare-spend-desc";
 import { toCampaignListItem } from "@/utils/to-campaign-list-item";
 
 /**
@@ -32,11 +34,11 @@ export function buildCampaignGroups(
       jobId: key,
       title: job ? job.title : CAMPAIGNS_COPY.unlinkedTitle,
       clientName: job ? job.artistName : "",
-      spend: 0,
+      spend: {},
       campaigns: [],
     };
 
-    group.spend += campaign.spend;
+    group.spend = addToSpend(group.spend, campaign.spend.currency, campaign.spend.amount);
     group.campaigns.push(
       toCampaignListItem(
         campaign,
@@ -50,7 +52,7 @@ export function buildCampaignGroups(
   const unlinked = byJob.get(null);
   const linked = [...byJob.values()]
     .filter((group) => group.jobId !== null)
-    .sort((a, b) => b.spend - a.spend);
+    .sort((a, b) => compareSpendDesc(a.spend, b.spend));
 
   return unlinked ? [unlinked, ...linked] : linked;
 }

@@ -34,12 +34,14 @@ export interface ClientRow {
   avatar_url: string | null;
   created_at: string;
   jobs: ClientJobRow[] | null;
+  /** Inscripción en Nómina: objeto, lista o `null` según cómo la embeba PostgREST. */
+  client_payroll: { client_id: string } | { client_id: string }[] | null;
 }
 
 const JOB_SUMMARY_COLUMNS =
   "jobs ( status, platforms, investment, starts_on, ends_on, updated_at )";
 
-export const CLIENT_COLUMNS = `id, name, handle, kind, genre, email, phone, city, country, notes, avatar_url, created_at, ${JOB_SUMMARY_COLUMNS}`;
+export const CLIENT_COLUMNS = `id, name, handle, kind, genre, email, phone, city, country, notes, avatar_url, created_at, ${JOB_SUMMARY_COLUMNS}, client_payroll ( client_id )`;
 
 function toJobSummary(row: ClientJobRow): ClientJobSummary {
   return {
@@ -81,6 +83,7 @@ function toClientOf(row: ClientRow, jobs: ClientJobSummary[]): Client {
     notes: row.notes,
     avatarUrl: row.avatar_url,
     lastActivityAt: lastActivityOf(jobs),
+    isInNomina: Array.isArray(row.client_payroll) ? row.client_payroll.length > 0 : row.client_payroll !== null,
     createdAt: row.created_at,
   };
 }

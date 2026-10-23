@@ -23,7 +23,9 @@ function emptyDay(): Record<JobPlatform, number> {
  * detalle del trabajo; a la serie solo le importan sus dos extremos.
  */
 export function buildReportGrowth(
-  points: ReportDailyPoint[],
+  // Solo lee reproducciones por día y plataforma: así sirve igual para la serie
+  // del reporte y para la del detalle del trabajo, cuyo gasto es de otro tipo.
+  points: Pick<ReportDailyPoint, "platform" | "date" | "videoPlays">[],
   job: JobPeriod,
   today: string,
 ): ReportGrowth | null {

@@ -1,3 +1,4 @@
+import type { NominaEligibleClient } from "@/domain/entities/nomina-eligible-client";
 import type { NominaMonthKpis } from "@/domain/entities/nomina-overview";
 import type { NominaRosterEntry } from "@/domain/entities/nomina-roster";
 
@@ -29,6 +30,10 @@ export interface MonthBandFigureProps {
   value: string;
   note: string;
   dotColor: string;
+}
+
+export interface ArtistsEmptyStateProps {
+  eligibleClients: NominaEligibleClient[];
 }
 
 export interface ArtistsRosterTableProps {

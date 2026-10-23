@@ -9,7 +9,7 @@ import { PlatformLogo } from "@/presentation/components/brand/platform-logo";
 import { CampaignStateChip } from "@/presentation/components/campanas/campaign-state-chip";
 import type { CampaignRowProps } from "@/types/campaigns-list.types";
 import { cn } from "@/utils/cn";
-import { formatCompactCurrency } from "@/utils/format-compact-currency";
+import { formatMoney } from "@/utils/format-money";
 import { formatCompactNumber } from "@/utils/format-compact-number";
 
 /**
@@ -90,19 +90,10 @@ export function CampaignRow({
       <span
         className={cn(
           CAMPAIGN_COLUMN_WIDTHS.spend,
-          "flex shrink-0 flex-col items-end gap-0.5 whitespace-nowrap",
+          "shrink-0 text-right text-[13px] whitespace-nowrap text-text-primary",
         )}
       >
-        <span className="text-[13px] text-text-primary">
-          {formatCompactCurrency(campaign.spend)}
-        </span>
-        {/* La cuenta reporta en otra moneda: se enseña el original para que
-            se vea de dónde sale la cifra en pesos. */}
-        {campaign.accountSpend ? (
-          <span className="text-[11px] font-light text-text-muted">
-            {campaign.accountSpend}
-          </span>
-        ) : null}
+        {formatMoney(campaign.spend.amount, campaign.spend.currency, { compact: true })}
       </span>
 
       {/* Un icono que dice qué hace, en vez del `⋯` del diseño: el menú tendría

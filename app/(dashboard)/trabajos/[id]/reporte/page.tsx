@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { jobCampaignsRoute } from "@/constants/routes.constants";
-import { DEFAULT_CAMPAIGN_LIST_QUERY } from "@/domain/entities/campaign";
 import { createGetClient } from "@/domain/use-cases/get-client";
 import { createGetJob } from "@/domain/use-cases/get-job";
 import { createGetJobReportSettings } from "@/domain/use-cases/get-job-report-settings";
-import { createListCampaigns } from "@/domain/use-cases/list-campaigns";
+import { createListJobCampaigns } from "@/domain/use-cases/list-job-campaigns";
 import { createSupabaseCampaignRepository } from "@/infrastructure/repositories/supabase-campaign-repository";
 import { createSupabaseClientRepository } from "@/infrastructure/repositories/supabase-client-repository";
 import { createSupabaseJobReportSettingsRepository } from "@/infrastructure/repositories/supabase-job-report-settings-repository";
@@ -14,6 +13,7 @@ import { createServerSupabaseClient } from "@/infrastructure/supabase/server-sup
 import { JobWizardLayout } from "@/presentation/components/trabajos/wizard/job-wizard-layout";
 import { ReportSettingsForm } from "@/presentation/components/trabajos/wizard/report-settings-form";
 import { buildWizardSummary } from "@/utils/build-wizard-summary";
+import { spendOfCampaigns } from "@/utils/spend-of-campaigns";
 
 export const metadata: Metadata = { title: "Reporte del cliente · adsme" };
 
@@ -29,19 +29,13 @@ export default async function TrabajoReportePage({
 
   const [client, campaigns, settings] = await Promise.all([
     createGetClient(createSupabaseClientRepository(supabase))(job.clientId),
-    createListCampaigns(createSupabaseCampaignRepository(supabase))(
-      DEFAULT_CAMPAIGN_LIST_QUERY,
-    ),
+    createListJobCampaigns(createSupabaseCampaignRepository(supabase))(job.id),
     createGetJobReportSettings(
       createSupabaseJobReportSettingsRepository(supabase),
     )(job.id),
   ]);
 
-  const linkedPlatforms = new Set(
-    campaigns
-      .filter((campaign) => campaign.jobId === job.id)
-      .map((campaign) => campaign.platform),
-  );
+  const linkedPlatforms = new Set(campaigns.map((campaign) => campaign.platform));
 
   return (
     <JobWizardLayout
@@ -54,6 +48,8 @@ export default async function TrabajoReportePage({
         cpvOptimization={settings.cpvOptimization}
         chargedCpv={settings.chargedCpv}
         hiddenSections={settings.hiddenSections}
+        usdCopRate={settings.usdCopRate}
+        jobSpend={spendOfCampaigns(campaigns)}
         previousHref={jobCampaignsRoute(job.id)}
       />
     </JobWizardLayout>

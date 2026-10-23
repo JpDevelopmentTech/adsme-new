@@ -10,8 +10,7 @@ import { SUPABASE_ENV } from "@/infrastructure/supabase/supabase-env";
  * - el endpoint de ingesta de Google Ads, al que llama un script externo ya
  *   autenticado por su secreto compartido;
  * - el cron diario, que lo usa para abrir la sesión de cada propietario
- *   (`openOwnerSession`), no para leer ni escribir sus datos;
- * - las tasas de cambio, comunes a todos y sin políticas de escritura.
+ *   (`openOwnerSession`), no para leer ni escribir sus datos.
  *
  * No debe usarse para datos de un usuario: RLS es lo que aísla a unos de otros
  * y esta clave se la salta entera.

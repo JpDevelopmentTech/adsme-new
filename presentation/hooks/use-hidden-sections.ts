@@ -4,8 +4,9 @@ import { useState } from "react";
 import type { ReportSection } from "@/domain/entities/report-section";
 
 /**
- * Secciones ocultas mientras se edita el paso 3. Solo alimenta el recuento de
- * lo que verá el cliente: lo que se guarda sale de los propios interruptores.
+ * Secciones ocultas mientras se edita el paso 3. Gobierna los interruptores
+ * (controlados, para que no se reinicien tras un envío fallido) y el recuento
+ * de lo que verá el cliente.
  */
 export function useHiddenSections(initial: ReportSection[]) {
   const [hidden, setHidden] = useState<ReportSection[]>(initial);

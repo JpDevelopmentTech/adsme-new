@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { z } from "zod";
 import {
   REPORT_SETTINGS_FIELDS,
   STEP_THREE_COPY,
@@ -22,8 +23,9 @@ import { jobReportSettingsSchema } from "@/validators/job-report-settings.valida
 
 /**
  * Server Action del paso 3 del asistente: valida y guarda qué partes del
- * reporte ve el cliente y la optimización de CPV, y sigue al paso 4. Si algo
- * falla devuelve el error al formulario sin perder lo escrito.
+ * reporte ve el cliente, la optimización de CPV y la TRM, y sigue al paso 4.
+ * Si algo falla devuelve el error de cada campo al formulario sin perder lo
+ * escrito.
  */
 export async function saveJobReportSettingsAction(
   _prevState: ReportSettingsFormState,
@@ -34,12 +36,19 @@ export async function saveJobReportSettingsAction(
     cpvOptimization: formData.get(REPORT_SETTINGS_FIELDS.cpvOptimization) === "on",
     chargedCpv: String(formData.get(REPORT_SETTINGS_FIELDS.chargedCpv) ?? ""),
     hiddenSections: readHiddenSections(formData),
+    trmEnabled: formData.get(REPORT_SETTINGS_FIELDS.trmEnabled) === "on",
+    usdCopRate: String(formData.get(REPORT_SETTINGS_FIELDS.usdCopRate) ?? ""),
   });
 
   if (!parsed.success) {
+    const { fieldErrors } = z.flattenError(parsed.error);
+
     return {
       message: null,
-      chargedCpvError: parsed.error.issues[0]?.message ?? null,
+      fieldErrors: {
+        chargedCpv: fieldErrors.chargedCpv?.[0],
+        usdCopRate: fieldErrors.usdCopRate?.[0],
+      },
     };
   }
 
@@ -53,7 +62,7 @@ export async function saveJobReportSettingsAction(
   )(jobId, parsed.data);
 
   if (!saved) {
-    return { message: STEP_THREE_COPY.saveFailed, chargedCpvError: null };
+    return { message: STEP_THREE_COPY.saveFailed, fieldErrors: {} };
   }
 
   revalidatePath(jobReportRoute(jobId));

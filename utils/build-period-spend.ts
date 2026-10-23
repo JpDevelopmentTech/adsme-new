@@ -5,6 +5,7 @@ import type { JobListing } from "@/domain/entities/job-listing";
 import { buildPlannedSpendDays } from "@/utils/build-planned-spend-days";
 import { formatPeriodLabel } from "@/utils/format-period-label";
 import { groupDailySpend, type RealSpendDay } from "@/utils/group-daily-spend";
+import { sumForeignDailySpend } from "@/utils/sum-foreign-daily-spend";
 
 /** Sustituye el reparto planificado de un día por lo que se gastó de verdad. */
 function toRealDay(day: SpendDay, real: RealSpendDay): SpendDay {
@@ -54,5 +55,6 @@ export function buildPeriodSpend(
     peakAmount: Math.max(0, ...days.map((day) => day.total)),
     hasUnassigned: days.some((day) => day.unassigned > 0),
     hasReal: days.some((day) => day.source === "real"),
+    foreignSpent: sumForeignDailySpend(daily, today),
   };
 }

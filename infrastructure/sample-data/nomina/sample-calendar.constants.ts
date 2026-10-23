@@ -13,5 +13,14 @@ export const SAMPLE_PREVIOUS_TOTALS = {
   investment: 20_100_000,
 } as const;
 
+/** Calendario de los datos de muestra del diseño. */
+export const SAMPLE_CALENDAR = {
+  months: [...SAMPLE_MONTHS],
+  currentMonth: SAMPLE_CURRENT_MONTH,
+  today: SAMPLE_TODAY,
+  daysInCurrentMonth: 31,
+  previousTotals: { ...SAMPLE_PREVIOUS_TOTALS },
+};
+
 /** Tasa de impuestos sobre la Utilidad que aplica el modelo. */
 export const SAMPLE_TAX_RATE = 0.3;

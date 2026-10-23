@@ -27,6 +27,8 @@ export interface FinanceKpi {
 
 /** Veredicto del negocio en el periodo. */
 export interface BusinessHealth {
+  /** `false` si el periodo no tiene ingresos: no hay veredicto que dar. */
+  hasIncome: boolean;
   margin: number | null;
   level: ProfitLevel;
   /** Utilidad neta ÷ ingresos brutos. */

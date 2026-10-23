@@ -1,0 +1,7 @@
+import type { QuotePlace } from "@/domain/entities/quote-catalog";
+
+/** Países que se pueden elegir en un segmento. */
+export const QUOTE_COUNTRIES: QuotePlace[] = [{"code": "CO", "name": "Colombia"}, {"code": "MX", "name": "México"}, {"code": "US", "name": "Estados Unidos"}, {"code": "PE", "name": "Perú"}, {"code": "EC", "name": "Ecuador"}, {"code": "VE", "name": "Venezuela"}, {"code": "CL", "name": "Chile"}, {"code": "AR", "name": "Argentina"}, {"code": "GT", "name": "Guatemala"}, {"code": "HN", "name": "Honduras"}, {"code": "SV", "name": "El Salvador"}, {"code": "NI", "name": "Nicaragua"}, {"code": "CR", "name": "Costa Rica"}, {"code": "PA", "name": "Panamá"}, {"code": "DO", "name": "República Dominicana"}, {"code": "PR", "name": "Puerto Rico"}, {"code": "CU", "name": "Cuba"}, {"code": "BO", "name": "Bolivia"}, {"code": "PY", "name": "Paraguay"}, {"code": "UY", "name": "Uruguay"}, {"code": "BR", "name": "Brasil"}, {"code": "ES", "name": "España"}, {"code": "CA", "name": "Canadá"}];
+
+/** Regiones: solo nombre; salen tal cual en la cotización. */
+export const QUOTE_REGIONS: QuotePlace[] = [{"code": "LATAM", "name": "Latinoamérica"}, {"code": "CAM", "name": "Centroamérica"}, {"code": "SAM", "name": "Sudamérica"}, {"code": "CARIBE", "name": "Caribe hispano"}, {"code": "ANDINO", "name": "Países andinos"}, {"code": "CONO", "name": "Cono Sur"}, {"code": "HISP", "name": "Hispanos en EE.UU."}, {"code": "NA", "name": "Norteamérica"}, {"code": "GLOBAL", "name": "Global (habla hispana)"}];

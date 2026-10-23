@@ -30,7 +30,7 @@ export function CpvOptimizationSection({
           name={REPORT_SETTINGS_FIELDS.cpvOptimization}
           label={STEP_THREE_COPY.cpvToggle}
           description={STEP_THREE_COPY.cpvToggleHint}
-          defaultChecked={cpvOptimization}
+          checked={isOn}
           onChange={(event) => setIsOn(event.target.checked)}
         />
 

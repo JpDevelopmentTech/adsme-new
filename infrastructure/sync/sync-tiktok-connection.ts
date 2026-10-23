@@ -17,7 +17,6 @@ import { fetchAdvertiserCurrency } from "@/infrastructure/tiktok/tiktok-advertis
 import { TiktokApiError } from "@/infrastructure/tiktok/tiktok-api-error";
 import { fetchTiktokCampaigns } from "@/infrastructure/tiktok/tiktok-campaigns";
 import { createTiktokDailyInsightsProvider } from "@/infrastructure/tiktok/tiktok-daily-insights-provider";
-import { currencyWarning } from "@/utils/currency-warning";
 import { toTiktokCampaignDrafts } from "@/utils/to-tiktok-campaign-drafts";
 
 /**
@@ -75,7 +74,6 @@ export async function syncTiktokConnection(
   // El día a día y el reparto van después de las campañas porque cuelgan de
   // ellas. Que fallen no invalida lo ya importado: se avisa y se sigue.
   const warnings = [
-    currencyWarning(currency),
     await importDailyMetrics(
       supabase,
       campaignRepository,

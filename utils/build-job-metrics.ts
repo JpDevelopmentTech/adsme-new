@@ -1,10 +1,13 @@
 import type { Campaign } from "@/domain/entities/campaign";
 import type { ConnectionPlatform } from "@/domain/entities/connection";
+import type { SpendByCurrency } from "@/domain/entities/money";
+import { spendOfCampaigns } from "@/utils/spend-of-campaigns";
 
 export interface JobMetrics {
   views: number;
   reach: number;
-  spend: number;
+  /** Gasto por moneda: los dólares no se suman a los pesos. */
+  spend: SpendByCurrency;
   /** Porcentaje de clics sobre impresiones; 0 cuando no hubo entrega. */
   ctr: number;
 }
@@ -20,7 +23,7 @@ export function buildJobMetrics(campaigns: Campaign[]): JobMetrics {
   return {
     views: sum((campaign) => campaign.videoPlays),
     reach: sum((campaign) => campaign.reach),
-    spend: sum((campaign) => campaign.spend),
+    spend: spendOfCampaigns(campaigns),
     ctr: impressions > 0 ? (clicks / impressions) * 100 : 0,
   };
 }

@@ -1,8 +1,8 @@
-import type { Job } from "@/domain/entities/job";
 import type { Campaign } from "@/domain/entities/campaign";
 import type { ConnectionPlatform } from "@/domain/entities/connection";
 import type { ReactNode, RefObject } from "react";
-import type { JobFormat, JobPlatform } from "@/domain/entities/job";
+import type { JobFormat } from "@/domain/entities/job";
+import type { SpendByCurrency } from "@/domain/entities/money";
 import type { ReportSection } from "@/domain/entities/report-section";
 import type { ReportVisibilityGroup } from "@/types/report-visibility.types";
 import type { FilterSelectOption } from "@/types/ui.types";
@@ -121,22 +121,6 @@ export interface PlatformCampaignRowProps {
   jobId: string;
 }
 
-/** Parte de la inversión del trabajo que se lleva una de sus plataformas. */
-export interface JobPlatformSplit {
-  platform: JobPlatform;
-  amount: number;
-  percent: number;
-}
-
-export interface ReportPreviewDeviceProps {
-  job: Job;
-  clientName: string;
-  /** KPIs de la maqueta, en el orden del diseño. */
-  kpis: { value: string; label: string }[];
-  /** Reparto por plataforma; vacío si el trabajo no incluye ninguna. */
-  platforms: JobPlatformSplit[];
-}
-
 export interface ReportLinkProtectionFormProps {
   jobId: string;
   /** El enlace ya tiene clave; el campo no la muestra, solo permite cambiarla. */
@@ -168,14 +152,34 @@ export interface ReportSettingsFormProps {
   chargedCpv: number | null;
   /** Secciones que el cliente no ve, tal como están guardadas. */
   hiddenSections: ReportSection[];
+  /** TRM guardada; `null` con el interruptor apagado. */
+  usdCopRate: number | null;
+  /** Gasto del trabajo por moneda, para enseñar la conversión mientras se escribe. */
+  jobSpend: SpendByCurrency;
   /** Ruta del paso anterior, para el botón «Atrás». */
   previousHref: string;
 }
 
+/** Campos del paso 3 que pueden volver con un error de validación. */
+export type ReportSettingsErrorField = "chargedCpv" | "usdCopRate";
+
 /** Estado devuelto por la Server Action del paso 3 hacia el formulario. */
 export interface ReportSettingsFormState {
   message: string | null;
-  chargedCpvError: string | null;
+  /** Un mensaje por campo, para enseñar a la vez los errores del CPV y de la TRM. */
+  fieldErrors: Partial<Record<ReportSettingsErrorField, string>>;
+}
+
+export interface TrmSectionProps {
+  usdCopRate: number | null;
+  jobSpend: SpendByCurrency;
+  error: string | null;
+}
+
+export interface TrmRateFieldProps {
+  defaultValue: string;
+  jobSpend: SpendByCurrency;
+  error: string | null;
 }
 
 export interface CpvChargeFieldProps {

@@ -1,6 +1,7 @@
 import { FINANCE_NAME_LIMIT, FINANCE_SPLIT_LIMIT } from "@/constants/nomina-finanzas.constants";
-import { FINANCE_PROFIT_COPY as COPY } from "@/constants/nomina-finanzas-copy.constants";
+import { FINANCE_EMPTY_COPY as EMPTY, FINANCE_PROFIT_COPY as COPY } from "@/constants/nomina-finanzas-copy.constants";
 import { ArtistProfitTable } from "@/presentation/components/nomina/finanzas/artist-profit-table";
+import { FinanceEmptyNote } from "@/presentation/components/nomina/finanzas/finance-empty-note";
 import { MiniStatGrid } from "@/presentation/components/nomina/finanzas/mini-stat-grid";
 import { StackedColumnsChart } from "@/presentation/components/nomina/finanzas/stacked-columns-chart";
 import { NominaPanel } from "@/presentation/components/nomina/nomina-panel";
@@ -12,11 +13,19 @@ import { buildProfitStats } from "@/utils/build-profit-stats";
 import { formatMonthTick } from "@/utils/format-nomina-dates";
 import { truncateLabel } from "@/utils/truncate-label";
 
-/** Rentabilidad: quién deja utilidad, con qué margen y cómo se reparte cada artista. */
+/** Rentabilidad: quién deja utilidad, con qué margen y cómo se reparte cada artista; vacía si nadie ingresó en el periodo. */
 export function ProfitabilityTab({ finance }: FinanceTabProps) {
   const rows = buildArtistProfitRows(finance.artists);
   const byIncome = [...rows].sort((a, b) => b.income - a.income).slice(0, FINANCE_SPLIT_LIMIT);
   const months = finance.months.map((month) => month.month);
+
+  if (rows.length === 0) {
+    return (
+      <NominaPanel title={COPY.tableTitle}>
+        <FinanceEmptyNote title={EMPTY.noIncome} text={EMPTY.profit} />
+      </NominaPanel>
+    );
+  }
 
   return (
     <>

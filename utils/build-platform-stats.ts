@@ -4,8 +4,9 @@ import {
 } from "@/constants/report.constants";
 import type { ReportPlatformMetrics } from "@/domain/entities/report-metrics";
 import type { ReportStat } from "@/types/report.types";
-import { formatExactCurrency } from "@/utils/format-exact-currency";
+import { formatReportSpendLine } from "@/utils/format-report-spend-line";
 import { formatExactNumber } from "@/utils/format-exact-number";
+import { hasReportSpend } from "@/utils/has-report-spend";
 
 /**
  * Las métricas que esa plataforma sí reporta, en cifras completas.
@@ -28,10 +29,10 @@ export function buildPlatformStats(
     return [{ label: stat.label, value: formatExactNumber(value) }];
   });
 
-  if (!showSpend || metrics.spend <= 0) return stats;
+  if (!showSpend || !hasReportSpend(metrics.spend)) return stats;
 
   return [
     ...stats,
-    { label: PLATFORM_SPEND_LABEL, value: formatExactCurrency(metrics.spend) },
+    { label: PLATFORM_SPEND_LABEL, value: formatReportSpendLine(metrics.spend) },
   ];
 }

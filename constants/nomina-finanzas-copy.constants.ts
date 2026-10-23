@@ -2,10 +2,20 @@
 export const FINANCE_COPY = {
   title: "Finanzas",
   subtitleLead: "Contabilidad, flujo de caja, rentabilidad y tributario",
-  periodLabel: "Últimos 6 meses",
-  periodRange: "May 26 – Oct 26",
   tabsLabel: "Secciones de Finanzas",
   comparison: "vs. periodo anterior",
+  comparisonMonth: "vs. mes anterior",
+} as const;
+
+/** Estados vacíos de cada pestaña cuando el periodo no tiene movimientos. */
+export const FINANCE_EMPTY_COPY = {
+  noIncome: "Sin ingresos en este periodo",
+  evolution: "Cambia el periodo o registra ingresos para ver la evolución.",
+  noFlow: "Sin flujo en este periodo",
+  flow: "Cuando haya ingresos en el periodo elegido, el flujo aparece aquí.",
+  profit: "Cambia el periodo para ver qué tan rentable es cada artista.",
+  noTaxes: "Sin impuestos causados en este periodo",
+  health: "Cuando haya ingresos, aquí verás si el negocio es rentable.",
 } as const;
 
 /** Resumen: salud del negocio, KPIs, indicadores, evolución y estado de resultados. */
@@ -22,7 +32,6 @@ export const FINANCE_SUMMARY_COPY = {
   ],
   healthNote:
     "Rentabilidad neta = Utilidad neta ÷ Ingresos propios (Servicio + Utilidad), después de costos de servicio e impuestos. La Inversión no se cuenta como ingreso porque es presupuesto de Ads del artista que pasa de largo.",
-  serviceNote: (assumed: number, total: number) => `AdsME asume el de ${assumed} de ${total} artistas`,
   indicatorsTitle: "Indicadores clave",
   indicatorsSubtitle: "Qué tan sano es el negocio en el periodo elegido.",
   evolutionTitle: "Evolución mensual",

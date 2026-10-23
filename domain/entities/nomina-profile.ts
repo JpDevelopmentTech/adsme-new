@@ -1,3 +1,5 @@
+import type { NominaArtistConfig } from "@/domain/entities/nomina-artist-config";
+import type { NominaArtistCampaign } from "@/domain/entities/nomina-campaign-spend";
 import type { NominaArtistSummary, NominaScalability, NominaShowProgress } from "@/domain/entities/nomina-artist";
 import type { NominaBucketAmount, NominaDailyPoint, NominaMonthSplit } from "@/domain/entities/nomina-bucket";
 import type { NominaExpense } from "@/domain/entities/nomina-expense";
@@ -9,7 +11,10 @@ export interface NominaProfileKpis {
   monthIncome: number;
   availableBudget: number;
   monthProfit: number;
+  /** Gastos con destino Ads más el gasto en pesos de las campañas. */
   adsSpent: number;
+  /** Parte de `adsSpent` que viene de las campañas de AdsME. */
+  campaignSpent: number;
   monthService: number;
   monthTaxes: number;
   serviceAssumedByAdsme: boolean;
@@ -43,9 +48,13 @@ export interface NominaArtistProfile extends NominaArtistSummary {
   movements: NominaMovement[];
   movementTotals: NominaMovementTotals;
   expenses: NominaExpense[];
+  /** Campañas de AdsME desde que entró a Nómina. */
+  campaigns: NominaArtistCampaign[];
   monthDistribution: NominaBucketAmount[];
   performance: NominaDailyPoint[];
   history: NominaBudgetMonth[];
   /** Inversión acumulada de todos los meses. */
   raisedInvestment: number;
+  /** Configuración guardada, para precargar «Configuración». */
+  config: NominaArtistConfig;
 }

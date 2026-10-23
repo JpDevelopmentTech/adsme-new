@@ -12,4 +12,7 @@ export interface RowIconButtonProps {
 export interface InlineDeleteButtonProps {
   label: string;
   confirmLabel: string;
+  /** Segundo clic: borra de verdad. */
+  onConfirm: () => void;
+  isPending?: boolean;
 }

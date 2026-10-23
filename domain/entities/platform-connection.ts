@@ -1,3 +1,4 @@
+import type { Money, SpendByCurrency } from "@/domain/entities/money";
 import type { JobPlatform } from "@/domain/entities/job";
 
 /**
@@ -28,7 +29,8 @@ export interface PlatformConnection {
   accountNames: string[];
   activeCampaigns: number | null;
   /** Inversión sumada de las campañas que ha importado esta cuenta. */
-  importedSpend: number | null;
+  /** Gasto importado por moneda; las cuentas en dólares no se suman a las de pesos. */
+  importedSpend: SpendByCurrency | null;
   lastSyncedLabel: string | null;
   access: ConnectionAccess | null;
 }
@@ -42,6 +44,7 @@ export interface ImportedCampaign {
   accountName: string;
   /** Trabajo al que está asociada («Neón · Sofía Vega»); `null` si no lo está. */
   jobLabel: string | null;
-  spend: number;
+  /** En la moneda de su cuenta, sin convertir. */
+  spend: Money;
   syncedAtLabel: string;
 }

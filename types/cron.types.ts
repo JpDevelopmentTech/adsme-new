@@ -10,7 +10,5 @@ export interface OwnerSyncResult {
 export interface DailySyncSummary {
   startedAt: string;
   finishedAt: string;
-  /** Aviso si no se pudo refrescar la TRM; `null` si se refrescó. */
-  rateWarning: string | null;
   owners: OwnerSyncResult[];
 }

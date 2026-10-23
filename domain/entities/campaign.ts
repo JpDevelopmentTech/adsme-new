@@ -1,4 +1,5 @@
 import type { ConnectionPlatform } from "@/domain/entities/connection";
+import type { Money } from "@/domain/entities/money";
 
 /**
  * Campaña importada de una plataforma. `externalCampaignId` es su identificador
@@ -16,14 +17,11 @@ export interface Campaign {
   status: string;
   objective: string | null;
   /**
-   * Gasto en pesos colombianos, ya convertido con la tasa vigente del día. Es
-   * el que se suma y se muestra en toda la aplicación.
+   * Gasto en la moneda de su cuenta publicitaria, tal como lo reporta la
+   * plataforma. Nunca se convierte: dólares y pesos se suman cada uno por su
+   * lado, y solo el reporte de un trabajo con TRM pasa los dólares a pesos.
    */
-  spend: number;
-  /** Gasto tal como lo reporta la plataforma, en la moneda de la cuenta. */
-  accountSpend: number;
-  /** Moneda ISO 4217 de la cuenta publicitaria (`COP`, `USD`…). */
-  currency: string;
+  spend: Money;
   impressions: number;
   clicks: number;
   /** Personas únicas alcanzadas; siempre menor o igual que las impresiones. */
@@ -49,7 +47,7 @@ export interface CampaignDraft {
   name: string;
   status: string;
   objective?: string | null;
-  /** Gasto en la moneda de la cuenta; la conversión a pesos se hace al leer. */
+  /** Gasto en la moneda de la cuenta (`currency`). */
   spend?: number;
   /** Moneda de la cuenta en la que viene `spend`. */
   currency?: string;

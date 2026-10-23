@@ -26,7 +26,7 @@ export function ReportVisibilityGroupCard({
               name={field}
               label={option.label}
               description={option.description}
-              defaultChecked={isReportSectionVisible(hiddenSections, option.section)}
+              checked={isReportSectionVisible(hiddenSections, option.section)}
               onChange={(event) => onToggle(option.section, event.target.checked)}
             />
           );

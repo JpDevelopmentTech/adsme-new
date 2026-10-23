@@ -251,3 +251,37 @@ body {
   font-family: var(--font-body);
   font-weight: 300;
 }
+
+/* PDF del cotizador: al imprimir solo se ve la hoja de la cotización, en carta y sin márgenes. */
+@media print {
+  @page {
+    size: letter;
+    margin: 0;
+  }
+
+  html,
+  body {
+    height: auto !important;
+    overflow: visible !important;
+    background: #ffffff !important;
+  }
+
+  body * {
+    visibility: hidden;
+  }
+
+  .quote-print-sheet,
+  .quote-print-sheet * {
+    visibility: visible;
+  }
+
+  .quote-print-sheet {
+    display: flex !important;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: #ffffff;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}

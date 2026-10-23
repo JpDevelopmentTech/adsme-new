@@ -42,6 +42,9 @@ export const KPI_COPY = {
   campaignsFallback: "pautas por plataforma",
   clients: "Clientes con pauta",
   clientsLabel: (jobs: number) => (jobs === 1 ? "1 trabajo en el período" : `${jobs} trabajos en el período`),
+  /** Gasto que no se suma a la cifra en pesos: «Además US$1.966 en cuentas en dólares». */
+  foreignSpend: (amounts: string, onlyDollars: boolean) =>
+    `Además ${amounts} en cuentas en ${onlyDollars ? "dólares" : "otras monedas"}`,
 } as const;
 
 /** Cuántas filas del panel de campañas caben sin que la tarjeta crezca de más. */

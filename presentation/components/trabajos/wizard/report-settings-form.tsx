@@ -11,6 +11,7 @@ import { REPORT_VISIBILITY_GROUPS } from "@/constants/report-visibility.constant
 import { REPORT_SECTION_KEYS } from "@/domain/entities/report-section";
 import { saveJobReportSettingsAction } from "@/presentation/actions/save-job-report-settings-action";
 import { CpvOptimizationSection } from "@/presentation/components/trabajos/wizard/cpv-optimization-section";
+import { TrmSection } from "@/presentation/components/trabajos/wizard/trm-section";
 import { WizardBackLink } from "@/presentation/components/trabajos/wizard/wizard-back-link";
 import { JobWizardPanel } from "@/presentation/components/trabajos/wizard/job-wizard-panel";
 import { ReportVisibilityGroupCard } from "@/presentation/components/trabajos/wizard/report-visibility-group-card";
@@ -25,12 +26,13 @@ import type {
 
 const INITIAL_STATE: ReportSettingsFormState = {
   message: null,
-  chargedCpvError: null,
+  fieldErrors: {},
 };
 
 /**
- * Paso 3 del asistente: qué partes del reporte ve el cliente y la optimización
- * de CPV. Todo se guarda al pulsar «Siguiente», como el resto de pasos.
+ * Paso 3 del asistente: qué partes del reporte ve el cliente, la optimización
+ * de CPV y la TRM de los dólares. Todo se guarda al pulsar «Siguiente», como el
+ * resto de pasos.
  */
 export function ReportSettingsForm({
   jobId,
@@ -38,6 +40,8 @@ export function ReportSettingsForm({
   cpvOptimization,
   chargedCpv,
   hiddenSections,
+  usdCopRate,
+  jobSpend,
   previousHref,
 }: ReportSettingsFormProps) {
   const [state, formAction, isPending] = useActionState(
@@ -81,7 +85,7 @@ export function ReportSettingsForm({
             <ReportVisibilityGroupCard
               key={group.title}
               group={group}
-              hiddenSections={hiddenSections}
+              hiddenSections={hidden}
               onToggle={toggle}
             />
           ))}
@@ -91,7 +95,13 @@ export function ReportSettingsForm({
           cpvOptimization={cpvOptimization}
           chargedCpv={chargedCpv}
           investment={investment}
-          error={state.chargedCpvError}
+          error={state.fieldErrors.chargedCpv ?? null}
+        />
+
+        <TrmSection
+          usdCopRate={usdCopRate}
+          jobSpend={jobSpend}
+          error={state.fieldErrors.usdCopRate ?? null}
         />
       </JobWizardPanel>
     </form>

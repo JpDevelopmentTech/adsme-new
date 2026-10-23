@@ -1,6 +1,6 @@
 "use client";
 
-import { Settings, Share2, Trash2 } from "lucide-react";
+import { Settings, Share2, UserMinus } from "lucide-react";
 import { useState } from "react";
 import { PROFILE_ACTIONS_COPY } from "@/constants/nomina-modales-perfil-copy.constants";
 import { DeleteArtistDialog } from "@/presentation/components/nomina/modales/perfil/delete-artist-dialog";
@@ -9,7 +9,7 @@ import { ShareModal } from "@/presentation/components/nomina/modales/perfil/shar
 import { SecondaryButton } from "@/presentation/components/ui/secondary-button";
 import type { ProfileActionsProps } from "@/types/nomina-modals.types";
 
-/** Acciones del perfil: Compartir, Configuración y Eliminar artista, cada una con su modal. */
+/** Acciones del perfil: Compartir, Configuración y Quitar de Nómina, cada una con su modal. */
 export function ProfileActions({ movementCount, ...settingsProps }: ProfileActionsProps) {
   const [open, setOpen] = useState<"share" | "settings" | "delete" | null>(null);
   const close = () => setOpen(null);
@@ -35,7 +35,7 @@ export function ProfileActions({ movementCount, ...settingsProps }: ProfileActio
         onClick={() => setOpen("delete")}
         className="flex cursor-pointer items-center gap-2 rounded-pill px-3 py-[10px] text-sm font-light text-danger transition-colors hover:bg-danger/10 focus-visible:ring-2 focus-visible:ring-lilac focus-visible:outline-none"
       >
-        <Trash2 size={16} strokeWidth={1.5} aria-hidden />
+        <UserMinus size={16} strokeWidth={1.5} aria-hidden />
         {PROFILE_ACTIONS_COPY.remove}
       </button>
       {open === "share" ? <ShareModal isOpen onClose={close} artist={artist} /> : null}

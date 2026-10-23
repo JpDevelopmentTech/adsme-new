@@ -34,7 +34,7 @@ export function ArtistsRosterRow({ entry }: ArtistsRosterRowProps) {
         </span>
       </td>
       <td className={cn(NOMINA_TD_CLASSES, ROSTER_STICKY_SECOND_CLASSES)} onClick={(event) => event.stopPropagation()}>
-        <NewIncomeButton artist={entry} variant="icon" monthBilled={entry.monthIncome} monthMovementCount={entry.monthEvents} />
+        <NewIncomeButton artist={entry} variant="icon" />
       </td>
       <td className={cn(MONEY, "font-normal text-text-primary")}>{formatExactCurrency(entry.monthIncome)}</td>
       <td className={cn(NOMINA_TD_CLASSES, "text-right")}>{entry.monthEvents}</td>

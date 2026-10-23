@@ -17,7 +17,7 @@ export const NOMINA_ARTISTAS_COPY = {
   sortBy: (label: string) => `Ordenar por ${label}`,
   hint: "Toca una fila para abrir el perfil del artista. El botón + registra un ingreso sin salir de la lista.",
   emptyTitle: "Tu roster está vacío",
-  emptyDescription: "Crea tu primer artista para empezar a registrar ingresos.",
+  emptyDescription: "Inscribe a uno de tus clientes para empezar a registrar ingresos.",
 } as const;
 
 /** Rótulos de las columnas ordenables, en el orden en que aparecen tras «Estado». */

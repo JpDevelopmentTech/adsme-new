@@ -1,4 +1,4 @@
-import { SAMPLE_CURRENT_MONTH, SAMPLE_TODAY } from "@/infrastructure/sample-data/nomina/sample-calendar.constants";
+import type { NominaCalendar } from "@/infrastructure/sample-data/nomina/sample-nomina.types";
 
 /** Fechas exactas de los shows de octubre de Valeria Gómez, como en el diseño. */
 const DESIGNED_DATES: Record<string, { event: number; income: number }[]> = {
@@ -18,11 +18,11 @@ function daysIn(month: string): number {
  * Días de evento e ingreso de los `count` shows de un mes, repartidos a lo largo
  * del mes. En el mes en curso solo llegan hasta ayer, porque hoy aún no pasa.
  */
-export function sampleShowDates(artistId: string, month: string, count: number): { event: number; income: number }[] {
+export function sampleShowDates(artistId: string, month: string, count: number, calendar: NominaCalendar): { event: number; income: number }[] {
   const designed = DESIGNED_DATES[`${artistId}/${month}`];
   if (designed && designed.length === count) return designed;
 
-  const lastDay = month === SAMPLE_CURRENT_MONTH ? SAMPLE_TODAY - 1 : daysIn(month) - 1;
+  const lastDay = month === calendar.currentMonth ? calendar.today - 1 : daysIn(month) - 1;
 
   return Array.from({ length: count }, (_, index) => {
     const event = Math.max(1, Math.round(((index + 1) * lastDay) / (count + 1)));

@@ -12,7 +12,6 @@ export function buildLedgerEntries(finance: NominaFinance): LedgerEntry[] {
       ...row,
       taxes,
       netProfit: row.profit - taxes,
-      investment: row.amount - row.service - row.profit,
       photoUrl: photos.get(row.artistId) ?? null,
     };
   });

@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { NOMINA_RESUMEN_COPY as COPY } from "@/constants/nomina-resumen-copy.constants";
 import { createGetNominaOverview } from "@/domain/use-cases/get-nomina-overview";
-import { createSampleNominaRepository } from "@/infrastructure/repositories/sample-nomina-repository";
+import { createListNominaEligibleClients } from "@/domain/use-cases/list-nomina-eligible-clients";
+import { createServerSupabaseClient } from "@/infrastructure/supabase/server-supabase-client";
+import { createSupabaseNominaEnrollmentRepository } from "@/infrastructure/repositories/supabase-nomina-enrollment-repository";
+import { createSupabaseNominaRepository } from "@/infrastructure/repositories/supabase-nomina-repository";
 import { DistributionCard } from "@/presentation/components/nomina/distribution-card";
 import { NewArtistButton } from "@/presentation/components/nomina/modales/new-artist-button";
 import { NominaPanel } from "@/presentation/components/nomina/nomina-panel";
@@ -18,12 +21,16 @@ export const metadata: Metadata = { title: COPY.metaTitle };
  * cifra bruta a cómo se repartió, su evolución diaria y quién la generó.
  */
 export default async function NominaResumenPage() {
-  const overview = await createGetNominaOverview(createSampleNominaRepository())();
+  const supabase = await createServerSupabaseClient();
+  const [overview, eligibleClients] = await Promise.all([
+    createGetNominaOverview(createSupabaseNominaRepository(supabase, new Date()))(),
+    createListNominaEligibleClients(createSupabaseNominaEnrollmentRepository(supabase))(),
+  ]);
   const monthLabel = formatMonthLong(overview.month);
 
   return (
     <>
-      <NominaTopbar title={COPY.title} subtitle={COPY.subtitle(monthLabel)} hasSearch action={<NewArtistButton />} />
+      <NominaTopbar title={COPY.title} subtitle={COPY.subtitle(monthLabel)} hasSearch action={<NewArtistButton eligibleClients={eligibleClients} />} />
 
       <ResumenKpiRow kpis={overview.kpis} month={overview.month} />
 

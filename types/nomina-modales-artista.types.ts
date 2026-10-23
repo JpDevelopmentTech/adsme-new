@@ -1,5 +1,5 @@
-import type { ReactNode } from "react";
-import type { NominaChoice, NominaSplitModel, NominaSplitSettings, NominaViability } from "@/types/nomina-modales.types";
+import type { NominaEligibleClient } from "@/domain/entities/nomina-eligible-client";
+import type { NominaSplitModel, NominaSplitSettings, NominaViability } from "@/types/nomina-modales.types";
 import type { NominaSplitPatch } from "@/types/nomina-modales-reparto.types";
 
 /** Estado del bloque «Modelo de reparto» (hook `useNominaSplitModel`). */
@@ -11,34 +11,10 @@ export interface NominaSplitModelState {
   isViable: boolean;
 }
 
-/** Foto elegida en el alta (hook `useArtistPhoto`). */
-export interface ArtistPhotoState {
-  url: string | null;
-  error: string | null;
-  selectFile: (file: File | null | undefined) => void;
-  remove: () => void;
-}
-
-/** Bloque Express del alta (hook `useNewArtistExpress`). */
-export interface NewArtistExpressState {
-  isOn: boolean;
-  setIsOn: (isOn: boolean) => void;
-  preset: string;
-  setPreset: (preset: string) => void;
-  otherAmount: number | null;
-  setOtherAmount: (amount: number | null) => void;
-  coveredMonth: string;
-  setCoveredMonth: (month: string) => void;
-  /** Monto de entrada aceptado, ya resuelto. */
-  amount: number;
-}
-
 /** Formulario completo «Nuevo artista» (hook `useNewArtistForm`). */
 export interface NewArtistFormState {
-  name: string;
-  setName: (name: string) => void;
-  isDuplicate: boolean;
-  photo: ArtistPhotoState;
+  client: NominaEligibleClient | null;
+  setClient: (client: NominaEligibleClient | null) => void;
   nomina: number | null;
   setNomina: (nomina: number | null) => void;
   nominaError: string | null;
@@ -47,33 +23,44 @@ export interface NewArtistFormState {
   setMinShows: (minShows: number | null) => void;
   threshold: number | null;
   split: NominaSplitModelState;
-  express: NewArtistExpressState;
   startDate: string;
   setStartDate: (date: string) => void;
   canSave: boolean;
+  isSaving: boolean;
+  error: string | null;
+  /** Inscribe al cliente y abre su perfil de Nómina. */
+  submit: () => void;
 }
 
 export interface NewArtistModalProps {
   isOpen: boolean;
   onClose: () => void;
-  existingNames: string[];
+  eligibleClients: NominaEligibleClient[];
+  /** Cliente ya elegido (desde su ficha): el alta abre en el paso de nómina. */
+  initialClient?: NominaEligibleClient;
+}
+
+export interface ClientPickerStepProps {
+  clients: NominaEligibleClient[];
+  onPick: (client: NominaEligibleClient) => void;
+}
+
+export interface EligibleClientOptionProps {
+  client: NominaEligibleClient;
+  onPick: (client: NominaEligibleClient) => void;
+}
+
+export interface SelectedClientCardProps {
+  client: NominaEligibleClient;
+  /** Sin él no se puede cambiar (alta abierta desde la ficha del cliente). */
+  onChange?: () => void;
 }
 
 export interface NewArtistSectionProps {
   form: NewArtistFormState;
 }
 
-export interface ArtistPhotoPickerProps {
-  photo: ArtistPhotoState;
-}
-
-export interface ArtistPhotoHelpProps {
-  photo: ArtistPhotoState;
-}
-
-export interface ExpressDetailProps {
-  express: NewArtistExpressState;
-  /** Distribución ya pintada (o nada si el monto no es mayor que 0). */
-  distribution: ReactNode;
-  monthOptions: NominaChoice<string>[];
+export interface ArtistSetupColumnProps extends NewArtistSectionProps {
+  /** Si el cliente elegido se puede cambiar (no cuando el alta abre desde su ficha). */
+  canChangeClient: boolean;
 }

@@ -1,21 +1,13 @@
+import type { NominaServicePayer as DomainServicePayer, NominaSplitTerms } from "@/domain/entities/nomina-split-terms";
 import type { NominaShowProgress } from "@/domain/entities/nomina-artist";
 import type { NominaSocialNetwork } from "@/domain/entities/nomina-social";
 import type { NominaIncomeConcept } from "@/domain/entities/nomina-movement";
 
-/** Quién paga el Servicio: sale del dinero del cliente o lo asume AdsME. */
-export type NominaServicePayer = "cliente" | "adsme";
+/** Quién paga el Servicio (ver la entidad del dominio). */
+export type NominaServicePayer = DomainServicePayer;
 
 /** Lo que se edita del modelo de reparto; `service: null` = sugerido (2/7). */
-export interface NominaSplitSettings {
-  hasService: boolean;
-  service: number | null;
-  servicePayer: NominaServicePayer;
-  hasScalability: boolean;
-  profitPercent: number;
-  profitPerShowAfterMin: number;
-  hasFixedProfit: boolean;
-  fixedProfit: number;
-}
+export type NominaSplitSettings = NominaSplitTerms;
 
 /** Modelo completo, con la nómina, el mínimo y el Servicio ya resuelto. */
 export interface NominaSplitModel extends Omit<NominaSplitSettings, "service"> {
@@ -64,6 +56,8 @@ export interface NominaIncomeSplitInput {
   model: NominaSplitModel;
   /** Lo facturado en el mes antes de este ingreso. */
   monthBilled: number;
+  /** Servicio que ya cubrió la Utilidad ese mes (cuando AdsME lo asume). */
+  serviceCovered: number;
 }
 
 /** Opción de un grupo de botones o de un `select`. */

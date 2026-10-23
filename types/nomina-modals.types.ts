@@ -1,28 +1,27 @@
+import type { NominaSplitTerms } from "@/domain/entities/nomina-split-terms";
+import type { NominaEligibleClient } from "@/domain/entities/nomina-eligible-client";
 import type { NominaArtistSummary } from "@/domain/entities/nomina-artist";
+import type { NominaBillingEntry } from "@/domain/entities/nomina-billing-entry";
 import type { NominaExpense } from "@/domain/entities/nomina-expense";
 import type { NominaMovement } from "@/domain/entities/nomina-movement";
 import type { NominaSocialLink } from "@/domain/entities/nomina-social";
 
-/** Artista sobre el que actúa un modal: lo mínimo más su nómina. */
+/** Artista sobre el que actúa un modal: lo mínimo, su nómina y lo que necesita el reparto. */
 export interface NominaModalArtist extends NominaArtistSummary {
   nomina: number;
+  minShows: number;
+  /** Modelo de reparto guardado del artista. */
+  split: NominaSplitTerms;
+  /** Ingresos ya registrados, para el acumulado del mes al repartir. */
+  billing: NominaBillingEntry[];
 }
 
 export interface NewArtistButtonProps {
-  /** Nombres ya usados, para avisar «Ya existe un artista con ese nombre.». */
-  existingNames?: string[];
+  /** Clientes que todavía no están en Nómina. */
+  eligibleClients: NominaEligibleClient[];
 }
 
-/** Datos opcionales del mes para el modal de ingreso (nota del acumulado). */
-export interface NominaIncomeMonthProps {
-  /** Mínimo de Shows del artista; sin él se usa el sugerido por su nómina. */
-  minShows?: number;
-  /** Facturado en el mes en curso antes del nuevo ingreso. */
-  monthBilled?: number;
-  monthMovementCount?: number;
-}
-
-export interface NewIncomeButtonProps extends NominaIncomeMonthProps {
+export interface NewIncomeButtonProps {
   artist: NominaModalArtist;
   /** `primary`: píldora «Nuevo Ingreso»; `icon`: el «+» de la fila del roster. */
   variant: "primary" | "icon";
@@ -37,13 +36,11 @@ export interface ProfileActionsProps {
   socials: NominaSocialLink[];
   minShows: number;
   movementCount: number;
-  /** Meta de Utilidad fija del artista, para precargar la configuración. */
-  fixedProfitGoal?: number | null;
-  /** Si AdsME asume el Servicio del artista. */
-  serviceAssumedByAdsme?: boolean;
+  /** Modelo de reparto guardado, para precargar la configuración. */
+  split: NominaSplitTerms;
 }
 
-export interface MovementRowActionsProps extends NominaIncomeMonthProps {
+export interface MovementRowActionsProps {
   artist: NominaModalArtist;
   movement: NominaMovement;
 }

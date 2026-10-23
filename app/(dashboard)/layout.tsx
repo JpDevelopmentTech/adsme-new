@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { LOGIN_ROUTE, ROUTES_WITH_OWN_HEADER } from "@/constants/routes.constants";
 import { createGetCurrentUser } from "@/domain/use-cases/get-current-user";
 import { createListNominaRoster } from "@/domain/use-cases/list-nomina-roster";
-import { createSampleNominaRepository } from "@/infrastructure/repositories/sample-nomina-repository";
+import { createSupabaseNominaRepository } from "@/infrastructure/repositories/supabase-nomina-repository";
 import { createSupabaseAuthRepository } from "@/infrastructure/repositories/supabase-auth-repository";
 import { createServerSupabaseClient } from "@/infrastructure/supabase/server-supabase-client";
 import { AppSidebar } from "@/presentation/components/dashboard/app-sidebar";
@@ -29,7 +29,7 @@ export default async function DashboardLayout({
   if (!user) redirect(LOGIN_ROUTE);
 
   const summary = toCurrentUserSummary(user);
-  const nominaArtists = await createListNominaRoster(createSampleNominaRepository())();
+  const nominaArtists = await createListNominaRoster(createSupabaseNominaRepository(await createServerSupabaseClient(), new Date()))();
 
   return (
     <div className="flex h-dvh overflow-hidden lg:p-5">

@@ -36,3 +36,12 @@ export const PLATFORM_PRIMARY_METRIC: Record<
   meta: { label: "Alcance", name: "Meta Ads" },
   tiktok: { label: "Reprod.", name: "TikTok Ads" },
 };
+
+/** Textos del gasto en el detalle del trabajo, donde pesos y dólares van separados. */
+export const JOB_SPEND_COPY = {
+  accumulated: "inversión acumulada",
+  /** La nota cuando hay gasto en otra moneda: «+ US$876 · inversión acumulada». */
+  withOthers: (others: string) => `+ ${others} · inversión acumulada`,
+  platformCaption: "Inversión",
+  platformCaptionWithOthers: (others: string) => `Inversión · + ${others}`,
+} as const;

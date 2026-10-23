@@ -5,9 +5,9 @@ import { ARTIST_SPEND_HEADER, ARTIST_TABLE_HEADERS, REPORT_COPY } from "@/consta
 import { REPORT_ROUTE_PREFIX } from "@/constants/report-link.constants";
 import { JobCover } from "@/presentation/components/cliente-detalle/job-cover";
 import { StatusBadge } from "@/presentation/components/ui/status-badge";
+import { ReportSpendFigure } from "@/presentation/components/reporte/report-spend-figure";
 import type { ArtistLaunchesTableProps } from "@/types/report.types";
 import { cn } from "@/utils/cn";
-import { formatExactCurrency } from "@/utils/format-exact-currency";
 import { formatExactNumber } from "@/utils/format-exact-number";
 
 /** Ancho y alineación de cada columna, en el orden de `ARTIST_TABLE_HEADERS`. */
@@ -65,7 +65,7 @@ export function ArtistLaunchesTable({ launches, showSpend }: ArtistLaunchesTable
                   </td>
                   {showSpend ? (
                     <td className="pr-6 text-right text-[15px] whitespace-nowrap text-text-primary tabular-nums">
-                      {formatExactCurrency(launch.spend)}
+                      <ReportSpendFigure spend={launch.spend} />
                     </td>
                   ) : null}
                   <td>

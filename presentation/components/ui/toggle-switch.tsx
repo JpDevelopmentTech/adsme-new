@@ -12,6 +12,7 @@ export function ToggleSwitch({
   label,
   description,
   defaultChecked = false,
+  checked,
   onChange,
 }: ToggleSwitchProps) {
   return (
@@ -27,7 +28,7 @@ export function ToggleSwitch({
         id={id}
         name={name}
         type="checkbox"
-        defaultChecked={defaultChecked}
+        {...(checked === undefined ? { defaultChecked } : { checked })}
         onChange={onChange}
         className="peer sr-only"
       />

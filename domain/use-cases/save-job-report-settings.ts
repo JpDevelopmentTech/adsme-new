@@ -17,6 +17,7 @@ export function createSaveJobReportSettings(
       cpvOptimization: settings.cpvOptimization,
       chargedCpv: settings.cpvOptimization ? settings.chargedCpv : null,
       hiddenSections: [...new Set(settings.hiddenSections)],
+      usdCopRate: settings.usdCopRate,
     });
   };
 }

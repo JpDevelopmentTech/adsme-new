@@ -1,7 +1,7 @@
-import { FINANCE_SUMMARY_COPY } from "@/constants/nomina-finanzas-copy.constants";
 import type { NominaFinance } from "@/domain/entities/nomina-finance";
 import type { FinanceFigures, FinanceKpi } from "@/types/nomina-finanzas.types";
 import { formatExactCurrency } from "@/utils/format-exact-currency";
+import { formatServiceAssumedNote } from "@/utils/format-service-assumed-note";
 import { percentChange } from "@/utils/percent-change";
 import { toFinanceFigures } from "@/utils/to-finance-figures";
 
@@ -23,6 +23,6 @@ export function buildFinanceKpis(finance: NominaFinance): FinanceKpi[] {
     label,
     value: formatExactCurrency(current[field]),
     delta: percentChange(current[field], previous?.[field]),
-    note: field === "service" ? FINANCE_SUMMARY_COPY.serviceNote(finance.serviceAssumedBy, finance.artistCount) : undefined,
+    note: field === "service" ? formatServiceAssumedNote(finance.serviceAssumedBy, finance.artistCount) : undefined,
   }));
 }

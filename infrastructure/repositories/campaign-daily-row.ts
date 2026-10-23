@@ -1,3 +1,4 @@
+import { DEFAULT_ACCOUNT_CURRENCY } from "@/constants/currency.constants";
 import type {
   CampaignDailyDraft,
   CampaignDailyPoint,
@@ -23,16 +24,17 @@ export interface CampaignDailyPointRow extends CampaignDailyRow {
   campaigns:
     | {
         job_id: string | null;
+        /** Moneda de la cuenta, en la que viene el gasto del día. */
+        currency: string;
         connections: { platform: string } | { platform: string }[] | null;
       }
     | null;
 }
 
-/** `spend:spend_cop`: el gasto del día llega ya convertido a pesos. */
 export const CAMPAIGN_DAILY_COLUMNS =
-  "metric_date, spend:spend_cop, impressions, clicks, reach, video_plays, engagement, comments, shares, reactions";
+  "metric_date, spend, impressions, clicks, reach, video_plays, engagement, comments, shares, reactions";
 
-export const CAMPAIGN_DAILY_POINT_COLUMNS = `${CAMPAIGN_DAILY_COLUMNS}, campaigns!inner ( job_id, connections!inner ( platform ) )`;
+export const CAMPAIGN_DAILY_POINT_COLUMNS = `${CAMPAIGN_DAILY_COLUMNS}, campaigns!inner ( job_id, currency, connections!inner ( platform ) )`;
 
 /**
  * La conexión de Google se llama `google_ads`, pero en los trabajos y en los
@@ -56,7 +58,10 @@ export function toCampaignDailyPoint(
     platform: toJobPlatform(connection?.platform),
     jobId: row.campaigns?.job_id ?? null,
     // `numeric` llega como cadena para no perder precisión.
-    spend: Number(row.spend),
+    spend: {
+      amount: Number(row.spend),
+      currency: row.campaigns?.currency ?? DEFAULT_ACCOUNT_CURRENCY,
+    },
     impressions: Number(row.impressions),
     clicks: Number(row.clicks),
     reach: Number(row.reach),

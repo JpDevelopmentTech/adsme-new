@@ -11,7 +11,7 @@ import type { NewArtistButtonProps } from "@/types/nomina-modals.types";
  * Acción «Nuevo artista»: abre el modal de alta. El modal se monta al abrirlo,
  * así cada apertura empieza con el formulario limpio.
  */
-export function NewArtistButton({ existingNames = [] }: NewArtistButtonProps = {}) {
+export function NewArtistButton({ eligibleClients }: NewArtistButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -20,7 +20,7 @@ export function NewArtistButton({ existingNames = [] }: NewArtistButtonProps = {
         <UserPlus size={16} strokeWidth={1.75} aria-hidden />
         {NOMINA_SHELL_COPY.newArtist}
       </PrimaryButton>
-      {isOpen ? <NewArtistModal isOpen onClose={() => setIsOpen(false)} existingNames={existingNames} /> : null}
+      {isOpen ? <NewArtistModal isOpen onClose={() => setIsOpen(false)} eligibleClients={eligibleClients} /> : null}
     </>
   );
 }

@@ -3,7 +3,7 @@ import { REPORT_COPY } from "@/constants/report.constants";
 import { PlatformLogo } from "@/presentation/components/brand/platform-logo";
 import type { ArtistPlatformCardsProps } from "@/types/report.types";
 import { formatPercent, share } from "@/utils/format-compact-number";
-import { formatExactCurrency } from "@/utils/format-exact-currency";
+import { formatReportSpendLine } from "@/utils/format-report-spend-line";
 import { formatExactNumber } from "@/utils/format-exact-number";
 
 /**
@@ -39,7 +39,7 @@ export function ArtistPlatformCards({ platforms, showSpend }: ArtistPlatformCard
               <p className="text-xs text-text-secondary">
                 {REPORT_COPY.artistPlatformNote(
                   formatPercent(percent),
-                  showSpend ? formatExactCurrency(metrics.spend) : null,
+                  showSpend ? formatReportSpendLine(metrics.spend) : null,
                 )}
               </p>
 

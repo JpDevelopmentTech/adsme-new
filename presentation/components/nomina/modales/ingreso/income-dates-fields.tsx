@@ -15,15 +15,15 @@ export function IncomeDatesFields({ form }: IncomeSectionProps) {
     <>
       <div className="grid gap-4 sm:grid-cols-2">
         <FieldShell htmlFor="income-event-date" label={INCOME_MODAL_COPY.eventDate} hint={INCOME_MODAL_COPY.dateHelp}>
-          <DateInput id="income-event-date" value={values.eventDate} onChange={(eventDate) => form.set({ eventDate, assignedMonth: keepAssignedMonth(values.assignedMonth, eventDate, values.incomeDate) })} />
+          <DateInput id="income-event-date" value={values.eventDate} onChange={(eventDate) => form.setMonthInput({ eventDate, assignedMonth: keepAssignedMonth(values.assignedMonth, eventDate, values.incomeDate) })} />
         </FieldShell>
         <FieldShell htmlFor="income-date" label={INCOME_MODAL_COPY.incomeDate} hint={INCOME_MODAL_COPY.dateHelp}>
-          <DateInput id="income-date" value={values.incomeDate} onChange={(incomeDate) => form.set({ incomeDate, assignedMonth: keepAssignedMonth(values.assignedMonth, values.eventDate, incomeDate) })} />
+          <DateInput id="income-date" value={values.incomeDate} onChange={(incomeDate) => form.setMonthInput({ incomeDate, assignedMonth: keepAssignedMonth(values.assignedMonth, values.eventDate, incomeDate) })} />
         </FieldShell>
       </div>
       {values.concept === "express" ? null : (
         <FieldShell htmlFor="income-month" label={INCOME_MODAL_COPY.assignedMonth} hint={INCOME_MODAL_COPY.assignedHelp}>
-          <SelectInput id="income-month" value={values.assignedMonth} options={listYearMonths(years)} onChange={(assignedMonth) => form.set({ assignedMonth })} />
+          <SelectInput id="income-month" value={values.assignedMonth} options={listYearMonths(years)} onChange={(assignedMonth) => form.setMonthInput({ assignedMonth })} />
         </FieldShell>
       )}
     </>

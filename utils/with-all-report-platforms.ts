@@ -1,5 +1,6 @@
 import { PLATFORM_ORDER } from "@/constants/platform-labels.constants";
 import { SHOW_ALL_REPORT_PLATFORMS } from "@/constants/report.constants";
+import { EMPTY_REPORT_SPEND } from "@/constants/report-spend.constants";
 import type { JobPlatform } from "@/domain/entities/job";
 import type { ReportPlatformMetrics } from "@/domain/entities/report-metrics";
 
@@ -9,7 +10,7 @@ function emptyMetrics(platform: JobPlatform): ReportPlatformMetrics {
     platform,
     campaigns: 0,
     activeCampaigns: 0,
-    spend: 0,
+    spend: EMPTY_REPORT_SPEND,
     impressions: 0,
     clicks: 0,
     reach: 0,

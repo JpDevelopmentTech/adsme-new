@@ -2,7 +2,7 @@
 export const PROFILE_ACTIONS_COPY = {
   share: "Compartir",
   settings: "Configuración",
-  remove: "Eliminar artista",
+  remove: "Quitar de Nómina",
 } as const;
 
 /** Textos literales del modal «Configuración de {artista}». */
@@ -44,16 +44,16 @@ export const SHARE_MODAL_COPY = {
 
 /** Textos literales de los borrados de artista (2 pasos) y de movimiento. */
 export const DELETE_COPY = {
-  artistTitle: (artist: string) => `¿Eliminar a ${artist}?`,
-  artistLead: "Se eliminará el artista del roster junto con",
+  artistTitle: (artist: string) => `¿Quitar a ${artist} de Nómina?`,
+  artistLead: "Saldrá del roster con su configuración de nómina y",
   artistCount: (count: number) => `${count} ${count === 1 ? "movimiento" : "movimientos"}`,
-  artistTail: "registrados y se quitará el acceso a su portal.",
-  artistIrreversible: "Esta acción no se puede deshacer.",
+  artistTail: "registrados, y se quitará el acceso a su portal.",
+  artistIrreversible: "El cliente se conserva en Clientes, con sus trabajos.",
   continue: "Continuar",
-  confirmTitle: "Confirma la eliminación",
+  confirmTitle: "Confirma que sale de Nómina",
   confirmLead: "Para confirmar, escribe el nombre del artista:",
   confirmInput: "Nombre del artista",
-  confirmButton: "Eliminar definitivamente",
+  confirmButton: "Quitar de Nómina",
   movementTitle: "¿Eliminar este movimiento?",
   movementText: (concept: string, amount: string, date: string) =>
     `Se eliminará ${concept} por ${amount} (${date}). Los totales y la distribución del mes se recalcularán. Esta acción no se puede deshacer.`,

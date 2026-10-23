@@ -8,7 +8,7 @@ import { EmptyStatePanel } from "@/presentation/components/ui/empty-state-panel"
 import type { MovementsPanelProps } from "@/types/nomina-perfil.types";
 
 /** Panel «Desglose de Movimientos»: los ingresos del artista con su reparto. */
-export function MovementsPanel({ artist, movements, totals, incomeContext, isReadOnly = false }: MovementsPanelProps) {
+export function MovementsPanel({ artist, movements, totals, isReadOnly = false }: MovementsPanelProps) {
   return (
     <NominaPanel
       isThick
@@ -18,7 +18,7 @@ export function MovementsPanel({ artist, movements, totals, incomeContext, isRea
         isReadOnly ? undefined : (
           <>
             <NewExpenseButton artist={artist} />
-            <NewIncomeButton artist={artist} variant="primary" {...incomeContext} />
+            <NewIncomeButton artist={artist} variant="primary" />
           </>
         )
       }
@@ -30,7 +30,7 @@ export function MovementsPanel({ artist, movements, totals, incomeContext, isRea
           description={isReadOnly ? FINANCE_TAB_COPY.emptyDescriptionReadOnly : FINANCE_TAB_COPY.emptyDescription}
         />
       ) : (
-        <MovementsTable artist={artist} movements={movements} totals={totals} incomeContext={incomeContext} isReadOnly={isReadOnly} />
+        <MovementsTable artist={artist} movements={movements} totals={totals} isReadOnly={isReadOnly} />
       )}
     </NominaPanel>
   );

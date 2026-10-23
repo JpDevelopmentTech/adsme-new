@@ -7,7 +7,7 @@ import {
 import { LINK_CAMPAIGN_ROUTE } from "@/constants/routes.constants";
 import { CampaignsSplitRail } from "@/presentation/components/campanas/campaigns-split-rail";
 import type { CampaignsSplitBandProps } from "@/types/campaigns-list.types";
-import { formatCompactCurrency } from "@/utils/format-compact-currency";
+import { formatSpend } from "@/utils/format-spend";
 
 /**
  * Cabecera de `B9`. Contesta «¿cuánto de lo que entró ya cuenta para alguien?»
@@ -28,7 +28,7 @@ export function CampaignsSplitBand({ split }: CampaignsSplitBandProps) {
             {isClear
               ? CAMPAIGNS_SPLIT_COPY.clear
               : CAMPAIGNS_SPLIT_COPY.pending(
-                  formatCompactCurrency(split.unlinked),
+                  formatSpend(split.unlinked, { compact: true }),
                 )}
           </h2>
           <p className="text-[12px] text-g-400">

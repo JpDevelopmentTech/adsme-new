@@ -2,6 +2,7 @@ import type {
   ReportPlatformMetrics,
   ReportTotals,
 } from "@/domain/entities/report-metrics";
+import { mergeReportSpend } from "@/utils/merge-report-spend";
 
 /** Suma las plataformas del reporte en un único bloque de totales. */
 export function buildReportTotals(
@@ -20,7 +21,8 @@ export function buildReportTotals(
   return {
     campaigns: sum((metrics) => metrics.campaigns),
     activeCampaigns: sum((metrics) => metrics.activeCampaigns),
-    spend: sum((metrics) => metrics.spend),
+    // El gasto se une por moneda y por TRM, nunca sumando importes sueltos.
+    spend: mergeReportSpend(platforms.map((metrics) => metrics.spend)),
     impressions: sum((metrics) => metrics.impressions),
     clicks: sum((metrics) => metrics.clicks),
     reach: sum((metrics) => metrics.reach),

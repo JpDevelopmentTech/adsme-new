@@ -5,7 +5,7 @@ import Link from "next/link";
 import { CAMPAIGNS_COPY } from "@/constants/campaigns.constants";
 import { jobDetailRoute } from "@/constants/routes.constants";
 import type { CampaignGroupHeadProps } from "@/types/campaigns-list.types";
-import { formatCompactCurrency } from "@/utils/format-compact-currency";
+import { formatSpend } from "@/utils/format-spend";
 
 /**
  * Cabecera del bloque. El grupo sin vincular se tiñe de acento y lleva la
@@ -19,7 +19,7 @@ export function CampaignGroupHead({
 }: CampaignGroupHeadProps) {
   const meta = CAMPAIGNS_COPY.groupMeta(
     group.campaigns.length,
-    formatCompactCurrency(group.spend),
+    formatSpend(group.spend, { compact: true }),
   );
 
   if (group.jobId === null) {

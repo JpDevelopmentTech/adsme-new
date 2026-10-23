@@ -1,12 +1,14 @@
 import type { NominaArtistProfile } from "@/domain/entities/nomina-profile";
-import type { SampleArtistFacts } from "@/infrastructure/sample-data/nomina/build-sample-artist";
+import type { NominaCalendar } from "@/infrastructure/sample-data/nomina/sample-nomina.types";
+import { deriveSpecConfig } from "@/infrastructure/sample-data/nomina/derive-spec-config";
+import type { SampleArtistFacts } from "@/infrastructure/sample-data/nomina/build-artist-facts";
 import { buildSampleDailyPoints } from "@/infrastructure/sample-data/nomina/build-sample-daily-points";
 import { buildSampleHistory } from "@/infrastructure/sample-data/nomina/build-sample-history";
 import { buildSampleMonthSplits } from "@/infrastructure/sample-data/nomina/build-sample-month-splits";
 import { sumMovements } from "@/infrastructure/sample-data/nomina/sum-movements";
 
 /** Perfil completo de un artista de muestra. */
-export function buildSampleProfile(facts: SampleArtistFacts): NominaArtistProfile {
+export function buildSampleProfile(facts: SampleArtistFacts, calendar: NominaCalendar): NominaArtistProfile {
   const { spec, movements } = facts;
   const total = sumMovements(movements);
   const month = sumMovements(facts.current);
@@ -26,6 +28,7 @@ export function buildSampleProfile(facts: SampleArtistFacts): NominaArtistProfil
       availableBudget: total.investment - facts.adsSpent,
       monthProfit: month.profit,
       adsSpent: facts.adsSpent,
+      campaignSpent: facts.campaignSpent,
       monthService: month.service,
       monthTaxes: month.taxes,
       serviceAssumedByAdsme: spec.adsmeAssumesService,
@@ -36,14 +39,16 @@ export function buildSampleProfile(facts: SampleArtistFacts): NominaArtistProfil
     movements,
     movementTotals: { count: movements.length, ...total },
     expenses: spec.expenses,
+    campaigns: facts.campaigns,
     monthDistribution: [
       { key: "inversion", amount: month.investment },
       { key: "servicio", amount: month.service },
       { key: "utilidadNeta", amount: month.netProfit },
       { key: "impuestos", amount: month.taxes },
     ],
-    performance: buildSampleDailyPoints(movements),
-    history: buildSampleHistory(spec, buildSampleMonthSplits(movements)),
+    performance: buildSampleDailyPoints(movements, calendar),
+    history: buildSampleHistory(spec, buildSampleMonthSplits(movements, calendar.months)),
     raisedInvestment: total.investment,
+    config: spec.config ?? deriveSpecConfig(spec),
   };
 }

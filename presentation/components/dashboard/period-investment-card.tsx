@@ -1,3 +1,4 @@
+import { TRM_CURRENCY } from "@/constants/currency.constants";
 import { KPI_COPY } from "@/constants/dashboard.constants";
 import { PacingPill } from "@/presentation/components/dashboard/pacing-pill";
 import { PacingRings } from "@/presentation/components/dashboard/pacing-rings";
@@ -5,17 +6,20 @@ import type { PeriodInvestmentCardProps } from "@/types/dashboard-home.types";
 import { cn } from "@/utils/cn";
 import { formatCompactCurrency } from "@/utils/format-compact-currency";
 import { share } from "@/utils/format-compact-number";
+import { formatSpend } from "@/utils/format-spend";
 import { splitCompactAmount } from "@/utils/split-compact-amount";
 
 /**
  * La tarjeta que abre el dashboard: la inversión que cae dentro del período en
  * una cifra grande —la misma suma que dibuja la gráfica diaria— y, a su lado,
- * el ritmo del gasto en dos anillos frente al calendario del período.
+ * el ritmo del gasto en dos anillos frente al calendario del período. Todo eso
+ * es en pesos; el gasto en dólares se nombra aparte, debajo de la cifra.
  */
 export function PeriodInvestmentCard({ spend, status, isSynced }: PeriodInvestmentCardProps) {
   const amount = splitCompactAmount(formatCompactCurrency(spend.planned));
   const spendPercent = share(spend.toDate, spend.planned);
   const calendarPercent = share(spend.elapsedDays, spend.totalDays);
+  const foreign = Object.keys(spend.foreignSpent);
 
   return (
     <section className="glass-panel flex flex-col gap-5 rounded-card p-6 sm:flex-row sm:items-center xl:w-[500px] xl:shrink-0">
@@ -34,6 +38,15 @@ export function PeriodInvestmentCard({ spend, status, isSynced }: PeriodInvestme
             </span>
           ) : null}
         </p>
+
+        {foreign.length > 0 ? (
+          <p className="text-xs font-normal text-text-secondary tabular-nums">
+            {KPI_COPY.foreignSpend(
+              formatSpend(spend.foreignSpent, { compact: true }),
+              foreign.every((currency) => currency === TRM_CURRENCY),
+            )}
+          </p>
+        ) : null}
 
         <PacingPill spendPercent={spendPercent} calendarPercent={calendarPercent} />
 

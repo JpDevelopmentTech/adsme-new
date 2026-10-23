@@ -1,6 +1,8 @@
 import type { ReactNode } from "react";
 import type { NominaSplit } from "@/domain/entities/nomina-bucket";
+import type { NominaIncomeDraft } from "@/domain/entities/nomina-income-draft";
 import type { NominaIncomeConcept, NominaMovement } from "@/domain/entities/nomina-movement";
+import type { NominaTransactionParams as DomainTransactionParams } from "@/domain/entities/nomina-transaction-params";
 import type { NominaSplitModel } from "@/types/nomina-modales.types";
 import type { NominaModalArtist } from "@/types/nomina-modals.types";
 
@@ -27,11 +29,8 @@ export interface AmountBoxProps {
   editLabel?: string;
 }
 
-/** Parámetros propios de una transacción (o `null`: los del artista). */
-export interface NominaTransactionParams {
-  profitPercent: number;
-  profitPerShowAfterMin: number;
-}
+/** Parámetros propios de una transacción (ver la entidad del dominio). */
+export type NominaTransactionParams = DomainTransactionParams;
 
 /** Datos del mes que necesita el modal para la nota del acumulado. */
 export interface NominaIncomeContext {
@@ -45,13 +44,13 @@ export interface NominaIncomeNoteInput {
   concept: NominaIncomeConcept;
   amount: number;
   cost: number;
-  /** Mes asignado `AAAA-MM`. */
+  /** Mes `AAAA-MM` del acumulado (en Express, el que cubre). */
   month: string;
   model: NominaSplitModel;
   context: NominaIncomeContext;
 }
 
-export interface IncomeModalProps extends NominaIncomeContext {
+export interface IncomeModalProps {
   isOpen: boolean;
   onClose: () => void;
   artist: NominaModalArtist;
@@ -84,6 +83,8 @@ export interface NominaIncomeFormState {
   set: (patch: Partial<NominaIncomeValues>) => void;
   /** Cambia un valor que altera el reparto: descarta los ajustes a mano. */
   setSplitInput: (patch: Partial<NominaIncomeValues>) => void;
+  /** Cambia fechas o mes: en un ingreso nuevo, si cambia el mes, vuelve a repartir. */
+  setMonthInput: (patch: Partial<NominaIncomeValues>) => void;
   editBucket: (bucket: NominaEditableBucket, value: number) => void;
   effectiveAmount: number;
   split: NominaSplit;
@@ -92,6 +93,8 @@ export interface NominaIncomeFormState {
   note: string;
   threshold: number;
   canSave: boolean;
+  /** El ingreso como se guardaría ahora. */
+  draft: NominaIncomeDraft;
 }
 
 export interface IncomeSectionProps {

@@ -227,6 +227,13 @@ export interface ToggleSwitchProps {
   /** Segunda línea explicativa; el diseño la omite en las métricas. */
   description?: string;
   defaultChecked?: boolean;
+  /**
+   * Estado controlado. Hace falta dentro de un `<form action>`: React 19
+   * reinicia los campos no controlados al terminar cada envío, también cuando
+   * vuelve con un error de validación, y el interruptor saltaría a su valor
+   * inicial sin que el usuario lo tocara.
+   */
+  checked?: boolean;
   /** Para revelar los campos que dependen del interruptor. */
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
 }

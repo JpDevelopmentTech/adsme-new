@@ -35,6 +35,7 @@ export interface NominaLedgerRow {
   amount: number;
   service: number;
   profit: number;
+  investment: number;
 }
 
 /** Finanzas del roster en un periodo. */
@@ -48,10 +49,14 @@ export interface NominaFinance {
   months: NominaMonthSplit[];
   artists: NominaArtistFinance[];
   incomeByConcept: NominaConceptIncome[];
-  /** Gasto en Ads acumulado de todos los artistas. */
+  /** Gasto en Ads acumulado de todos los artistas, sin importar el periodo. */
   consumedAds: number;
-  /** Ingresos del mes en curso y día de hoy, para proyectar el cierre. */
-  currentMonthIncome: number;
+  /** Presupuesto disponible para Ads: toda la Inversión acumulada menos lo consumido. */
+  availableAds: number;
+  /** Ingresos del mes en curso dentro del periodo (`null` si no hay), y el día de hoy, para proyectar el cierre. */
+  currentMonthIncome: number | null;
+  /** Mes en curso `AAAA-MM` (Bogotá), con independencia del periodo. */
+  currentMonth: string;
   currentDay: number;
   daysInCurrentMonth: number;
   /** Servicio asumido por AdsME: cuántos artistas de cuántos. */

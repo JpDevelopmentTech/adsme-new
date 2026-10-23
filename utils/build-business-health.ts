@@ -12,6 +12,7 @@ export function buildBusinessHealth(finance: NominaFinance): BusinessHealth {
   const margin = netMargin(figures.service, figures.profit);
 
   return {
+    hasIncome: figures.income > 0,
     margin,
     level: resolveProfitLevel(margin, figures.netProfit),
     grossShare: shareOf(figures.netProfit, figures.income),

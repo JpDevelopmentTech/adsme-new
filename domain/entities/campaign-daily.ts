@@ -1,3 +1,4 @@
+import type { Money } from "@/domain/entities/money";
 import type { JobPlatform } from "@/domain/entities/job";
 
 /**
@@ -5,11 +6,7 @@ import type { JobPlatform } from "@/domain/entities/job";
  * guarda: allí solo hay acumulados de toda la vida de la campaña.
  */
 export interface CampaignDailyMetrics {
-  /**
-   * Gasto del día. Al escribir va en la moneda de la cuenta, como lo entrega la
-   * plataforma; al leer llega ya en pesos (`spend_cop`), convertido con la
-   * tasa vigente.
-   */
+  /** Gasto del día en la moneda de la cuenta, como lo entrega la plataforma. */
   spend: number;
   impressions: number;
   clicks: number;
@@ -41,8 +38,13 @@ export interface CampaignDailyDraft extends CampaignDailyMetrics {
   extra: Record<string, unknown>;
 }
 
-/** Un día de la serie con la plataforma y el trabajo a los que pertenece. */
-export interface CampaignDailyPoint extends CampaignDailyMetrics {
+/**
+ * Un día de la serie con la plataforma y el trabajo a los que pertenece. El
+ * gasto lleva su moneda, porque una misma plataforma puede tener cuentas en
+ * dólares y en pesos.
+ */
+export interface CampaignDailyPoint extends Omit<CampaignDailyMetrics, "spend"> {
+  spend: Money;
   date: string;
   platform: JobPlatform;
   /** Trabajo al que está vinculada la campaña; `null` si no lo está. */

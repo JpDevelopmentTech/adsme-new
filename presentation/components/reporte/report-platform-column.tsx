@@ -4,7 +4,7 @@ import { PlatformLogo } from "@/presentation/components/brand/platform-logo";
 import type { ReportPlatformColumnProps } from "@/types/report.types";
 import { cn } from "@/utils/cn";
 import { formatPercent, share } from "@/utils/format-compact-number";
-import { formatExactCurrency } from "@/utils/format-exact-currency";
+import { formatReportSpendLine } from "@/utils/format-report-spend-line";
 import { formatExactNumber } from "@/utils/format-exact-number";
 
 /**
@@ -41,7 +41,7 @@ export function ReportPlatformColumn({ metrics, totalPlays, showSpend }: ReportP
 
       <span className="text-xs text-text-muted">
         {showSpend
-          ? REPORT_COPY.platformFoot(metrics.campaigns, formatExactCurrency(metrics.spend))
+          ? REPORT_COPY.platformFoot(metrics.campaigns, formatReportSpendLine(metrics.spend))
           : REPORT_COPY.detailCampaigns(metrics.campaigns)}
       </span>
     </li>

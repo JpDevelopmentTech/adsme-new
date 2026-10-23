@@ -6,10 +6,9 @@ import { INCOME_MODAL_COPY } from "@/constants/nomina-modales-ingreso-copy.const
 import { IncomeModal } from "@/presentation/components/nomina/modales/ingreso/income-modal";
 import { PrimaryButton } from "@/presentation/components/ui/primary-button";
 import type { NewIncomeButtonProps } from "@/types/nomina-modals.types";
-import { resolveIncomeContext } from "@/utils/resolve-income-context";
 
 /** Abre «Nuevo Ingreso» con el artista preseleccionado; `icon` es el «+» de la fila del roster. */
-export function NewIncomeButton({ artist, variant, ...month }: NewIncomeButtonProps) {
+export function NewIncomeButton({ artist, variant }: NewIncomeButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
   const open = () => setIsOpen(true);
 
@@ -32,7 +31,7 @@ export function NewIncomeButton({ artist, variant, ...month }: NewIncomeButtonPr
           {INCOME_MODAL_COPY.newTitle}
         </PrimaryButton>
       )}
-      {isOpen ? <IncomeModal isOpen onClose={() => setIsOpen(false)} artist={artist} {...resolveIncomeContext(artist.nomina, month)} /> : null}
+      {isOpen ? <IncomeModal isOpen onClose={() => setIsOpen(false)} artist={artist} /> : null}
     </>
   );
 }

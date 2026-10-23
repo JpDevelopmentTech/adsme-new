@@ -31,13 +31,19 @@ export const ADS_TAB_COPY = {
   raised: "Presupuesto recaudado",
   raisedNote: "Inversión acumulada de todos los meses",
   spent: "Presupuesto Gastado",
-  spentNote: "Gastos con destino Presupuesto de Ads",
+  spentNote: "Gastos con destino Ads y campañas de AdsME",
+  spentDetail: (expenses: string, campaigns: string) => `Gastos de Ads ${expenses} · Campañas ${campaigns}`,
   left: "Presupuesto Restante",
   leftNote: "Recaudado − Gastado = Presupuesto Disponible",
-  campaignsTitle: "Historial de Campañas",
-  campaignsSubtitle: "Vista de solo lectura — la gestión real ocurre en AdsME",
-  emptyTitle: "Sin campañas",
-  emptyDescription: "Las campañas aparecerán aquí cuando se sincronicen desde AdsME.",
+  campaignsTitle: "Campañas de AdsME",
+  campaignsSubtitle: "Gasto desde su inicio en Nómina: se descuenta del presupuesto de Ads",
+  emptyTitle: "Sin campañas con gasto",
+  emptyDescription: "Cuando un trabajo de este artista tenga campañas con gasto desde su inicio en Nómina, aparecerán aquí.",
+  openJob: (title: string) => `Abrir el trabajo ${title}`,
+  converted: (original: string, rate: string) => `${original} × TRM ${rate}`,
+  notConverted: "Sin TRM: no se descuenta",
+  unconverted: (amount: string, jobs: string) =>
+    `${amount} en cuentas en dólares no se descuentan porque su trabajo no tiene TRM (${jobs}). Agrégala en el paso 3 del trabajo.`,
 } as const;
 
 /** Textos de Optimización y Legal (maquetas: siempre vacías). */

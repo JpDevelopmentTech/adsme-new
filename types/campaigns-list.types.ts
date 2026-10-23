@@ -1,3 +1,4 @@
+import type { Money, SpendByCurrency } from "@/domain/entities/money";
 import type { ReactNode } from "react";
 import type { CampaignListQuery } from "@/domain/entities/campaign";
 import type { JobPlatform } from "@/domain/entities/job";
@@ -17,10 +18,8 @@ export interface CampaignListItem {
   state: CampaignState;
   period: string;
   reach: number;
-  /** Gasto en pesos. */
-  spend: number;
-  /** Gasto en la moneda de la cuenta si no es en pesos (`USD 876,00`). */
-  accountSpend: string | null;
+  /** Gasto en la moneda de su cuenta; se muestra tal cual, sin convertir. */
+  spend: Money;
 }
 
 /**
@@ -31,17 +30,22 @@ export interface CampaignGroup {
   jobId: string | null;
   title: string;
   clientName: string;
-  spend: number;
+  /** Gasto del grupo por moneda: dólares y pesos no se suman. */
+  spend: SpendByCurrency;
   campaigns: CampaignListItem[];
 }
 
 /** Reparto de lo importado entre lo que ya cuenta y lo que no, para la banda. */
 export interface CampaignsSplit {
-  linked: number;
-  unlinked: number;
+  linked: SpendByCurrency;
+  unlinked: SpendByCurrency;
   unlinkedCount: number;
   totalCount: number;
-  /** Parte del dinero importado que ya está vinculada, de 0 a 100. */
+  /**
+   * Parte del dinero importado que ya está vinculada, de 0 a 100. Se mide en
+   * una sola moneda —pesos, o dólares si no hay pesos—, porque repartir una
+   * barra entre importes de monedas distintas no significa nada.
+   */
   linkedPercent: number;
 }
 

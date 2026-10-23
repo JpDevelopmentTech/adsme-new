@@ -33,10 +33,9 @@ export function ArtistProfileView({ profile, tab, basePath, isReadOnly = false }
             <ProfileActions
               artist={toModalArtist(profile)}
               socials={profile.socials}
-              minShows={profile.progress.minShows}
+              minShows={profile.config.minShows}
               movementCount={profile.movementTotals.count}
-              fixedProfitGoal={profile.fixedProfitGoal}
-              serviceAssumedByAdsme={profile.kpis.serviceAssumedByAdsme}
+              split={profile.config.split}
             />
           )
         }

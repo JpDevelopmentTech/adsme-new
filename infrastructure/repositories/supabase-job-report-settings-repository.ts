@@ -5,13 +5,15 @@ import { isUuid } from "@/utils/is-uuid";
 import { toReportSections } from "@/utils/to-report-sections";
 
 const JOBS_TABLE = "jobs";
-const SETTINGS_COLUMNS = "cpv_optimization, charged_cpv, report_hidden_sections";
+const SETTINGS_COLUMNS =
+  "cpv_optimization, charged_cpv, report_hidden_sections, usd_cop_rate";
 
 interface JobReportSettingsRow {
   cpv_optimization: boolean;
   /** PostgREST devuelve `numeric` como número o como texto según su tamaño. */
   charged_cpv: number | string | null;
   report_hidden_sections: string[];
+  usd_cop_rate: number | string | null;
 }
 
 /**
@@ -38,6 +40,7 @@ export function createSupabaseJobReportSettingsRepository(
         cpvOptimization: data.cpv_optimization,
         chargedCpv: data.charged_cpv === null ? null : Number(data.charged_cpv),
         hiddenSections: toReportSections(data.report_hidden_sections),
+        usdCopRate: data.usd_cop_rate === null ? null : Number(data.usd_cop_rate),
       };
     },
 
@@ -53,6 +56,7 @@ export function createSupabaseJobReportSettingsRepository(
           cpv_optimization: settings.cpvOptimization,
           charged_cpv: settings.chargedCpv,
           report_hidden_sections: settings.hiddenSections,
+          usd_cop_rate: settings.usdCopRate,
         })
         .eq("id", jobId)
         .select("id")

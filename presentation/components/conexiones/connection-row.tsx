@@ -6,7 +6,7 @@ import {
 import { PlatformLogo } from "@/presentation/components/brand/platform-logo";
 import { ConnectionAccessRail } from "@/presentation/components/conexiones/connection-access-rail";
 import type { ConnectionRowProps } from "@/types/connections.types";
-import { formatCompactCurrency } from "@/utils/format-compact-currency";
+import { formatSpend } from "@/utils/format-spend";
 
 /**
  * Una plataforma a ancho completo. Antes eran tres tarjetas de ~370 px donde
@@ -63,7 +63,7 @@ export function ConnectionRow({ connection, actions }: ConnectionRowProps) {
 
           <div className="flex w-24 shrink-0 flex-col gap-0.5">
             <span className="text-[14px] font-normal whitespace-nowrap text-text-primary">
-              {formatCompactCurrency(connection.importedSpend ?? 0)}
+              {formatSpend(connection.importedSpend ?? {}, { compact: true })}
             </span>
             <span className="text-[10px] font-medium tracking-[0.6px] text-text-muted uppercase">
               {CONNECTION_CARD_COPY.imported}

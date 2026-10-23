@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ClientNominaBadge } from "@/presentation/components/clientes/client-nomina-badge";
 import { CLIENT_ROW_COPY, CLIENT_STATUS_BADGE } from "@/constants/clients.constants";
 import { clientDetailRoute } from "@/constants/routes.constants";
 import { ClientCardMenu } from "@/presentation/components/clientes/client-card-menu";
@@ -36,8 +37,9 @@ export function ClientRow({ client, maxInvestment, nowIso }: ClientRowProps) {
               {client.name}
             </Link>
           </h2>
-          <p className="truncate text-xs font-normal text-text-muted">
-            {client.handle} · {client.kind}
+          <p className="flex min-w-0 items-center gap-2 text-xs font-normal text-text-muted">
+            <span className="truncate">{client.handle} · {client.kind}</span>
+            {client.isInNomina ? <ClientNominaBadge /> : null}
           </p>
         </div>
       </div>

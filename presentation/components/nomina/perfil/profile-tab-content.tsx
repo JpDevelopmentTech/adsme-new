@@ -11,7 +11,7 @@ export function ProfileTabContent({ profile, tab, isReadOnly = false }: ProfileT
     case "historico":
       return <HistoryTab profile={profile} />;
     case "ads":
-      return <AdsTab raised={profile.raisedInvestment} spent={profile.kpis.adsSpent} />;
+      return <AdsTab raised={profile.raisedInvestment} spent={profile.kpis.adsSpent} campaignSpent={profile.kpis.campaignSpent} campaigns={profile.campaigns} isReadOnly={isReadOnly} />;
     case "optimizacion":
       return <OptimizationTab />;
     case "legal":

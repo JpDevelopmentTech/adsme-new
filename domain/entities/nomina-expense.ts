@@ -16,3 +16,8 @@ export interface NominaExpense {
   date: string;
   assignedMonth: string;
 }
+
+/** Gasto con el cliente al que pertenece. */
+export interface NominaClientExpense extends NominaExpense {
+  clientId: string;
+}

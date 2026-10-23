@@ -1,3 +1,4 @@
+import type { SpendByCurrency } from "@/domain/entities/money";
 import type { JobPlatform } from "@/domain/entities/job";
 import type { JobListing } from "@/domain/entities/job-listing";
 
@@ -88,6 +89,11 @@ export interface PeriodSpend {
   hasUnassigned: boolean;
   /** Si algún día del período muestra gasto real; con `false` todo es plan. */
   hasReal: boolean;
+  /**
+   * Gasto real en otras monedas (dólares), que no entra en las cifras de arriba:
+   * son en pesos, como el presupuesto, y sumarlos los falsearía.
+   */
+  foreignSpent: SpendByCurrency;
 }
 
 export interface PlatformShare {

@@ -2,11 +2,12 @@ import type { LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
 import type { NominaShowProgress } from "@/domain/entities/nomina-artist";
 import type { NominaBucketAmount, NominaBucketKey, NominaDailyPoint } from "@/domain/entities/nomina-bucket";
+import type { NominaArtistCampaign } from "@/domain/entities/nomina-campaign-spend";
 import type { NominaExpense, NominaExpenseTarget } from "@/domain/entities/nomina-expense";
 import type { NominaMovement, NominaMovementTotals } from "@/domain/entities/nomina-movement";
 import type { NominaArtistProfile, NominaBudgetMonth } from "@/domain/entities/nomina-profile";
 import type { NominaSocialLink, NominaSocialNetwork } from "@/domain/entities/nomina-social";
-import type { NominaIncomeMonthProps, NominaModalArtist } from "@/types/nomina-modals.types";
+import type { NominaModalArtist } from "@/types/nomina-modals.types";
 import type { ProfitLevel } from "@/types/nomina-ui.types";
 
 /** Pestañas del perfil, tal como viajan en `?pestana=`. */
@@ -111,15 +112,12 @@ export interface MovementsPanelProps extends ReadOnlyAware {
   artist: NominaModalArtist;
   movements: NominaMovement[];
   totals: NominaMovementTotals;
-  /** Lo facturado en el mes, para la nota del acumulado al registrar o editar. */
-  incomeContext: NominaIncomeMonthProps;
 }
 
 export interface MovementsTableProps extends ReadOnlyAware {
   artist: NominaModalArtist;
   movements: NominaMovement[];
   totals: NominaMovementTotals;
-  incomeContext: NominaIncomeMonthProps;
 }
 
 export interface MovementRowProps extends ReadOnlyAware {
@@ -127,7 +125,6 @@ export interface MovementRowProps extends ReadOnlyAware {
   movement: NominaMovement;
   isExpanded: boolean;
   onToggle: (id: string) => void;
-  incomeContext: NominaIncomeMonthProps;
 }
 
 export interface MovementDetailProps {
@@ -199,7 +196,26 @@ export interface BudgetRowProps {
 
 export interface AdsTabProps {
   raised: number;
+  /** Gasto en Ads total: gastos con destino Ads más campañas. */
   spent: number;
+  campaignSpent: number;
+  campaigns: NominaArtistCampaign[];
+  /** En el portal del artista no se enlaza al panel interno. */
+  isReadOnly?: boolean;
+}
+
+export interface CampaignSpendPanelProps {
+  campaigns: NominaArtistCampaign[];
+  isReadOnly: boolean;
+}
+
+export interface CampaignSpendRowProps {
+  campaign: NominaArtistCampaign;
+  isReadOnly: boolean;
+}
+
+export interface UnconvertedSpendNoteProps {
+  campaigns: NominaArtistCampaign[];
 }
 
 /** Columna de una tabla que hoy siempre está vacía. */

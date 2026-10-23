@@ -23,6 +23,8 @@ export interface FinanceTabProps {
 
 export interface FinanceTabsNavProps {
   active: FinanceTab;
+  /** Valor de `?periodo=` que conservan las pestañas. */
+  period: string;
 }
 
 export interface FinanceTabContentProps extends FinanceTabProps {
@@ -39,7 +41,14 @@ export interface BusinessHealthCardProps {
 
 export interface FinanceKpiGridProps {
   kpis: FinanceKpi[];
+  /** «vs. mes anterior» o «vs. periodo anterior». */
+  comparison?: string;
   className?: string;
+}
+
+export interface FinanceEmptyNoteProps {
+  title: string;
+  text?: string;
 }
 
 export interface MiniStatGridProps {

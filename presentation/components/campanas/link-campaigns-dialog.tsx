@@ -14,7 +14,7 @@ import { PrimaryButton } from "@/presentation/components/ui/primary-button";
 import { SearchableSelect } from "@/presentation/components/ui/searchable-select";
 import { SecondaryButton } from "@/presentation/components/ui/secondary-button";
 import type { LinkCampaignsDialogProps } from "@/types/campaigns-list.types";
-import { formatCompactCurrency } from "@/utils/format-compact-currency";
+import { formatMoney } from "@/utils/format-money";
 
 /**
  * Cierra el flujo de vinculación sin salir de la lista. `B8` sigue existiendo
@@ -78,7 +78,7 @@ export function LinkCampaignsDialog({
                   {campaign.name}
                 </span>
                 <span className="text-[12px] font-light whitespace-nowrap text-text-secondary">
-                  {formatCompactCurrency(campaign.spend)}
+                  {formatMoney(campaign.spend.amount, campaign.spend.currency, { compact: true })}
                 </span>
                 <button
                   type="button"

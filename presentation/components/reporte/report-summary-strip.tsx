@@ -3,8 +3,7 @@ import { REPORT_SUMMARY_COPY } from "@/constants/report.constants";
 import { ReportSummaryCard } from "@/presentation/components/reporte/report-summary-card";
 import type { ReportSummaryStripProps } from "@/types/report.types";
 import { cn } from "@/utils/cn";
-import { formatPercent, share } from "@/utils/format-compact-number";
-import { formatExactCurrency } from "@/utils/format-exact-currency";
+import { buildSpendSummary } from "@/utils/build-spend-summary";
 import { formatExactNumber } from "@/utils/format-exact-number";
 import { isReportSectionVisible } from "@/utils/is-report-section-visible";
 
@@ -14,6 +13,7 @@ import { isReportSectionVisible } from "@/utils/is-report-section-visible";
  * quedan se reparten el ancho, en lugar de dejar un hueco.
  */
 export function ReportSummaryStrip({ totals, investment, hiddenSections }: ReportSummaryStripProps) {
+  const spend = buildSpendSummary(totals.spend, investment);
   const stats = [
     {
       section: "plays" as const,
@@ -33,8 +33,9 @@ export function ReportSummaryStrip({ totals, investment, hiddenSections }: Repor
       section: "investment" as const,
       icon: Wallet,
       label: REPORT_SUMMARY_COPY.spend,
-      value: formatExactCurrency(totals.spend),
-      note: REPORT_SUMMARY_COPY.budget(formatPercent(share(totals.spend, investment))),
+      value: spend.value,
+      note: spend.note,
+      detail: spend.detail,
     },
   ].filter((stat) => isReportSectionVisible(hiddenSections, stat.section));
 

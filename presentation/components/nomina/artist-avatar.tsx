@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { SEMAPHORE_DOT_CLASSES, SEMAPHORE_LABELS } from "@/constants/nomina-semaphore.constants";
 import type { ArtistAvatarProps } from "@/types/nomina-shell.types";
 import { getInitials } from "@/utils/get-initials";
@@ -11,7 +10,9 @@ export function ArtistAvatar({ name, photoUrl, size, semaphore }: ArtistAvatarPr
   return (
     <span className="relative inline-flex shrink-0" style={{ width: size, height: size }}>
       {photoUrl ? (
-        <Image src={photoUrl} alt="" width={size} height={size} className="size-full rounded-pill object-cover" />
+        // Foto del cliente en Storage (URL remota), igual que el `Avatar` de Clientes: `next/image` no aporta aquí.
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={photoUrl} alt="" width={size} height={size} className="size-full rounded-pill object-cover" />
       ) : (
         <span className="grid size-full place-items-center rounded-pill bg-surface text-[11px] text-text-secondary">
           {getInitials(name, "")}

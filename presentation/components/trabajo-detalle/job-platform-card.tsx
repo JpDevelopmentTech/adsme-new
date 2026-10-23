@@ -1,11 +1,16 @@
 import { Link2 } from "lucide-react";
-import { JOB_DETAIL_COPY, PLATFORM_PRIMARY_METRIC } from "@/constants/job-detail.constants";
+import {
+  JOB_DETAIL_COPY,
+  JOB_SPEND_COPY,
+  PLATFORM_PRIMARY_METRIC,
+} from "@/constants/job-detail.constants";
 import { PLATFORM_OF_CONNECTION } from "@/constants/platform-labels.constants";
 import { PLATFORM_META } from "@/constants/platforms.constants";
 import { PlatformLogo } from "@/presentation/components/brand/platform-logo";
 import { StatusBadge } from "@/presentation/components/ui/status-badge";
 import type { JobPlatformCardProps } from "@/types/job-detail.types";
-import { formatCompactCurrency } from "@/utils/format-compact-currency";
+import { spendOfCampaigns } from "@/utils/spend-of-campaigns";
+import { splitSpendDisplay } from "@/utils/split-spend-display";
 import { formatRelativeTime } from "@/utils/format-relative-time";
 import { primaryMetricFor } from "@/utils/build-job-metrics";
 
@@ -22,7 +27,8 @@ export function JobPlatformCard({ platform, campaigns, now }: JobPlatformCardPro
   const { label, name } = PLATFORM_PRIMARY_METRIC[platform];
   const hasCampaigns = campaigns.length > 0;
 
-  const spend = campaigns.reduce((total, campaign) => total + campaign.spend, 0);
+  // Una plataforma puede tener cuentas en pesos y en dólares: no se suman.
+  const spend = splitSpendDisplay(spendOfCampaigns(campaigns), { compact: true });
   const lastSync = campaigns.map((campaign) => campaign.syncedAt).sort().at(-1);
 
   return (
@@ -45,7 +51,12 @@ export function JobPlatformCard({ platform, campaigns, now }: JobPlatformCardPro
         <div className="flex border-t border-border pt-3.5">
           {[
             [NUMBER_FORMAT.format(primaryMetricFor(platform, campaigns)), label],
-            [formatCompactCurrency(spend), "Inversión"],
+            [
+              spend.primary,
+              spend.rest
+                ? JOB_SPEND_COPY.platformCaptionWithOthers(spend.rest)
+                : JOB_SPEND_COPY.platformCaption,
+            ],
           ].map(([value, caption]) => (
             <div key={caption} className="flex flex-1 flex-col gap-0.5">
               <span className="text-[28px] leading-tight font-extralight text-text-primary tabular-nums">{value}</span>

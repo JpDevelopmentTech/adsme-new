@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { NOMINA_ARTISTS_ROUTE, nominaArtistRoute } from "@/constants/routes.constants";
 import { createGetNominaArtistProfile } from "@/domain/use-cases/get-nomina-artist-profile";
-import { createSampleNominaRepository } from "@/infrastructure/repositories/sample-nomina-repository";
+import { createServerSupabaseClient } from "@/infrastructure/supabase/server-supabase-client";
+import { createSupabaseNominaRepository } from "@/infrastructure/repositories/supabase-nomina-repository";
 import { ArtistProfileView } from "@/presentation/components/nomina/perfil/artist-profile-view";
 import { ProfileNotFound } from "@/presentation/components/nomina/perfil/profile-not-found";
 import { resolveProfileTab } from "@/utils/resolve-profile-tab";
@@ -17,7 +18,7 @@ export default async function NominaArtistPage({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const [{ id }, query] = await Promise.all([params, searchParams]);
-  const profile = await createGetNominaArtistProfile(createSampleNominaRepository())(id);
+  const profile = await createGetNominaArtistProfile(createSupabaseNominaRepository(await createServerSupabaseClient(), new Date()))(id);
 
   if (!profile) return <ProfileNotFound backHref={NOMINA_ARTISTS_ROUTE} />;
 

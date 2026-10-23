@@ -8,6 +8,7 @@ import { buildConnectionAccess } from "@/utils/build-connection-access";
 import { formatRelativeTime } from "@/utils/format-relative-time";
 import { isActiveCampaignStatus } from "@/utils/is-active-campaign";
 import { worstConnection } from "@/utils/worst-connection";
+import { spendOfCampaigns } from "@/utils/spend-of-campaigns";
 
 /**
  * Cuándo se importó por última vez. Con varias cuentas manda la que lleva más
@@ -69,7 +70,7 @@ export function toPlatformConnection(
     activeCampaigns: own.filter((campaign) =>
       isActiveCampaignStatus(campaign.status),
     ).length,
-    importedSpend: own.reduce((total, campaign) => total + campaign.spend, 0),
+    importedSpend: spendOfCampaigns(own),
     lastSyncedLabel: lastSyncedLabelOf(connections, now),
     access: buildConnectionAccess(weakest, now),
   };

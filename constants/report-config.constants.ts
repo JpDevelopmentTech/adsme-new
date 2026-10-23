@@ -14,14 +14,20 @@ export const STEP_THREE_COPY = {
   cpvViews: (views: string, investment: string) =>
     `Con la inversión de ${investment} equivale a ${views} vistas.`,
   cpvNoInvestment: "El trabajo aún no tiene inversión para calcular las vistas.",
+  trmSection: "Moneda",
+  trmToggle: "Agregar TRM",
+  trmToggleHint:
+    "Muestra el gasto en dólares también en pesos, con la tasa que fijes aquí. Sin TRM, los dólares se ven aparte.",
+  trmLabel: "TRM acordada",
+  trmUnit: "COP por US$1",
+  trmHint: (usd: string, rate: string, converted: string, total: string) =>
+    `${usd} × ${rate} = ${converted}. El reporte mostrará una inversión de ${total}.`,
+  trmNoUsd:
+    "Este trabajo aún no tiene campañas en dólares; la TRM se aplicará cuando las tenga.",
   saving: "Guardando el reporte",
   saveFailed:
     "No pudimos guardar la configuración del reporte. Inténtalo de nuevo.",
   next: "Siguiente: Enlace",
-  // Rótulos de la maqueta `ReportPreviewDevice`.
-  platformsTitle: "POR PLATAFORMA",
-  previewTitle: "Vista previa en vivo",
-  liveReport: "Reporte en vivo",
 } as const;
 
 /** Campos del formulario del paso 3. */
@@ -29,6 +35,16 @@ export const REPORT_SETTINGS_FIELDS = {
   jobId: "jobId",
   cpvOptimization: "cpvOptimization",
   chargedCpv: "chargedCpv",
+  trmEnabled: "trmEnabled",
+  usdCopRate: "usdCopRate",
+} as const;
+
+/** Mensajes de validación de la TRM. */
+export const USD_COP_RATE_MESSAGES = {
+  required: "Escribe la TRM que acordaste con el cliente.",
+  format: "Escribe la TRM como 4.150 o 4.150,25.",
+  range: (min: string, max: string) =>
+    `La TRM tiene que estar entre ${min} y ${max} pesos por dólar.`,
 } as const;
 
 /** Mensajes de validación del CPV cobrado. */

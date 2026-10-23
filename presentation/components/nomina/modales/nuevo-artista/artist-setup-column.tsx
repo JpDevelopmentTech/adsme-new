@@ -1,19 +1,17 @@
 import { NEW_ARTIST_COPY } from "@/constants/nomina-modales-copy.constants";
 import { DateInput } from "@/presentation/components/nomina/modales/campos/date-input";
 import { FieldShell } from "@/presentation/components/nomina/modales/campos/field-shell";
-import { ArtistNameField } from "@/presentation/components/nomina/modales/nuevo-artista/artist-name-field";
 import { ArtistNominaFields } from "@/presentation/components/nomina/modales/nuevo-artista/artist-nomina-fields";
-import { ExpressSection } from "@/presentation/components/nomina/modales/nuevo-artista/express-section";
 import { InitialStateNote } from "@/presentation/components/nomina/modales/nuevo-artista/initial-state-note";
-import type { NewArtistSectionProps } from "@/types/nomina-modales-artista.types";
+import { SelectedClientCard } from "@/presentation/components/nomina/modales/nuevo-artista/selected-client-card";
+import type { ArtistSetupColumnProps } from "@/types/nomina-modales-artista.types";
 
-/** Columna izquierda del alta: identidad, nómina, Express, vigencia y estado inicial. */
-export function ArtistSetupColumn({ form }: NewArtistSectionProps) {
+/** Columna izquierda del alta: el cliente elegido, su nómina, la vigencia y el estado inicial. */
+export function ArtistSetupColumn({ form, canChangeClient }: ArtistSetupColumnProps) {
   return (
     <div className="flex min-w-0 flex-col gap-6">
-      <ArtistNameField form={form} />
+      {form.client ? <SelectedClientCard client={form.client} onChange={canChangeClient ? () => form.setClient(null) : undefined} /> : null}
       <ArtistNominaFields form={form} />
-      <ExpressSection form={form} />
       <FieldShell htmlFor="new-artist-start" label={NEW_ARTIST_COPY.startDate} hint={NEW_ARTIST_COPY.startDateHelp}>
         <DateInput id="new-artist-start" value={form.startDate} onChange={form.setStartDate} />
       </FieldShell>

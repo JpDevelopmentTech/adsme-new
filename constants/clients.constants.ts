@@ -19,7 +19,7 @@ export const CLIENT_MENU_COPY = {
   cancel: "Cancelar",
   deleteTitle: "Eliminar cliente",
   deleteDescription: (name: string) =>
-    `Se eliminará «${name}» junto con su foto. Esta acción no se puede deshacer.`,
+    `Se eliminará «${name}» junto con su foto y sus trabajos; si está en Nómina, también sale de ella. Esta acción no se puede deshacer.`,
 } as const;
 
 export const CLIENTS_EMPTY_COPY = {

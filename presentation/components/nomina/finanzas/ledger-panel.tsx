@@ -4,6 +4,7 @@ import { Download } from "lucide-react";
 import { useState } from "react";
 import { LEDGER_MAX_ROWS, LEDGER_PREVIEW_ROWS } from "@/constants/nomina-finanzas.constants";
 import { FINANCE_LEDGER_COPY as COPY } from "@/constants/nomina-finanzas-copy.constants";
+import { FinanceEmptyNote } from "@/presentation/components/nomina/finanzas/finance-empty-note";
 import { LedgerTable } from "@/presentation/components/nomina/finanzas/ledger-table";
 import { NominaPanel } from "@/presentation/components/nomina/nomina-panel";
 import { FilterSelect } from "@/presentation/components/ui/filter-select";
@@ -55,7 +56,7 @@ export function LedgerPanel({ entries, artists, periodLabel }: LedgerPanelProps)
   return (
     <NominaPanel title={COPY.title} subtitle={`${COPY.count(filtered.length)} · ${periodLabel}`} actions={actions} isThick>
       {filtered.length === 0 ? (
-        <p className="py-10 text-center text-sm text-text-muted">{COPY.empty}</p>
+        <FinanceEmptyNote title={COPY.empty} />
       ) : (
         <LedgerTable entries={visible} totals={sumLedgerEntries(filtered)} hiddenCount={filtered.length - visible.length} onShowAll={() => setIsExpanded(true)} />
       )}

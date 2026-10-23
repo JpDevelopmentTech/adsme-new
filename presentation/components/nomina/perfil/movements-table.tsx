@@ -14,7 +14,7 @@ import { NOMINA_TABLE_SCROLL_CLASSES, NOMINA_TH_CLASSES } from "@/utils/nomina-t
  * el detalle económico se descubra sin buscarlo; el chevron de la cabecera
  * abre o cierra todas.
  */
-export function MovementsTable({ artist, movements, totals, incomeContext, isReadOnly = false }: MovementsTableProps) {
+export function MovementsTable({ artist, movements, totals, isReadOnly = false }: MovementsTableProps) {
   const [expanded, setExpanded] = useState<Set<string>>(() => new Set(movements.slice(0, 1).map((movement) => movement.id)));
   const isAllExpanded = expanded.size === movements.length;
   const allLabel = isAllExpanded ? FINANCE_TAB_COPY.collapseAll : FINANCE_TAB_COPY.expandAll;
@@ -62,7 +62,6 @@ export function MovementsTable({ artist, movements, totals, incomeContext, isRea
                 movement={movement}
                 isExpanded={expanded.has(movement.id)}
                 onToggle={toggle}
-                incomeContext={incomeContext}
                 isReadOnly={isReadOnly}
               />
             ))}

@@ -5,7 +5,7 @@ import { PLATFORM_OF_CONNECTION } from "@/constants/platform-labels.constants";
 import { PlatformLogo } from "@/presentation/components/brand/platform-logo";
 import type { CampaignPickerItemProps } from "@/types/link-campaign.types";
 import { cn } from "@/utils/cn";
-import { formatCompactCurrency } from "@/utils/format-compact-currency";
+import { formatMoney } from "@/utils/format-money";
 
 /** Fila seleccionable del listado de campañas de una cuenta. */
 export function CampaignPickerItem({
@@ -52,7 +52,7 @@ export function CampaignPickerItem({
         </span>
 
         <span className="shrink-0 text-[13px] font-semibold whitespace-nowrap text-text-secondary">
-          {formatCompactCurrency(campaign.spend)}
+          {formatMoney(campaign.spend.amount, campaign.spend.currency, { compact: true })}
         </span>
       </button>
     </li>

@@ -39,7 +39,7 @@ export function ExpressIncomeFields({ form, artist }: IncomeSectionProps) {
           value={values.coveredMonth}
           options={listYearMonths([year, year + 1])}
           placeholder={NEW_ARTIST_COPY.monthPlaceholder}
-          onChange={(coveredMonth) => form.set({ coveredMonth })}
+          onChange={(coveredMonth) => form.setMonthInput({ coveredMonth })}
         />
       </FieldShell>
     </>

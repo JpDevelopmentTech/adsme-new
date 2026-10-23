@@ -57,6 +57,8 @@ export interface Client {
   avatarUrl?: string | null;
   /** Última modificación entre sus trabajos; `null` mientras no tenga ninguno. */
   lastActivityAt: string | null;
+  /** Si el cliente está inscrito en Nómina Plan. */
+  isInNomina: boolean;
   /** Alta del cliente en formato ISO. */
   createdAt: string;
 }

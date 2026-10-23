@@ -16,7 +16,6 @@ import { createSupabaseCampaignDailyRepository } from "@/infrastructure/reposito
 import { createSupabaseCampaignRepository } from "@/infrastructure/repositories/supabase-campaign-repository";
 import type { ConnectionRepository } from "@/infrastructure/repositories/supabase-connection-repository";
 import { importBreakdowns } from "@/infrastructure/sync/import-breakdowns";
-import { currencyWarning } from "@/utils/currency-warning";
 import { toMetaCampaignDrafts } from "@/utils/to-meta-campaign-drafts";
 
 /**
@@ -73,7 +72,6 @@ export async function syncMetaConnection(
   // El día a día y el reparto van después de las campañas porque cuelgan de
   // ellas. Que fallen no invalida lo ya importado: se avisa y se sigue.
   const warnings = [
-    currencyWarning(currency),
     await importDailyMetrics(supabase, campaignRepository, connection),
     await importBreakdowns(
       supabase,

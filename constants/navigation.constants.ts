@@ -1,4 +1,5 @@
 import {
+  Calculator,
   Disc3,
   LayoutDashboard,
   LayoutGrid,
@@ -13,6 +14,7 @@ import {
   NOMINA_ARTISTS_ROUTE,
   NOMINA_FINANCE_ROUTE,
   NOMINA_ROUTE,
+  QUOTE_ROUTE,
 } from "@/constants/routes.constants";
 import type { NavSection } from "@/types/navigation.types";
 
@@ -32,6 +34,7 @@ export const NAV_SECTIONS: NavSection[] = [
       { label: "Clientes", href: "/clientes", icon: Users },
       { label: "Trabajos", href: "/trabajos", icon: Disc3 },
       { label: "Campañas", href: "/campanas", icon: Megaphone },
+      { label: "Cotizador", href: QUOTE_ROUTE, icon: Calculator },
     ],
   },
   {

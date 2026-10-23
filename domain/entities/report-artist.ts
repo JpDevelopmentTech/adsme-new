@@ -1,5 +1,6 @@
 import type { JobFormat, JobStatus } from "@/domain/entities/job";
 import type { ReportPlatformMetrics } from "@/domain/entities/report-metrics";
+import type { ReportSpend } from "@/domain/entities/report-spend";
 
 /** Un lanzamiento del artista en el reporte consolidado. */
 export interface ReportArtistLaunch {
@@ -12,7 +13,8 @@ export interface ReportArtistLaunch {
   code: string | null;
   startsOn: string;
   investment: number;
-  spend: number;
+  /** Gasto del lanzamiento, convertido con la TRM de ese trabajo si la tiene. */
+  spend: ReportSpend;
   videoPlays: number;
   reach: number;
   campaigns: number;

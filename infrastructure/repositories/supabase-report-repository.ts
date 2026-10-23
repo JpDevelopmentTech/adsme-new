@@ -7,6 +7,10 @@ import type {
 import type { ReportArtist, ReportArtistLaunch } from "@/domain/entities/report-artist";
 import type { ReportJob } from "@/domain/entities/report-job";
 import type { ReportPlatformMetrics } from "@/domain/entities/report-metrics";
+import {
+  toLaunchesReportSpend,
+  toReportSpend,
+} from "@/infrastructure/repositories/to-report-spend";
 import { toReportSections } from "@/utils/to-report-sections";
 
 interface ReportJobRow {
@@ -27,11 +31,17 @@ interface ReportJobRow {
   hidden_sections: string[] | null;
 }
 
+/**
+ * Las filas traen el gasto por moneda (`spend_by_currency`, jsonb) y la TRM del
+ * trabajo; la columna antigua `spend`, convertida con la TRM oficial, ya no se
+ * lee y desaparece de las funciones en una migración posterior.
+ */
 interface MetricsRow {
   platform: string;
   campaigns: number;
   active_campaigns: number;
-  spend: number | string;
+  spend_by_currency: unknown;
+  usd_cop_rate: unknown;
   impressions: number;
   clicks: number;
   reach: number;
@@ -54,7 +64,8 @@ interface LaunchRow {
   code: string | null;
   starts_on: string;
   investment: number;
-  spend: number | string;
+  spend_by_currency: unknown;
+  usd_cop_rate: unknown;
   video_plays: number;
   reach: number;
   campaigns: number;
@@ -65,7 +76,8 @@ interface ArtistPlatformRow {
   platform: string;
   campaigns: number;
   active_campaigns: number;
-  spend: number | string;
+  /** Gasto por lanzamiento, cada uno con su TRM: `[{usd_cop_rate, spend_by_currency}]`. */
+  spend_by_job: unknown;
   video_plays: number;
   reach: number;
   impressions: number;
@@ -164,8 +176,7 @@ function toPlatformMetrics(row: MetricsRow): ReportPlatformMetrics {
     platform: row.platform as JobPlatform,
     campaigns: Number(row.campaigns),
     activeCampaigns: Number(row.active_campaigns),
-    // `numeric` llega como cadena para no perder precisión.
-    spend: Number(row.spend),
+    spend: toReportSpend(row.spend_by_currency, row.usd_cop_rate),
     impressions: Number(row.impressions),
     clicks: Number(row.clicks),
     reach: Number(row.reach),
@@ -187,7 +198,7 @@ function toArtistPlatformMetrics(row: ArtistPlatformRow): ReportPlatformMetrics 
     platform: row.platform as JobPlatform,
     campaigns: Number(row.campaigns),
     activeCampaigns: Number(row.active_campaigns),
-    spend: Number(row.spend),
+    spend: toLaunchesReportSpend(row.spend_by_job),
     impressions: Number(row.impressions),
     clicks: 0,
     reach: Number(row.reach),
@@ -210,7 +221,7 @@ function toLaunch(row: LaunchRow): ReportArtistLaunch {
     code: row.code,
     startsOn: row.starts_on,
     investment: Number(row.investment),
-    spend: Number(row.spend),
+    spend: toReportSpend(row.spend_by_currency, row.usd_cop_rate),
     videoPlays: Number(row.video_plays),
     reach: Number(row.reach),
     campaigns: Number(row.campaigns),

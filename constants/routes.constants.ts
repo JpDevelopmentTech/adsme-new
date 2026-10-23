@@ -67,8 +67,11 @@ export function nominaPortalRoute(artistId: string): string {
   return `/portal-artista/${artistId}`;
 }
 
+/** Cotizador de pauta para artistas. */
+export const QUOTE_ROUTE = "/cotizador";
+
 /** Rutas que pintan su propia cabecera en lugar de la topbar del panel. */
-export const ROUTES_WITH_OWN_HEADER = [NOMINA_ROUTE] as const;
+export const ROUTES_WITH_OWN_HEADER = [NOMINA_ROUTE, QUOTE_ROUTE] as const;
 
 export const NEW_CLIENT_ROUTE = `${CLIENTS_ROUTE}/nuevo`;
 

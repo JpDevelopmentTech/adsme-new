@@ -1,34 +1,35 @@
 "use client";
 
-import { Calendar, ChevronDown } from "lucide-react";
-import { useState } from "react";
+import { DEFAULT_PERIOD, PERIOD_COPY, PERIOD_PRESETS } from "@/constants/nomina-period.constants";
 import { PeriodPopover } from "@/presentation/components/nomina/period-popover";
-import type { PeriodSelectorProps } from "@/types/nomina-ui.types";
-import { cn } from "@/utils/cn";
+import { PeriodTrigger } from "@/presentation/components/nomina/period-trigger";
+import { usePopoverDismiss } from "@/presentation/hooks/use-popover-dismiss";
+import type { PeriodSelectorProps } from "@/types/nomina-period.types";
+import { buildPeriodChips } from "@/utils/build-period-chips";
+import { buildPeriodMonthCells } from "@/utils/build-period-month-cells";
+import { buildPeriodShortcuts } from "@/utils/build-period-shortcuts";
+
+const ACTIVE = PERIOD_PRESETS.find((item) => item.label === DEFAULT_PERIOD.label)?.preset ?? "";
 
 /**
- * Botón del periodo con su rango resuelto siempre visible y el selector en un
- * popover. Hoy solo muestra el periodo por defecto: la interfaz, sin filtrar.
+ * Selector de periodo solo visual (Histórico del perfil): enseña el periodo por
+ * defecto, sin filtrar. El de Finanzas es `FinancePeriodSelector`.
  */
 export function PeriodSelector({ label, range }: PeriodSelectorProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  const { isOpen, toggle, containerRef } = usePopoverDismiss();
 
   return (
-    <div className="relative">
-      <button
-        type="button"
-        aria-expanded={isOpen}
-        onClick={() => setIsOpen((open) => !open)}
-        className="flex cursor-pointer items-center gap-2.5 rounded-pill border border-border-strong bg-surface px-3.5 py-[9px] text-[13px] font-normal transition-colors hover:bg-g-100 focus-visible:ring-2 focus-visible:ring-lilac focus-visible:outline-none"
-      >
-        <Calendar size={15} strokeWidth={1.5} className="text-lilac" aria-hidden />
-        {label}
-        <span className="text-xs text-text-muted">{range}</span>
-        <ChevronDown size={14} strokeWidth={1.5} className={cn("text-text-secondary transition-transform", isOpen && "rotate-180")} aria-hidden />
-      </button>
+    <div ref={containerRef} className="relative">
+      <PeriodTrigger label={label} range={range} isOpen={isOpen} onClick={toggle} />
       {isOpen ? (
         <div className="absolute top-full right-0 z-30 mt-2">
-          <PeriodPopover />
+          <PeriodPopover
+            year={DEFAULT_PERIOD.year}
+            shortcuts={buildPeriodShortcuts(ACTIVE)}
+            chips={buildPeriodChips(DEFAULT_PERIOD.year, "")}
+            months={buildPeriodMonthCells(DEFAULT_PERIOD.year, DEFAULT_PERIOD.from, DEFAULT_PERIOD.to, DEFAULT_PERIOD.to)}
+            help={PERIOD_COPY.help}
+          />
         </div>
       ) : null}
     </div>

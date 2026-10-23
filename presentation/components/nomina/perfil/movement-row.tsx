@@ -10,7 +10,7 @@ import { formatMonthShort, formatShortDate } from "@/utils/format-nomina-dates";
 import { NOMINA_TD_CLASSES } from "@/utils/nomina-table-styles";
 
 /** Fila de un movimiento con su chevron y, al expandirla, su detalle económico debajo. */
-export function MovementRow({ artist, movement, isExpanded, onToggle, incomeContext, isReadOnly = false }: MovementRowProps) {
+export function MovementRow({ artist, movement, isExpanded, onToggle, isReadOnly = false }: MovementRowProps) {
   const toggleLabel = isExpanded ? FINANCE_TAB_COPY.collapseRow : FINANCE_TAB_COPY.expandRow;
   const detailId = `detalle-${movement.id}`;
 
@@ -37,7 +37,7 @@ export function MovementRow({ artist, movement, isExpanded, onToggle, incomeCont
         <td className={NOMINA_TD_CLASSES}>{formatMonthShort(movement.assignedMonth)}</td>
         {isReadOnly ? null : (
           <td className={cn(NOMINA_TD_CLASSES, "text-right")}>
-            <MovementRowActions artist={artist} movement={movement} {...incomeContext} />
+            <MovementRowActions artist={artist} movement={movement} />
           </td>
         )}
       </tr>

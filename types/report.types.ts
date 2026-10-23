@@ -14,6 +14,7 @@ import type {
   PeriodPresetOption,
 } from "@/types/period-filter.types";
 import type { RawSearchParams } from "@/utils/parse-client-list-query";
+import type { ReportSpend } from "@/domain/entities/report-spend";
 
 /** Acento de una tarjeta; cada uno tiñe el chip del icono, la cifra y su halo. */
 export type ReportTone =
@@ -61,6 +62,19 @@ export interface ReportMetric {
   icon: ReportMetricIcon;
   tone: ReportTone;
   note: ReportMetricNote;
+  /** Línea extra bajo la cifra, como el desglose de la TRM; opcional. */
+  detail?: string | null;
+}
+
+/** La tarjeta de lo invertido: la cifra, su nota y de dónde sale el total en pesos. */
+export interface SpendSummary {
+  value: string;
+  /** «74% del presupuesto», o lo que quedó sin convertir si no se puede comparar. */
+  note: string;
+  /** Si el presupuesto se puede comparar: solo cuando todo el gasto está en pesos. */
+  isComparable: boolean;
+  /** «$X en pesos + US$Y × $TRM»; `null` si no se convirtió nada. */
+  detail: string | null;
 }
 
 /** El período del reporte con todo lo que necesita su filtro. */
@@ -178,6 +192,10 @@ export interface ArtistReportProps {
   reportUrl: string;
   /** Si el lanzamiento de origen deja ver la inversión. */
   showSpend: boolean;
+}
+
+export interface ReportSpendFigureProps {
+  spend: ReportSpend;
 }
 
 export interface ArtistLaunchesTableProps {
@@ -399,6 +417,8 @@ export interface ReportSummaryCardProps {
   label: string;
   value: string;
   note: string;
+  /** Línea fina bajo la cifra, para el desglose de la TRM. */
+  detail?: string | null;
 }
 
 export interface ReportPeriodBarProps {

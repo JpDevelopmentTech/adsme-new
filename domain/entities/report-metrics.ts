@@ -1,12 +1,15 @@
 import type { CampaignDailyMetrics } from "@/domain/entities/campaign-daily";
 import type { JobPlatform } from "@/domain/entities/job";
+import type { ReportSpend } from "@/domain/entities/report-spend";
 
 /**
  * Un día del reporte, ya sumadas todas las campañas que esa plataforma tiene
  * vinculadas al trabajo. Es lo que dibuja la curva de evolución.
  */
-export interface ReportDailyPoint extends CampaignDailyMetrics {
+export interface ReportDailyPoint extends Omit<CampaignDailyMetrics, "spend"> {
   platform: JobPlatform;
+  /** Gasto del día por moneda, ya convertido con la TRM del trabajo si la tiene. */
+  spend: ReportSpend;
   /** Fecha del dato en `YYYY-MM-DD`. */
   date: string;
 }
@@ -20,7 +23,8 @@ export interface ReportPlatformMetrics {
   platform: JobPlatform;
   campaigns: number;
   activeCampaigns: number;
-  spend: number;
+  /** Gasto por moneda; los dólares van convertidos solo si el trabajo tiene TRM. */
+  spend: ReportSpend;
   impressions: number;
   clicks: number;
   reach: number;
@@ -37,7 +41,8 @@ export interface ReportPlatformMetrics {
 export interface ReportTotals {
   campaigns: number;
   activeCampaigns: number;
-  spend: number;
+  /** Gasto por moneda; los dólares van convertidos solo si el trabajo tiene TRM. */
+  spend: ReportSpend;
   impressions: number;
   clicks: number;
   reach: number;

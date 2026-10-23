@@ -104,10 +104,6 @@ export interface PerformanceChartProps {
   currentMonth: string;
 }
 
-export interface PeriodSelectorProps {
-  label: string;
-  range: string;
-}
 
 export interface NominaFooterProps {
   className?: string;

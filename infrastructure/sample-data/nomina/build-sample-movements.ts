@@ -1,6 +1,6 @@
 import type { NominaMovement } from "@/domain/entities/nomina-movement";
-import { SAMPLE_MONTHS, SAMPLE_TAX_RATE } from "@/infrastructure/sample-data/nomina/sample-calendar.constants";
-import type { SampleArtistSpec } from "@/infrastructure/sample-data/nomina/sample-nomina.types";
+import { SAMPLE_TAX_RATE } from "@/infrastructure/sample-data/nomina/sample-calendar.constants";
+import type { NominaCalendar, SampleArtistSpec } from "@/infrastructure/sample-data/nomina/sample-nomina.types";
 import { isoDay, sampleShowDates } from "@/infrastructure/sample-data/nomina/sample-show-dates";
 import { splitSampleShow } from "@/infrastructure/sample-data/nomina/split-sample-show";
 
@@ -10,19 +10,27 @@ const DETAILS: Record<string, Pick<NominaMovement, "description" | "document">> 
 };
 
 /** Arma el movimiento completo a partir de su reparto bruto. */
-function toMovement(base: Omit<NominaMovement, "split">, service: number, profit: number, investment: number): NominaMovement {
+function toMovement(base: Pick<NominaMovement, "id" | "concept" | "amount" | "eventDate" | "incomeDate" | "assignedMonth">, service: number, profit: number, investment: number): NominaMovement {
   const taxes = Math.round(profit * SAMPLE_TAX_RATE);
-  return { ...base, split: { service, profit, taxes, netProfit: profit - taxes, investment }, ...DETAILS[base.id] };
+  return {
+    ...base,
+    split: { service, profit, taxes, netProfit: profit - taxes, investment },
+    params: null,
+    serviceAssumed: false,
+    serviceCost: base.concept === "inversion" ? service : 0,
+    createdAt: `${base.incomeDate}T12:00:00.000Z`,
+    ...DETAILS[base.id],
+  };
 }
 
 /** Movimientos de muestra de un artista, del más reciente al más antiguo. */
-export function buildSampleMovements(spec: SampleArtistSpec): NominaMovement[] {
+export function buildSampleMovements(spec: SampleArtistSpec, calendar: NominaCalendar): NominaMovement[] {
   const movements: NominaMovement[] = [];
 
-  SAMPLE_MONTHS.forEach((month, monthIndex) => {
+  calendar.months.forEach((month, monthIndex) => {
     let billed = 0;
     let covered = 0;
-    sampleShowDates(spec.id, month, spec.showsByMonth[monthIndex]).forEach((date, index) => {
+    sampleShowDates(spec.id, month, spec.showsByMonth[monthIndex] ?? 0, calendar).forEach((date, index) => {
       const split = splitSampleShow(spec, spec.nomina, billed, covered);
       billed += spec.nomina;
       covered += split.service;

@@ -1,12 +1,14 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { JobPlatform } from "@/domain/entities/job";
 import type { ReportDailyPoint } from "@/domain/entities/report-metrics";
+import { toReportSpend } from "@/infrastructure/repositories/to-report-spend";
 
 /** Fila de `get_report_daily_metrics`, con todo agregado por día y plataforma. */
 interface DailyMetricsRow {
   platform: string;
   metric_date: string;
-  spend: number | string;
+  spend_by_currency: unknown;
+  usd_cop_rate: unknown;
   impressions: number;
   clicks: number;
   reach: number;
@@ -44,8 +46,7 @@ function toDailyPoint(row: DailyMetricsRow): ReportDailyPoint {
   return {
     platform: row.platform as JobPlatform,
     date: row.metric_date,
-    // `numeric` llega como cadena para no perder precisión.
-    spend: Number(row.spend),
+    spend: toReportSpend(row.spend_by_currency, row.usd_cop_rate),
     impressions: Number(row.impressions),
     clicks: Number(row.clicks),
     reach: Number(row.reach),

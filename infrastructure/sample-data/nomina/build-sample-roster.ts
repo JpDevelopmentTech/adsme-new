@@ -1,5 +1,7 @@
 import type { NominaRosterEntry } from "@/domain/entities/nomina-roster";
-import type { SampleArtistFacts } from "@/infrastructure/sample-data/nomina/build-sample-artist";
+import type { SampleArtistFacts } from "@/infrastructure/sample-data/nomina/build-artist-facts";
+import { deriveSpecConfig } from "@/infrastructure/sample-data/nomina/derive-spec-config";
+import { toBillingEntry } from "@/utils/to-billing-entry";
 import { sumMovements } from "@/infrastructure/sample-data/nomina/sum-movements";
 
 /** Fila del roster de un artista de muestra. */
@@ -20,5 +22,8 @@ export function buildSampleRosterEntry(facts: SampleArtistFacts): NominaRosterEn
     nomina: spec.nomina,
     availableBudget: total.investment - facts.adsSpent,
     joinedAt: spec.joinedAt,
+    minShows: spec.minShows,
+    split: (spec.config ?? deriveSpecConfig(spec)).split,
+    billing: facts.movements.map(toBillingEntry),
   };
 }

@@ -19,6 +19,10 @@ export interface NominaSettingsState {
   links: NominaSocialDraft;
   setLink: (network: NominaSocialNetwork, url: string) => void;
   canSave: boolean;
+  isSaving: boolean;
+  error: string | null;
+  /** Guarda la pestaña abierta: el modelo o las redes. */
+  submit: () => void;
 }
 
 export interface ProfileModalProps {
@@ -28,6 +32,13 @@ export interface ProfileModalProps {
 }
 
 export type SettingsModalProps = ProfileModalProps & Omit<ProfileActionsProps, "artist" | "movementCount">;
+
+/** Baja de Nómina en curso (hook `useUnenrollArtist`). */
+export interface UnenrollState {
+  unenroll: () => void;
+  isPending: boolean;
+  error: string | null;
+}
 
 export interface DeleteArtistDialogProps extends ProfileModalProps {
   movementCount: number;

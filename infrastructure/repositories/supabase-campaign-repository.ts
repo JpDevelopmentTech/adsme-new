@@ -13,15 +13,20 @@ import {
   type CampaignRow,
 } from "@/infrastructure/repositories/campaign-row";
 import { toClientError } from "@/infrastructure/repositories/supabase-client-error-mapper";
+import { compareMoneyDesc } from "@/utils/compare-money-desc";
 import { isUuid } from "@/utils/is-uuid";
 
 const CAMPAIGNS_TABLE = "campaigns";
 
+
 /**
- * Campo calculado con el gasto en pesos. Se ordena por él y no por `spend`,
- * que está en la moneda de cada cuenta: 900 dólares no van detrás de 50.000 pesos.
+ * De mayor a menor gasto, agrupando por moneda: 900 dólares y 50.000 pesos no
+ * se comparan por cifra. La base ordena por `spend` en crudo y aquí se reparte
+ * por moneda, que es lo que SQL no sabe hacer sin convertir.
  */
-const SPEND_IN_COP = "spend_cop";
+function sortByMoneyDesc(campaigns: Campaign[]): Campaign[] {
+  return [...campaigns].sort((a, b) => compareMoneyDesc(a.spend, b.spend));
+}
 
 /** Implementación del port de campañas sobre Supabase; el aislamiento lo da RLS. */
 export function createSupabaseCampaignRepository(
@@ -43,12 +48,12 @@ export function createSupabaseCampaignRepository(
       }
 
       const { data, error } = await request
-        .order(SPEND_IN_COP, { ascending: false })
+        .order("spend", { ascending: false })
         .returns<CampaignRow[]>();
 
       if (error) throw error;
 
-      return data.map(toCampaign);
+      return sortByMoneyDesc(data.map(toCampaign));
     },
 
     async getCampaign(campaignId: string): Promise<Campaign | null> {
@@ -72,12 +77,12 @@ export function createSupabaseCampaignRepository(
         .from(CAMPAIGNS_TABLE)
         .select(CAMPAIGN_COLUMNS)
         .eq("job_id", jobId)
-        .order(SPEND_IN_COP, { ascending: false })
+        .order("spend", { ascending: false })
         .returns<CampaignRow[]>();
 
       if (error) throw error;
 
-      return data.map(toCampaign);
+      return sortByMoneyDesc(data.map(toCampaign));
     },
 
     async createCampaign(draft: CampaignDraft): Promise<ClientResult<Campaign>> {

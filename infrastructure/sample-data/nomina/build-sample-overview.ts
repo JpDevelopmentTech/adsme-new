@@ -1,11 +1,11 @@
 import type { NominaOverview } from "@/domain/entities/nomina-overview";
-import type { SampleArtistFacts } from "@/infrastructure/sample-data/nomina/build-sample-artist";
+import type { SampleArtistFacts } from "@/infrastructure/sample-data/nomina/build-artist-facts";
 import { buildSampleDailyPoints } from "@/infrastructure/sample-data/nomina/build-sample-daily-points";
-import { SAMPLE_CURRENT_MONTH } from "@/infrastructure/sample-data/nomina/sample-calendar.constants";
+import type { NominaCalendar } from "@/infrastructure/sample-data/nomina/sample-nomina.types";
 import { sumMovements } from "@/infrastructure/sample-data/nomina/sum-movements";
 
 /** Resumen del mes en curso para todo el roster de muestra. */
-export function buildSampleOverview(roster: SampleArtistFacts[]): NominaOverview {
+export function buildSampleOverview(roster: SampleArtistFacts[], calendar: NominaCalendar): NominaOverview {
   const month = sumMovements(roster.flatMap((facts) => facts.current));
 
   const topArtists = roster
@@ -23,7 +23,7 @@ export function buildSampleOverview(roster: SampleArtistFacts[]): NominaOverview
     }));
 
   return {
-    month: SAMPLE_CURRENT_MONTH,
+    month: calendar.currentMonth,
     kpis: {
       grossIncome: month.amount,
       profit: month.profit,
@@ -39,7 +39,7 @@ export function buildSampleOverview(roster: SampleArtistFacts[]): NominaOverview
       { key: "utilidadNeta", amount: month.netProfit },
       { key: "impuestos", amount: month.taxes },
     ],
-    performance: buildSampleDailyPoints(roster.flatMap((facts) => facts.movements)),
+    performance: buildSampleDailyPoints(roster.flatMap((facts) => facts.movements), calendar),
     topArtists,
   };
 }
