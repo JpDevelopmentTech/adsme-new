@@ -10,7 +10,8 @@ import type { FilterSelectOption } from "@/types/ui.types";
 export interface JobBasicsValues {
   title: string;
   clientId: string;
-  format: JobFormat;
+  /** Vacío hasta que se elige: no se presupone el sector del trabajo. */
+  format: JobFormat | "";
   startsOn: string;
   endsOn: string;
   /** Se edita como texto para poder formatearlo con separadores de miles. */
@@ -71,6 +72,8 @@ export interface JobBasicsFieldsProps {
   values: JobBasicsValues;
   errors: JobBasicsErrors;
   clientOptions: FilterSelectOption<string>[];
+  /** Abre el alta rápida de cliente con lo que se escribió en el buscador. */
+  onCreateClient: (query: string) => void;
   /** Portada elegida, para la caja de subida. */
   cover: JobCoverUploaderProps;
   onChange: <TField extends keyof JobBasicsValues>(
@@ -204,4 +207,14 @@ export interface CpvOptimizationSectionProps {
 export interface WizardBackLinkProps {
   /** Paso o pantalla al que vuelve. */
   href: string;
+}
+
+/** Alta rápida de cliente desde el paso 1 del asistente. */
+export interface InlineClientCreation {
+  options: FilterSelectOption<string>[];
+  /** Nombre de partida mientras el diálogo está abierto; `null` si está cerrado. */
+  draftName: string | null;
+  open: (query: string) => void;
+  close: () => void;
+  add: (client: FilterSelectOption<string>) => void;
 }

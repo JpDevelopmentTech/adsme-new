@@ -1,4 +1,4 @@
-import { DEFAULT_CLIENT_GRADIENT, EMPTY_CLIENT_FORM_VALUES } from "@/constants/client-form.constants";
+import { EMPTY_CLIENT_FORM_VALUES, NEW_CLIENT_PREVIEW_META } from "@/constants/client-form.constants";
 import { CLIENT_FORM_COPY } from "@/constants/client-form-copy.constants";
 import { ClientForm } from "@/presentation/components/clientes/client-form";
 
@@ -9,12 +9,7 @@ export function NewClientScreen({ isModal }: { isModal: boolean }) {
       isModal={isModal}
       title={CLIENT_FORM_COPY.createTitle}
       initialValues={EMPTY_CLIENT_FORM_VALUES}
-      previewMeta={{
-        gradient: DEFAULT_CLIENT_GRADIENT,
-        jobsCount: 0,
-        activeJobsCount: 0,
-        status: { label: CLIENT_FORM_COPY.previewNewStatus, tone: "brand" },
-      }}
+      previewMeta={NEW_CLIENT_PREVIEW_META}
     />
   );
 }

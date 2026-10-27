@@ -19,21 +19,21 @@ export function SyncClock({ countdown, elapsedPercent }: SyncClockProps) {
           aria-hidden
           className="absolute inset-0 rounded-pill"
           style={{
-            background: `conic-gradient(var(--color-accent-bright) ${elapsedPercent}%, #1f2a271a 0)`,
+            background: `conic-gradient(var(--color-accent-bright) ${elapsedPercent}%, var(--color-border) 0)`,
             mask,
             WebkitMask: mask,
           }}
         />
 
         <span className="flex flex-col items-center leading-none">
-          <span className="font-display text-[19px] font-light tracking-[-0.5px] text-g-50">
+          <span className="font-display text-[19px] font-light tracking-[-0.5px] text-text-primary">
             {countdown?.value ?? "—"}
           </span>
-          <span className="text-[9px] text-g-400">{countdown?.unit ?? ""}</span>
+          <span className="text-[9px] text-text-muted">{countdown?.unit ?? ""}</span>
         </span>
       </div>
 
-      <span className="text-[10px] font-medium tracking-[0.6px] text-g-500 uppercase">
+      <span className="text-[10px] font-medium tracking-[0.6px] text-text-muted uppercase">
         {CONNECTIONS_SUMMARY_COPY.nextLabel}
       </span>
     </div>

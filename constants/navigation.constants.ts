@@ -1,6 +1,6 @@
 import {
   Calculator,
-  Disc3,
+  BriefcaseBusiness,
   LayoutDashboard,
   LayoutGrid,
   Megaphone,
@@ -32,7 +32,7 @@ export const NAV_SECTIONS: NavSection[] = [
     items: [
       { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
       { label: "Clientes", href: "/clientes", icon: Users },
-      { label: "Trabajos", href: "/trabajos", icon: Disc3 },
+      { label: "Trabajos", href: "/trabajos", icon: BriefcaseBusiness },
       { label: "Campañas", href: "/campanas", icon: Megaphone },
       { label: "Cotizador", href: QUOTE_ROUTE, icon: Calculator },
     ],

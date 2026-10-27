@@ -3,7 +3,9 @@ import type { Money } from "@/domain/entities/money";
 
 /**
  * Gasto de una campaña de AdsME de un artista de Nómina en un mes, en la
- * moneda de su cuenta. Solo cuenta desde el inicio de vigencia en Nómina.
+ * moneda de su cuenta. Cuenta desde el inicio en Nómina o desde el primer mes
+ * con ingresos, lo que sea antes: si el presupuesto incluye esa Inversión,
+ * también se descuenta lo que se gastó con ella.
  */
 export interface NominaCampaignSpend {
   clientId: string;
@@ -20,7 +22,7 @@ export interface NominaCampaignSpend {
   spend: Money;
 }
 
-/** Campaña de un artista con su gasto acumulado desde que entró a Nómina. */
+/** Campaña de un artista con su gasto acumulado desde que cuenta para Nómina. */
 export interface NominaArtistCampaign {
   campaignId: string;
   campaignName: string;

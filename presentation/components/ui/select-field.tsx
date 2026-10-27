@@ -1,11 +1,26 @@
 import { AlertCircle, ChevronDown } from "lucide-react";
-import type { SelectFieldProps, SelectOption } from "@/types/ui.types";
+import type { SelectFieldProps, SelectOption, SelectOptionGroup } from "@/types/ui.types";
 import { cn } from "@/utils/cn";
 import { FIELD_SURFACE_CLASSES } from "@/utils/field-surface";
 
 /** Normaliza las opciones a pares valor/etiqueta. */
 function toEntry(option: SelectOption) {
   return typeof option === "string" ? { value: option, label: option } : option;
+}
+
+/** Distingue un grupo de una opción suelta. */
+function isGroup(item: SelectOption | SelectOptionGroup): item is SelectOptionGroup {
+  return typeof item !== "string" && "options" in item;
+}
+
+/** Pinta una opción suelta. */
+function renderOption(option: SelectOption) {
+  const entry = toEntry(option);
+  return (
+    <option key={entry.value} value={entry.value}>
+      {entry.label}
+    </option>
+  );
 }
 
 export function SelectField({
@@ -35,7 +50,7 @@ export function SelectField({
           id={id}
           aria-invalid={Boolean(error)}
           aria-describedby={error ? `${id}-error` : undefined}
-          className="w-full cursor-pointer appearance-none bg-transparent px-3.5 py-3 pr-10 text-sm text-text-primary outline-none [&_option]:bg-[#140c26] [&_option]:text-text-primary"
+          className="w-full cursor-pointer appearance-none bg-transparent px-3.5 py-3 pr-10 text-sm text-text-primary outline-none [&_optgroup]:bg-[#140c26] [&_optgroup]:text-text-muted [&_option]:bg-[#140c26] [&_option]:text-text-primary"
           {...selectProps}
         >
           {placeholder ? (
@@ -43,15 +58,15 @@ export function SelectField({
               {placeholder}
             </option>
           ) : null}
-          {options.map(toEntry).map((option) => (
-            <option
-              key={option.value}
-              value={option.value}
-             
-            >
-              {option.label}
-            </option>
-          ))}
+          {options.map((item) =>
+            isGroup(item) ? (
+              <optgroup key={item.label} label={item.label}>
+                {item.options.map(renderOption)}
+              </optgroup>
+            ) : (
+              renderOption(item)
+            ),
+          )}
         </select>
         <ChevronDown
           size={16}

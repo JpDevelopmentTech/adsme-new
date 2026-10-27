@@ -57,7 +57,7 @@ export function ClientFormPreview({ values, meta, avatarUrl }: ClientFormPreview
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <TagPill label={values.genre} />
+          {values.genre ? <TagPill label={values.genre} /> : null}
           <StatusBadge label={meta.status.label} tone={meta.status.tone} />
         </div>
       </div>

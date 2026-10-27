@@ -1,4 +1,4 @@
-import { Music } from "lucide-react";
+import { ImageIcon } from "lucide-react";
 import type { JobCoverProps } from "@/types/job.types";
 
 /** Lado por defecto de la portada, en px. */
@@ -6,7 +6,7 @@ const DEFAULT_COVER_SIZE = 36;
 
 /**
  * Portada del trabajo. Con imagen subida la muestra; sin ella cae a un bloque
- * de vidrio con la nota musical. El radio crece con el tamaño, como en el diseño.
+ * de vidrio con un icono de imagen. El radio crece con el tamaño, como en el diseño.
  */
 export function JobCover({ imageUrl, title, size = DEFAULT_COVER_SIZE }: JobCoverProps) {
   const style = { width: size, height: size, borderRadius: Math.round(size * 0.23) };
@@ -30,7 +30,7 @@ export function JobCover({ imageUrl, title, size = DEFAULT_COVER_SIZE }: JobCove
       className="grid shrink-0 place-items-center border border-border bg-surface"
       style={style}
     >
-      <Music size={Math.round(size * 0.4)} strokeWidth={1.5} className="text-text-muted" />
+      <ImageIcon size={Math.round(size * 0.4)} strokeWidth={1.5} className="text-text-muted" />
     </span>
   );
 }

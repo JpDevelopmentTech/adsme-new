@@ -4,8 +4,21 @@ export type JobPlatform = "youtube" | "meta" | "tiktok";
 /** Estado de la campaña asociada al trabajo, según los badges de `B3`. */
 export type JobStatus = "active" | "finished" | "syncing";
 
-/** Formato del lanzamiento sobre el que se pauta. */
-export type JobFormat = "Single" | "EP" | "Álbum";
+/**
+ * Qué se promociona con el trabajo. La agencia pauta para cualquier sector:
+ * los formatos musicales conviven con los de marcas, negocios y eventos.
+ */
+export type JobFormat =
+  | "Producto o servicio"
+  | "Marca"
+  | "Promoción u oferta"
+  | "Apertura o lanzamiento"
+  | "Evento"
+  | "Contenido"
+  | "Single"
+  | "EP"
+  | "Álbum"
+  | "Otro";
 
 /** Par de colores de la portada, usado cuando el trabajo no tiene imagen propia. */
 export interface JobCoverGradient {

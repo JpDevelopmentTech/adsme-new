@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
-import { IMPORTED_CAMPAIGNS_LIMIT } from "@/constants/connections.constants";
+import {
+  CONNECTIONS_COPY,
+  IMPORTED_CAMPAIGNS_LIMIT,
+} from "@/constants/connections.constants";
 import { META_ERRORS } from "@/constants/meta-ads.constants";
 import { TIKTOK_ERRORS } from "@/constants/tiktok-ads.constants";
 import { DEFAULT_CAMPAIGN_LIST_QUERY } from "@/domain/entities/campaign";
 import type { ConnectionPlatform } from "@/domain/entities/connection";
-import type { PlatformConnection } from "@/domain/entities/platform-connection";
 import { DEFAULT_JOB_LIST_QUERY } from "@/domain/entities/job-query";
 import { createListCampaigns } from "@/domain/use-cases/list-campaigns";
 import { createListJobs } from "@/domain/use-cases/list-jobs";
@@ -17,6 +19,7 @@ import { createServerSupabaseClient } from "@/infrastructure/supabase/server-sup
 import { ConnectionRow } from "@/presentation/components/conexiones/connection-row";
 import { ConnectionsPanel } from "@/presentation/components/conexiones/connections-panel";
 import { ConnectionsStatusBand } from "@/presentation/components/conexiones/connections-status-band";
+import { GoogleScriptBadge } from "@/presentation/components/conexiones/google-script-badge";
 import { ImportedCampaignsPanel } from "@/presentation/components/conexiones/imported-campaigns-panel";
 import {
   MetaConnectAction,
@@ -29,7 +32,6 @@ import {
 import { FormAlert } from "@/presentation/components/ui/form-alert";
 import { buildConnectionsStatus } from "@/utils/build-connections-status";
 import { buildImportedCampaigns } from "@/utils/build-imported-campaigns";
-import { findDesignConnection } from "@/utils/find-design-connection";
 import { toPlatformConnection } from "@/utils/to-platform-connection";
 
 export const metadata: Metadata = { title: "Conexiones · adsme" };
@@ -66,10 +68,13 @@ export default async function ConexionesPage({
   const isMetaConnected = meta.status === "connected";
   const isTiktokConnected = tiktok.status === "connected";
 
-  const youtube = findDesignConnection("youtube");
-  const rows = [youtube, meta, tiktok].filter(
-    (row): row is PlatformConnection => row !== null,
-  );
+  // Google Ads no pasa por OAuth: su conexión la crea el script programado que
+  // empuja las campañas, y la fila la lee igual que las demás.
+  const youtube = {
+    ...toPlatformConnection("youtube", of("google_ads"), campaigns, now),
+    name: CONNECTIONS_COPY.googleAdsName,
+  };
+  const rows = [youtube, meta, tiktok];
   const lastSyncedAt =
     connections
       .map((connection) => connection.lastSyncedAt)
@@ -99,7 +104,12 @@ export default async function ConexionesPage({
       ) : null}
 
       <ConnectionsPanel>
-        {youtube ? <ConnectionRow connection={youtube} /> : null}
+        <ConnectionRow
+          connection={youtube}
+          actions={
+            youtube.status === "connected" ? <GoogleScriptBadge /> : undefined
+          }
+        />
 
         <ConnectionRow
           connection={meta}

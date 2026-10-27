@@ -1,5 +1,4 @@
 import type { ConnectionPlatform } from "@/domain/entities/connection";
-import type { PlatformConnection } from "@/domain/entities/platform-connection";
 
 export const CONNECTIONS_COPY = {
   title: "Conexiones",
@@ -34,6 +33,10 @@ export const CONNECTIONS_COPY = {
   actions: (platform: string) => `Acciones de ${platform}`,
   pendingOauth:
     "Requiere registrar la app OAuth de la plataforma (client ID, secret y developer token).",
+  googleAdsName: "Google Ads",
+  scriptFed: "Entra por script",
+  scriptFedHint:
+    "Las campañas de Google Ads llegan desde el script programado de la cuenta: no hay acceso que conectar ni renovar aquí.",
 } as const;
 
 /** Textos del estado de la importación y del reloj de la banda. */
@@ -135,21 +138,3 @@ export const IMPORTED_TABLE_WIDTHS = [
 
 /** Filas de la tabla de campañas importadas; el resto se ve en `B9`. */
 export const IMPORTED_CAMPAIGNS_LIMIT = 6;
-
-/**
- * Conexiones de muestra copiadas de `B10 · Conexiones`. Son datos del diseño,
- * no cuentas reales: solo quedan aquí las plataformas cuya app OAuth todavía no
- * existe. Meta y TikTok ya son reales y salieron de esta lista.
- */
-export const MOCK_CONNECTIONS: PlatformConnection[] = [
-  {
-    platform: "youtube",
-    name: "Google Ads",
-    status: "disconnected",
-    accountNames: [],
-    activeCampaigns: null,
-    importedSpend: null,
-    lastSyncedLabel: null,
-    access: null,
-  },
-];

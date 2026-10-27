@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import type { ReactNode } from "react";
+import type { ChangeEvent, ReactNode, RefObject } from "react";
 import type { NominaShowProgress } from "@/domain/entities/nomina-artist";
 import type { NominaBucketAmount, NominaBucketKey, NominaDailyPoint } from "@/domain/entities/nomina-bucket";
 import type { NominaArtistCampaign } from "@/domain/entities/nomina-campaign-spend";
@@ -36,9 +36,23 @@ export interface ProfileHeaderProps extends ReadOnlyAware {
 }
 
 export interface ProfilePhotoProps extends ReadOnlyAware {
+  clientId: string;
   name: string;
   photoUrl: string | null;
   semaphore: NominaArtistProfile["semaphore"];
+}
+
+/** Foto del perfil que se puede cambiar (solo en el panel, no en el portal). */
+export type EditableProfilePhotoProps = Omit<ProfilePhotoProps, "isReadOnly">;
+
+/** Estado del cambio de foto: selector oculto, previsualización y resultado. */
+export interface ArtistPhotoUploadState {
+  inputRef: RefObject<HTMLInputElement | null>;
+  previewUrl: string | null;
+  error: string | null;
+  isPending: boolean;
+  pick: () => void;
+  onFileChange: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
 export interface SocialBarProps extends ReadOnlyAware {

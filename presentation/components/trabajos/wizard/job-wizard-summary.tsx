@@ -1,4 +1,4 @@
-import { Music, Save } from "lucide-react";
+import { ImageIcon, Save } from "lucide-react";
 import { JOB_WIZARD_SUMMARY } from "@/constants/job-wizard.constants";
 import type { JobWizardSummaryProps } from "@/types/job-wizard.types";
 import { cn } from "@/utils/cn";
@@ -32,7 +32,7 @@ export function JobWizardSummary({ summary }: JobWizardSummaryProps) {
         <img src={summary.coverUrl} alt="" className="aspect-square w-full rounded-[18px] object-cover" />
       ) : (
         <span aria-hidden className="grid aspect-square w-full place-items-center rounded-[18px] border border-border bg-surface">
-          <Music size={40} strokeWidth={1.25} className="text-text-muted" />
+          <ImageIcon size={40} strokeWidth={1.25} className="text-text-muted" />
         </span>
       )}
 

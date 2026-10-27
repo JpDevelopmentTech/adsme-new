@@ -1,8 +1,8 @@
 import { AtSign, Mail, MapPin, Phone } from "lucide-react";
 import {
   CLIENT_COUNTRIES,
-  CLIENT_GENRES,
-  CLIENT_KINDS,
+  CLIENT_KIND_GROUPS,
+  CLIENT_SECTORS,
 } from "@/constants/client-form.constants";
 import { CLIENT_FORM_COPY } from "@/constants/client-form-copy.constants";
 import { SelectField } from "@/presentation/components/ui/select-field";
@@ -52,7 +52,7 @@ export function ClientFormFields({
           name="kind"
           surface="elevated"
           label={CLIENT_FORM_COPY.kindLabel}
-          options={CLIENT_KINDS}
+          options={CLIENT_KIND_GROUPS}
           value={values.kind}
           error={errors.kind}
           onChange={(event) => onChange("kind", event.target.value as ClientKind)}
@@ -62,7 +62,8 @@ export function ClientFormFields({
           name="genre"
           surface="elevated"
           label={CLIENT_FORM_COPY.genreLabel}
-          options={CLIENT_GENRES}
+          options={CLIENT_SECTORS}
+          placeholder={CLIENT_FORM_COPY.genrePlaceholder}
           value={values.genre}
           error={errors.genre}
           onChange={(event) => onChange("genre", event.target.value)}

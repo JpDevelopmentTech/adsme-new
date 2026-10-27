@@ -1,4 +1,4 @@
-import { Activity, Disc3, Link, Wallet } from "lucide-react";
+import { Activity, BriefcaseBusiness, Link, Wallet } from "lucide-react";
 import { CLIENT_METRIC_LABELS } from "@/constants/client-detail.constants";
 import { ClientMetricCard } from "@/presentation/components/cliente-detalle/client-metric-card";
 import type { ClientMetricsProps } from "@/types/client-detail.types";
@@ -9,7 +9,7 @@ const ICON_SIZE = 18;
 /** Las cuatro cifras del cliente en tarjetas de vidrio, en el orden del diseño. */
 export function ClientMetrics({ metrics }: ClientMetricsProps) {
   const cards = [
-    { key: "totalJobs", Icon: Disc3, value: String(metrics.totalJobs), label: CLIENT_METRIC_LABELS.totalJobs },
+    { key: "totalJobs", Icon: BriefcaseBusiness, value: String(metrics.totalJobs), label: CLIENT_METRIC_LABELS.totalJobs },
     { key: "activeJobs", Icon: Activity, value: String(metrics.activeJobs), label: CLIENT_METRIC_LABELS.activeJobs },
     {
       key: "totalInvestment",

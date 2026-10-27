@@ -1,4 +1,4 @@
-import { Calendar, CircleCheck, Disc3, ExternalLink, MicVocal, Music, RefreshCw, SlidersHorizontal } from "lucide-react";
+import { Calendar, CircleCheck, BriefcaseBusiness, ExternalLink, Users, ImageIcon, RefreshCw, SlidersHorizontal } from "lucide-react";
 import { JOB_STATUS_BADGE } from "@/constants/client-detail.constants";
 import { JOB_DETAIL_COPY } from "@/constants/job-detail.constants";
 import { JOB_FORM_FIELDS } from "@/constants/job-wizard.constants";
@@ -18,8 +18,8 @@ export function JobHero({ job, clientName, now }: JobHeroProps) {
   const status = JOB_STATUS_BADGE[job.status];
 
   const meta = [
-    { Icon: MicVocal, text: clientName },
-    { Icon: Disc3, text: `${job.format} · ${job.startsOn.slice(0, 4)}` },
+    { Icon: Users, text: clientName },
+    { Icon: BriefcaseBusiness, text: `${job.format} · ${job.startsOn.slice(0, 4)}` },
     { Icon: Calendar, text: formatJobPeriod(job.startsOn, job.endsOn) },
     { Icon: RefreshCw, text: `Actualizado ${formatRelativeTime(job.updatedAt, now)}` },
   ];
@@ -39,7 +39,7 @@ export function JobHero({ job, clientName, now }: JobHeroProps) {
           aria-hidden
           className="grid size-[200px] shrink-0 place-items-center rounded-[26px] border border-border bg-surface"
         >
-          <Music size={56} strokeWidth={1.25} className="text-text-muted" />
+          <ImageIcon size={56} strokeWidth={1.25} className="text-text-muted" />
         </span>
       )}
 

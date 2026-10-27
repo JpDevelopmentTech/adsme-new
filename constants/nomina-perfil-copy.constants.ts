@@ -25,6 +25,7 @@ export const PROFILE_COPY = {
   backLabel: "Artistas",
   tabsLabel: "Secciones del perfil",
   changePhoto: "Cambiar foto",
+  uploadingPhoto: "Subiendo foto…",
   nominaLead: "Nómina",
   joinedLead: "En el roster desde",
   monthIncome: "Ingresos Brutos (mes)",

@@ -20,7 +20,7 @@ export const GLOBAL_SEARCH_COPY = {
   error: "No pudimos buscar. Inténtalo de nuevo.",
   minChars: "Escribe al menos 2 letras para buscar.",
   empty: (term: string) => `Sin resultados para «${term}»`,
-  emptyHint: "Prueba con el nombre del artista, el @usuario o el título del lanzamiento.",
+  emptyHint: "Prueba con el nombre del cliente, el @usuario o el nombre del trabajo.",
   hint: "↑↓ para moverte · Enter para abrir · Esc para cerrar",
   resultsLabel: "Resultados de la búsqueda",
   /** Anuncio para lectores de pantalla cuando llegan resultados. */

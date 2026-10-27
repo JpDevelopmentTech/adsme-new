@@ -1,5 +1,6 @@
 import type { JobFormat } from "@/domain/entities/job";
 import type { JobBasicsValues } from "@/types/job-wizard.types";
+import type { SelectOptionGroup } from "@/types/ui.types";
 
 /**
  * Los cuatro pasos del asistente. `note` sirve para avisar en el propio
@@ -18,7 +19,7 @@ export const JOB_WIZARD_STEPS: readonly {
 
 /** Los tres bloques en que se agrupan los campos del paso 1. */
 export const JOB_WIZARD_SECTIONS = {
-  what: "Qué se lanza",
+  what: "Qué se pauta y para quién",
   when: "Cuándo corre la pauta",
   howMuch: "Cuánto se invierte",
 } as const;
@@ -54,16 +55,36 @@ export const JOB_STEP_COPY = {
   three: {
     title: "Reporte del cliente",
     subtitle:
-      "Elige qué ve el artista al abrir su enlace. Puedes cambiarlo después sin volver a compartirlo.",
+      "Elige qué ve el cliente al abrir su enlace. Puedes cambiarlo después sin volver a compartirlo.",
   },
   four: {
     title: "Enlace del cliente",
     subtitle:
-      "Esto es lo que recibe el artista. Se abre sin cuenta y se actualiza solo.",
+      "Esto es lo que recibe el cliente. Se abre sin cuenta y se actualiza solo.",
   },
 } as const;
 
-export const JOB_FORMATS = ["Single", "EP", "Álbum"] as const satisfies readonly JobFormat[];
+/** Formatos que acepta la base (`jobs_format_check`). */
+export const JOB_FORMATS = [
+  "Producto o servicio",
+  "Marca",
+  "Promoción u oferta",
+  "Apertura o lanzamiento",
+  "Evento",
+  "Contenido",
+  "Single",
+  "EP",
+  "Álbum",
+  "Otro",
+] as const satisfies readonly JobFormat[];
+
+/** El desplegable de formatos, agrupado por el tipo de cliente que suele pedirlos. */
+export const JOB_FORMAT_GROUPS = [
+  { label: "Marcas y negocios", options: ["Producto o servicio", "Marca", "Promoción u oferta", "Apertura o lanzamiento"] },
+  { label: "Eventos y contenido", options: ["Evento", "Contenido"] },
+  { label: "Música", options: ["Single", "EP", "Álbum"] },
+  { label: "Otros", options: ["Otro"] },
+] as const satisfies readonly (SelectOptionGroup & { options: readonly JobFormat[] })[];
 
 export const JOB_WIZARD_COPY = {
   /** Rótulo sobre el nombre de cada paso en el indicador de progreso. */
@@ -72,15 +93,16 @@ export const JOB_WIZARD_COPY = {
   title: "Nuevo trabajo",
   editTitle: "Editar trabajo",
   saveDraft: "Guardar borrador",
-  coverLabel: "Portada de la canción",
-  coverTitle: "Arrastra la portada",
-  coverHint: "JPG · PNG · 1400 px",
-  coverRemove: "Quitar portada",
-  titleLabel: "Nombre de la canción",
-  titlePlaceholder: "Corazón de Neón",
-  clientLabel: "Cliente / Artista",
+  coverLabel: "Imagen del trabajo",
+  coverTitle: "Arrastra la imagen",
+  coverHint: "JPG · PNG · cuadrada",
+  coverRemove: "Quitar imagen",
+  titleLabel: "Nombre del trabajo",
+  titlePlaceholder: "Temporada de verano 2026",
+  clientLabel: "Cliente",
   clientPlaceholder: "Selecciona un cliente",
-  formatLabel: "Tipo de lanzamiento",
+  formatLabel: "Qué se promociona",
+  formatPlaceholder: "Elige el tipo",
   periodLabel: "Período de la campaña",
   startLabel: "Inicio",
   endLabel: "Fin",
@@ -89,13 +111,14 @@ export const JOB_WIZARD_COPY = {
   investmentCurrency: "COP",
   descriptionLabel: "Descripción (opcional)",
   descriptionPlaceholder:
-    "Lanzamiento principal del sencillo. Enfoque en audiencia joven 18–34 en Colombia y México.",
+    "Objetivo, público y mensaje clave. Ej.: dar a conocer la nueva sede a personas de 25 a 45 años en Medellín.",
   previous: "Atrás",
   next: "Siguiente: Campañas",
   stepOneDone:
     "Datos básicos completos. El paso 2 (Campañas) todavía no está implementado.",
   noClients:
-    "Necesitas al menos un cliente para crear un trabajo. Crea uno primero.",
+    "Todavía no tienes clientes. Créalo desde el campo «Cliente»: queda elegido para este trabajo.",
+  createClient: (query: string) => (query ? `Crear «${query}» como cliente nuevo` : "Crear cliente nuevo"),
 } as const;
 
 /** Nombres de los campos auxiliares del asistente dentro del FormData. */
@@ -109,7 +132,7 @@ export const JOB_FORM_FIELDS = {
 export const EMPTY_JOB_VALUES: JobBasicsValues = {
   title: "",
   clientId: "",
-  format: "Single",
+  format: "",
   startsOn: "",
   endsOn: "",
   investment: "",
@@ -118,7 +141,7 @@ export const EMPTY_JOB_VALUES: JobBasicsValues = {
 
 /** Etiquetas del resumen previo a publicar, en el paso 4. */
 export const JOB_REVIEW_LABELS = {
-  song: "Canción",
+  song: "Trabajo",
   client: "Cliente",
   period: "Período",
   investment: "Inversión",
@@ -135,7 +158,7 @@ export const JOB_MENU_COPY = {
   cancel: "Cancelar",
   deleteTitle: "Eliminar trabajo",
   deleteDescription: (title: string) =>
-    `Se eliminará «${title}» junto con su portada. Esta acción no se puede deshacer.`,
+    `Se eliminará «${title}» junto con su imagen. Esta acción no se puede deshacer.`,
 } as const;
 
 /** Textos del paso 2 del asistente (`B6 · Wizard Paso 2`). */

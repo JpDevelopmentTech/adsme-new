@@ -1,7 +1,7 @@
-import { ArrowRight, CalendarRange, Disc3, Wallet } from "lucide-react";
+import { ArrowRight, BriefcaseBusiness, CalendarRange, Wallet } from "lucide-react";
 import { CURRENCY_SYMBOL } from "@/constants/currency.constants";
 import {
-  JOB_FORMATS,
+  JOB_FORMAT_GROUPS,
   JOB_WIZARD_COPY,
   JOB_WIZARD_SECTIONS,
 } from "@/constants/job-wizard.constants";
@@ -34,6 +34,7 @@ export function JobBasicsFields({
   values,
   errors,
   clientOptions,
+  onCreateClient,
   cover,
   onChange,
 }: JobBasicsFieldsProps) {
@@ -46,7 +47,7 @@ export function JobBasicsFields({
 
   return (
     <>
-      <WizardSection label={JOB_WIZARD_SECTIONS.what} icon={<Disc3 size={15} strokeWidth={1.5} aria-hidden />}>
+      <WizardSection label={JOB_WIZARD_SECTIONS.what} icon={<BriefcaseBusiness size={15} strokeWidth={1.5} aria-hidden />}>
         <div className="flex flex-col gap-[22px] lg:flex-row lg:items-start">
           <JobCoverUploader {...cover} />
 
@@ -70,7 +71,9 @@ export function JobBasicsFields({
                 label={JOB_WIZARD_COPY.clientLabel}
                 placeholder={JOB_WIZARD_COPY.clientPlaceholder}
                 options={clientOptions}
-                defaultValue={values.clientId}
+                value={values.clientId || null}
+                onChange={(clientId) => onChange("clientId", clientId ?? "")}
+                createAction={{ label: JOB_WIZARD_COPY.createClient, onCreate: onCreateClient }}
                 error={errors.clientId}
               />
 
@@ -79,7 +82,8 @@ export function JobBasicsFields({
                 name="format"
                 surface="elevated"
                 label={JOB_WIZARD_COPY.formatLabel}
-                options={JOB_FORMATS}
+                options={JOB_FORMAT_GROUPS}
+                placeholder={JOB_WIZARD_COPY.formatPlaceholder}
                 value={values.format}
                 error={errors.format}
                 onChange={(event) =>

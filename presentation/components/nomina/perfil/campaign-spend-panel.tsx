@@ -11,7 +11,7 @@ import { NOMINA_TABLE_SCROLL_CLASSES, NOMINA_TH_CLASSES } from "@/utils/nomina-t
 
 const ALIGN_CLASSES = { left: "text-left", right: "text-right", center: "text-center" } as const;
 
-/** Campañas de AdsME del artista con lo que gastaron desde su inicio en Nómina. */
+/** Campañas de AdsME del artista con lo que gastaron desde que cuentan para Nómina. */
 export function CampaignSpendPanel({ campaigns, isReadOnly }: CampaignSpendPanelProps) {
   const columns = isReadOnly ? ADS_COLUMNS : [...ADS_COLUMNS, ADS_LINK_COLUMN];
   const copy = { title: ADS_TAB_COPY.campaignsTitle, subtitle: ADS_TAB_COPY.campaignsSubtitle };

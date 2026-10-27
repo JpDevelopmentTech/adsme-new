@@ -1,4 +1,4 @@
-import { Disc3 } from "lucide-react";
+import { BriefcaseBusiness } from "lucide-react";
 import { CLIENT_DETAIL_COPY } from "@/constants/client-detail.constants";
 import { EmptyStatePanel } from "@/presentation/components/ui/empty-state-panel";
 
@@ -6,7 +6,7 @@ import { EmptyStatePanel } from "@/presentation/components/ui/empty-state-panel"
 export function ClientJobsEmpty() {
   return (
     <EmptyStatePanel
-      icon={<Disc3 size={24} strokeWidth={1.5} aria-hidden />}
+      icon={<BriefcaseBusiness size={24} strokeWidth={1.5} aria-hidden />}
       title={CLIENT_DETAIL_COPY.emptyJobs}
       description={CLIENT_DETAIL_COPY.emptyJobsHint}
     />

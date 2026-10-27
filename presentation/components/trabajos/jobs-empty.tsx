@@ -1,6 +1,6 @@
 "use client";
 
-import { Disc3, Plus, SearchX, X } from "lucide-react";
+import { BriefcaseBusiness, Plus, SearchX, X } from "lucide-react";
 import { JOBS_COPY, JOBS_EMPTY_COPY } from "@/constants/jobs.constants";
 import { NEW_JOB_ROUTE } from "@/constants/routes.constants";
 import { EmptyStatePanel } from "@/presentation/components/ui/empty-state-panel";
@@ -36,7 +36,7 @@ export function JobsEmpty({ isFiltered }: JobsEmptyProps) {
   return (
     <EmptyStatePanel
       isStandalone
-      icon={<Disc3 size={24} strokeWidth={1.5} aria-hidden />}
+      icon={<BriefcaseBusiness size={24} strokeWidth={1.5} aria-hidden />}
       title={JOBS_EMPTY_COPY.title}
       description={JOBS_EMPTY_COPY.subtitle}
       action={

@@ -1,4 +1,4 @@
-import { Disc3, Plus, UserPlus, Users } from "lucide-react";
+import { BriefcaseBusiness, Plus, UserPlus, Users } from "lucide-react";
 import Link from "next/link";
 import {
   DASHBOARD_COPY,
@@ -7,7 +7,7 @@ import {
 } from "@/constants/dashboard.constants";
 import { cn } from "@/utils/cn";
 
-const ICONS = [Plus, UserPlus, Disc3, Users];
+const ICONS = [Plus, UserPlus, BriefcaseBusiness, Users];
 
 /** Cuadrícula de accesos directos a las acciones más frecuentes. */
 export function QuickActions() {

@@ -7,12 +7,14 @@ import {
   JOB_WIZARD_COPY,
 } from "@/constants/job-wizard.constants";
 import { saveJobAction } from "@/presentation/actions/save-job-action";
+import { ClientCreateDialog } from "@/presentation/components/clientes/client-create-dialog";
 import { JobBasicsFields } from "@/presentation/components/trabajos/wizard/job-basics-fields";
 import { JobWizardFooter } from "@/presentation/components/trabajos/wizard/job-wizard-footer";
 import { JobWizardLayout } from "@/presentation/components/trabajos/wizard/job-wizard-layout";
 import { JobWizardPanel } from "@/presentation/components/trabajos/wizard/job-wizard-panel";
 import { FormAlert } from "@/presentation/components/ui/form-alert";
 import { useAvatarPreview } from "@/presentation/hooks/use-avatar-preview";
+import { useInlineClientCreation } from "@/presentation/hooks/use-inline-client-creation";
 import type {
   JobBasicsFormProps,
   JobBasicsValues,
@@ -22,9 +24,12 @@ import { formatInvestmentSummary } from "@/utils/format-investment-summary";
 import { formatPeriodSummary } from "@/utils/format-period-summary";
 import { parseThousands } from "@/utils/parse-thousands";
 
-/** Paso 1 del asistente `B6`: datos básicos del trabajo y su portada. */
+/**
+ * Paso 1 del asistente `B6`: datos básicos del trabajo y su portada. El cliente
+ * que falta se crea aquí mismo, en un diálogo, sin perder lo ya escrito.
+ */
 export function JobBasicsForm({
-  clientOptions,
+  clientOptions: initialClientOptions,
   initialValues,
   jobId,
   initialCoverUrl = null,
@@ -40,6 +45,10 @@ export function JobBasicsForm({
   // así que la intención se escribe en el DOM antes de que el envío la lea.
   const intentRef = useRef<HTMLInputElement>(null);
   const cover = useAvatarPreview(initialCoverUrl, coverInputRef);
+  const clients = useInlineClientCreation(initialClientOptions, (clientId) =>
+    setValues((previous) => ({ ...previous, clientId })),
+  );
+  const clientOptions = clients.options;
 
   /** Escribe la intención directamente en el DOM: es síncrono y sin carreras. */
   const setIntent = (intent: JobWizardIntent) => {
@@ -72,6 +81,7 @@ export function JobBasicsForm({
   };
 
   return (
+    <>
     <form action={formAction} noValidate className="flex flex-col gap-4">
       {jobId ? (
         <input type="hidden" name={JOB_FORM_FIELDS.jobId} value={jobId} />
@@ -106,6 +116,7 @@ export function JobBasicsForm({
             values={values}
             errors={state.fieldErrors}
             clientOptions={clientOptions}
+            onCreateClient={clients.open}
             cover={{
               previewUrl: cover.previewUrl,
               error: cover.error,
@@ -117,5 +128,14 @@ export function JobBasicsForm({
         </JobWizardPanel>
       </JobWizardLayout>
     </form>
+
+    {/* Fuera del `<form>` del trabajo: los formularios no se pueden anidar. */}
+    <ClientCreateDialog
+      isOpen={clients.draftName !== null}
+      initialName={clients.draftName ?? ""}
+      onClose={clients.close}
+      onCreated={clients.add}
+    />
+    </>
   );
 }

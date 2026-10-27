@@ -43,5 +43,8 @@ const socialLinkSchema = z
 /** Redes del artista: como mucho una por red. */
 export const socialsSchema = z.object({ clientId: z.uuid(), socials: z.array(socialLinkSchema).max(6) });
 
+/** Cambio de foto del artista: el archivo se valida aparte. */
+export const photoSchema = z.object({ clientId: z.uuid() });
+
 /** Baja de Nómina. */
 export const unenrollSchema = z.object({ clientId: z.uuid() });

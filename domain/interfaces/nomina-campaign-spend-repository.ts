@@ -5,6 +5,6 @@ import type { NominaCampaignSpend } from "@/domain/entities/nomina-campaign-spen
  * la infraestructura falla.
  */
 export interface NominaCampaignSpendRepository {
-  /** Gasto por campaña y mes de todos los inscritos, desde su inicio en Nómina. */
+  /** Gasto por campaña y mes de todos los inscritos, desde su inicio en Nómina o su primer mes con ingresos, lo que sea antes. */
   listCampaignSpend(): Promise<NominaCampaignSpend[]>;
 }

@@ -61,7 +61,7 @@ export function ConnectionRow({ connection, actions }: ConnectionRowProps) {
             </span>
           </div>
 
-          <div className="flex w-24 shrink-0 flex-col gap-0.5">
+          <div className="flex min-w-24 shrink-0 flex-col gap-0.5">
             <span className="text-[14px] font-normal whitespace-nowrap text-text-primary">
               {formatSpend(connection.importedSpend ?? {}, { compact: true })}
             </span>

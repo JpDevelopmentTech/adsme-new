@@ -4,7 +4,7 @@ import type {
   ClientAvatarGradient,
   ClientKind,
 } from "@/domain/entities/client";
-import type { StatusTone } from "@/types/ui.types";
+import type { FilterSelectOption, StatusTone } from "@/types/ui.types";
 
 export interface ClientFormValues {
   name: string;
@@ -32,6 +32,8 @@ export type ClientFormErrors = Partial<Record<keyof ClientFormValues, string>>;
 export interface ClientFormState {
   message: string | null;
   fieldErrors: ClientFormErrors;
+  /** Cliente recién creado por el alta rápida, listo para el selector. */
+  created?: FilterSelectOption<string>;
 }
 
 export interface ClientFormProps {
@@ -43,6 +45,23 @@ export interface ClientFormProps {
   clientId?: string;
   /** `true` cuando se abre como modal sobre la lista: cerrar vuelve atrás. */
   isModal?: boolean;
+}
+
+/** Tarjeta del formulario sin decidir a dónde lleva guardar: la acción viene de fuera. */
+export interface ClientFormCardProps extends Omit<ClientFormProps, "isModal"> {
+  state: ClientFormState;
+  formAction: (formData: FormData) => void;
+  isPending: boolean;
+  onClose: () => void;
+}
+
+/** Alta rápida de cliente desde otro formulario; devuelve el cliente creado. */
+export interface ClientCreateDialogProps {
+  isOpen: boolean;
+  /** Lo que ya se escribió en el buscador: llega como nombre del cliente. */
+  initialName: string;
+  onClose: () => void;
+  onCreated: (client: FilterSelectOption<string>) => void;
 }
 
 export interface ClientFormHeaderProps {

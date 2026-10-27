@@ -1,4 +1,4 @@
-import { CircleCheck, Disc3, UserPlus } from "lucide-react";
+import { CircleCheck, BriefcaseBusiness, UserPlus } from "lucide-react";
 import { DASHBOARD_COPY } from "@/constants/dashboard.constants";
 import { PanelCard } from "@/presentation/components/dashboard/panel-card";
 import type { ActivityKind } from "@/domain/entities/dashboard";
@@ -7,7 +7,7 @@ import { formatRelativeTime } from "@/utils/format-relative-time";
 
 const ICONS: Record<ActivityKind, typeof UserPlus> = {
   "client-created": UserPlus,
-  "job-created": Disc3,
+  "job-created": BriefcaseBusiness,
   "job-updated": CircleCheck,
 };
 

@@ -4,9 +4,9 @@ import { JOB_FORMATS } from "@/constants/job-wizard.constants";
 /** Valida el paso 1 del asistente: datos básicos del trabajo. */
 export const jobBasicsSchema = z
   .object({
-    title: z.string().trim().min(2, { message: "Ingresa el nombre de la canción." }),
-    clientId: z.string().min(1, { message: "Elige el cliente del lanzamiento." }),
-    format: z.enum(JOB_FORMATS),
+    title: z.string().trim().min(2, { message: "Ingresa el nombre del trabajo." }),
+    clientId: z.string().min(1, { message: "Elige el cliente del trabajo." }),
+    format: z.enum(JOB_FORMATS, { message: "Elige qué se promociona." }),
     startsOn: z.string().min(1, { message: "Elige la fecha de inicio." }),
     endsOn: z.string().min(1, { message: "Elige la fecha de fin." }),
     investment: z.coerce

@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronRight, Disc3, Link2, Unlink } from "lucide-react";
+import { ChevronRight, BriefcaseBusiness, Link2, Unlink } from "lucide-react";
 import Link from "next/link";
 import { CAMPAIGNS_COPY } from "@/constants/campaigns.constants";
 import { jobDetailRoute } from "@/constants/routes.constants";
@@ -49,7 +49,7 @@ export function CampaignGroupHead({
 
   return (
     <div className="flex flex-wrap items-center gap-3 bg-g-100 px-5 py-2.5">
-      <Disc3 size={15} strokeWidth={1.5} className="text-text-muted" aria-hidden />
+      <BriefcaseBusiness size={15} strokeWidth={1.5} className="text-text-muted" aria-hidden />
       <span className="text-[12.5px] text-text-primary">{group.title}</span>
       <span className="text-[12px] font-light text-text-secondary">
         {group.clientName}

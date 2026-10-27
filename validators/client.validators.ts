@@ -1,15 +1,15 @@
 import { z } from "zod";
 import {
   CLIENT_COUNTRIES,
-  CLIENT_GENRES,
   CLIENT_HANDLE_PATTERN,
   CLIENT_KINDS,
+  CLIENT_SECTORS,
 } from "@/constants/client-form.constants";
 import { stripClientHandle, toClientHandle } from "@/utils/normalize-client-handle";
 
 /** Valida el formulario de alta y edición de clientes. */
 export const clientFormSchema = z.object({
-  name: z.string().trim().min(2, { message: "Ingresa el nombre artístico." }),
+  name: z.string().trim().min(2, { message: "Ingresa el nombre del cliente." }),
   // Se escribe sin arroba; si alguien la pone o usa mayúsculas, se limpia aquí
   // y se guarda siempre como `@usuario` en minúsculas, que es lo que exige la base.
   handle: z
@@ -22,7 +22,7 @@ export const clientFormSchema = z.object({
     )
     .transform(toClientHandle),
   kind: z.enum(CLIENT_KINDS),
-  genre: z.enum(CLIENT_GENRES),
+  genre: z.enum(CLIENT_SECTORS, { message: "Elige el sector del cliente." }),
   email: z.email({ message: "Ingresa un correo electrónico válido." }).trim(),
   phone: z.string().trim().min(7, { message: "Ingresa un teléfono válido." }),
   city: z.string().trim().min(2, { message: "Ingresa la ciudad." }),

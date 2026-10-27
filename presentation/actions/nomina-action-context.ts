@@ -22,10 +22,24 @@ export async function loadNominaLedgerRepository() {
   return createSupabaseNominaLedgerRepository(await loadSignedInClient());
 }
 
+/**
+ * Lo que necesita la acción de la foto: el cliente de Supabase para Storage,
+ * el usuario (su carpeta en el bucket) y el repositorio de inscripciones.
+ */
+export async function loadNominaPhotoContext() {
+  const { supabase, userId } = await loadSignedInSession();
+  return { supabase, userId, repository: createSupabaseNominaEnrollmentRepository(supabase) };
+}
+
 /** Cliente de Supabase con sesión; sin usuario, manda al login. */
 async function loadSignedInClient() {
+  return (await loadSignedInSession()).supabase;
+}
+
+/** Cliente de Supabase y usuario con sesión; sin usuario, manda al login. */
+async function loadSignedInSession() {
   const supabase = await createServerSupabaseClient();
   const user = await createGetCurrentUser(createSupabaseAuthRepository(supabase))();
   if (!user) redirect(LOGIN_ROUTE);
-  return supabase;
+  return { supabase, userId: user.id };
 }

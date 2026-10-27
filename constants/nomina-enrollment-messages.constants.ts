@@ -10,5 +10,11 @@ export const NOMINA_ENROLLMENT_ERRORS: Record<NominaEnrollmentErrorCode, string>
   unknown: "No se pudo guardar. Inténtalo de nuevo.",
 };
 
+/** Fallos al cambiar la foto del artista desde su perfil. */
+export const NOMINA_PHOTO_ERRORS = {
+  missingFile: "Elige una imagen para la foto.",
+  storageFailed: "No pudimos subir la foto. Inténtalo de nuevo.",
+} as const;
+
 /** Cuando el modelo de reparto no pasa la revisión de viabilidad en el servidor. */
 export const NOMINA_NOT_VIABLE = "El modelo de reparto no es viable. Revisa el detalle antes de guardar.";

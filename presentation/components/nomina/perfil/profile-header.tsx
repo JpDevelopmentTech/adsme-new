@@ -9,7 +9,7 @@ import { formatLongDate } from "@/utils/format-nomina-dates";
 export function ProfileHeader({ profile, isReadOnly = false }: ProfileHeaderProps) {
   return (
     <header className="flex flex-wrap items-center gap-x-6 gap-y-4">
-      <ProfilePhoto name={profile.name} photoUrl={profile.photoUrl} semaphore={profile.semaphore} isReadOnly={isReadOnly} />
+      <ProfilePhoto clientId={profile.id} name={profile.name} photoUrl={profile.photoUrl} semaphore={profile.semaphore} isReadOnly={isReadOnly} />
       <div className="flex min-w-0 flex-1 flex-col gap-2">
         <h1 className="text-[40px] leading-tight font-extralight tracking-[-1px] text-text-primary sm:text-5xl">{profile.name}</h1>
         <p className="flex flex-wrap items-center gap-x-2.5 text-sm text-text-secondary">

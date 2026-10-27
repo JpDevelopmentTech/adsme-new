@@ -25,7 +25,7 @@ export const CLIENT_MENU_COPY = {
 export const CLIENTS_EMPTY_COPY = {
   title: "Aún no tienes clientes",
   subtitle:
-    "Crea tu primer cliente para empezar a gestionar sus lanzamientos y campañas. Podrás asociarle trabajos y compartir reportes en vivo.",
+    "Crea tu primer cliente para empezar a gestionar sus trabajos y campañas. Podrás asociarle trabajos y compartir reportes en vivo.",
   action: "Crear primer cliente",
 } as const;
 

@@ -2,7 +2,7 @@ import type { ConnectionPlatform } from "@/domain/entities/connection";
 
 export const JOB_DETAIL_COPY = {
   /** Rótulo sobre el título del trabajo en la cabecera del detalle. */
-  eyebrow: "Lanzamiento",
+  eyebrow: "Trabajo",
   back: "Trabajos",
   copyLink: "Copiar enlace",
   configureReport: "Configurar reporte",
@@ -10,10 +10,10 @@ export const JOB_DETAIL_COPY = {
   finished: "Finalizada",
   viewReport: "Ver reporte del cliente",
   noLink: "Sin enlace de reporte",
-  evolutionTitle: "Evolución del lanzamiento",
+  evolutionTitle: "Evolución de la pauta",
   evolutionSubtitle: (period: string) => `Reproducciones por día · ${period}`,
   evolutionEmpty:
-    "Las campañas de este lanzamiento no tienen reproducciones registradas en estas fechas. Aparecen aquí al sincronizar sus métricas.",
+    "Las campañas de este trabajo no tienen reproducciones registradas en estas fechas. Aparecen aquí al sincronizar sus métricas.",
   noCampaigns: "Sin campañas vinculadas",
 } as const;
 

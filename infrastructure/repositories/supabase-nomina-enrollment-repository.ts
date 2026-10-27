@@ -57,6 +57,11 @@ export function createSupabaseNominaEnrollmentRepository(supabase: SupabaseClien
       if (!error && data.length === 0) return { success: false, error: { code: "client_not_found" } };
       return done(error);
     },
+    async updatePhoto(clientId, avatarUrl) {
+      const { data, error } = await supabase.from("clients").update({ avatar_url: avatarUrl }).eq("id", clientId).select("id");
+      if (!error && data.length === 0) return { success: false, error: { code: "client_not_found" } };
+      return done(error);
+    },
     async unenroll(clientId) {
       const { data, error } = await supabase.from(PAYROLL_TABLE).delete().eq("client_id", clientId).select("client_id");
       if (!error && data.length === 0) return { success: false, error: { code: "not_enrolled" } };

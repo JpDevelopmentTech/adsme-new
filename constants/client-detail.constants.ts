@@ -17,7 +17,7 @@ export const CLIENT_DETAIL_COPY = {
   newJob: "Nuevo trabajo",
   jobsTitle: "Trabajos",
   emptyJobs: "Este cliente todavía no tiene trabajos.",
-  emptyJobsHint: "Crea el primero para empezar a pautar sus lanzamientos.",
+  emptyJobsHint: "Crea el primero para empezar a pautar sus campañas.",
   notFoundTitle: "Cliente no encontrado",
   notFoundHint: "El cliente no existe o se eliminó del panel.",
   backToClientsAction: "Volver a Clientes",
@@ -25,7 +25,7 @@ export const CLIENT_DETAIL_COPY = {
 
 /** Encabezados de la tabla de trabajos, en el orden del diseño. */
 export const JOB_TABLE_HEADERS = {
-  song: "Canción",
+  song: "Trabajo",
   platforms: "Plataformas",
   status: "Estado",
   reportLink: "Enlace del cliente",

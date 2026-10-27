@@ -14,6 +14,7 @@ export function ModalSheet({
   onClose,
   children,
   widthClassName = "w-[min(460px,calc(100vw-2rem))]",
+  surfaceClassName = "glass-float rounded-[30px]",
 }: ModalSheetProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
 
@@ -33,7 +34,7 @@ export function ModalSheet({
       onClick={(event) => {
         if (event.target === dialogRef.current) onClose();
       }}
-      className={`glass-float m-auto max-h-[calc(100dvh-2rem)] ${widthClassName} rounded-[30px] p-0 text-text-primary backdrop:bg-[#0a041a8c] backdrop:backdrop-blur-[8px]`}
+      className={`m-auto max-h-[calc(100dvh-2rem)] ${widthClassName} ${surfaceClassName} p-0 text-text-primary backdrop:bg-[#0a041a8c] backdrop:backdrop-blur-[8px]`}
     >
       {children}
     </dialog>

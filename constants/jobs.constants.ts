@@ -21,7 +21,7 @@ export const JOBS_COPY = {
   count: (total: number) => (total === 1 ? "1 trabajo" : `${total} trabajos`),
   results: (shown: number, total: number) => `${shown} de ${total}`,
   newJob: "Nuevo trabajo",
-  searchPlaceholder: "Buscar canción o artista…",
+  searchPlaceholder: "Buscar trabajo o cliente…",
   listView: "Ver como lista",
   gridView: "Ver como tarjetas",
   gridPending: "La vista de tarjetas todavía no está diseñada",
@@ -127,7 +127,7 @@ export const JOB_TABLE_COLUMNS = {
 export const JOBS_EMPTY_COPY = {
   title: "Aún no tienes trabajos",
   subtitle:
-    "Crea un trabajo para empezar a pautar el lanzamiento de alguno de tus clientes.",
+    "Crea un trabajo para empezar a pautar las campañas de alguno de tus clientes.",
   noResultsTitle: "Ningún trabajo coincide",
   noResultsSubtitle:
     "Prueba con otro término de búsqueda o quita algún filtro para ver más resultados.",

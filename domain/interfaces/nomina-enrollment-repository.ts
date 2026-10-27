@@ -27,6 +27,9 @@ export interface NominaEnrollmentRepository {
   /** Redes del cliente: son identidad y se guardan en el propio cliente. */
   updateSocials(clientId: string, socials: NominaSocialLink[]): Promise<NominaResult<null>>;
 
+  /** Foto del cliente: es identidad y se guarda en el propio cliente. */
+  updatePhoto(clientId: string, avatarUrl: string | null): Promise<NominaResult<null>>;
+
   /** Saca al cliente de Nómina; el cliente se conserva. */
   unenroll(clientId: string): Promise<NominaResult<null>>;
 }

@@ -26,25 +26,56 @@ export interface TextFieldProps
 /** Opción de un `<select>`: una cadena cuando valor y etiqueta coinciden. */
 export type SelectOption = string | { value: string; label: string };
 
+/** Grupo de opciones con rótulo, que el `<select>` pinta como `<optgroup>`. */
+export interface SelectOptionGroup {
+  label: string;
+  options: readonly SelectOption[];
+}
+
 export interface SelectFieldProps
   extends Omit<SelectHTMLAttributes<HTMLSelectElement>, "className"> {
   id: string;
   name: string;
   label: string;
-  options: readonly SelectOption[];
+  /** Opciones sueltas o agrupadas; los grupos ayudan a recorrer listas largas. */
+  options: readonly (SelectOption | SelectOptionGroup)[];
   /** Opción inicial deshabilitada que actúa de marcador. */
   placeholder?: string;
   error?: string;
   surface?: FieldSurface;
 }
 
+/** Opción del selector con buscador. */
+export interface SearchableOption {
+  value: string;
+  label: string;
+}
+
+/** Acción «crear lo que no está» al final del menú del selector con buscador. */
+export interface SearchableCreateAction {
+  /** Texto de la opción a partir de lo escrito (vacío si no se escribió nada). */
+  label: (query: string) => string;
+  /** Se llama con lo escrito; la opción nunca queda seleccionada. */
+  onCreate: (query: string) => void;
+}
+
+export interface SearchableOptionLabelProps {
+  option: SearchableOption;
+  context: "menu" | "value";
+  selectedValue?: string;
+}
+
 export interface SearchableSelectProps {
   id: string;
   name: string;
   label: string;
-  options: { value: string; label: string }[];
+  options: SearchableOption[];
   /** Valor preseleccionado al abrir el formulario en modo edición. */
   defaultValue?: string;
+  /** Valor controlado desde fuera; si llega, manda sobre el estado propio. */
+  value?: string | null;
+  onChange?: (value: string | null) => void;
+  createAction?: SearchableCreateAction;
   placeholder: string;
   error?: string;
   surface?: FieldSurface;
@@ -251,6 +282,8 @@ export interface ModalSheetProps {
   children: ReactNode;
   /** Ancho de la lámina; por defecto el de los diálogos simples (460 px). */
   widthClassName?: string;
+  /** Superficie de la lámina; transparente cuando el contenido ya trae su propia tarjeta. */
+  surfaceClassName?: string;
 }
 
 export interface ScreenLoaderProps {
